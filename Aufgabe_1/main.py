@@ -7,7 +7,7 @@ import solver
 def run_simulation():
     # Parameters
     m = 1.0      # mass (kg)
-    k = 10.0     # stiffness (N/m)
+    k = 10000.0     # stiffness (N/m)
     d = 0.001      # damping coefficient
 
     # initial conditions
@@ -38,6 +38,11 @@ def run_simulation():
         mySolver.step(t, model, dt)
 
     # Plotting the result
+    plt.plot(times, positions)
+    plt.xlabel('Time (s)')
+    plt.ylabel('Position (m)')
+    plt.title('Single Mass Oscillator')
+    plt.show()
 
 if __name__ == "__main__":
     run_simulation()
