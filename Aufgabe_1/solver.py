@@ -43,5 +43,5 @@ class SolverImplicit(Solver):
 #@hannes implementiere Newton hier;)
 
         # Set the new state in the model
-        self.__model__.set_state(new_state)
+        #self.__model__.set_state(new_state)
         
