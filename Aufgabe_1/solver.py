@@ -15,12 +15,17 @@ class SolverExplicit(Solver):
         super().__init__(model2Solve)
 
     def step(self, t, dt):
-        
         """Perform one step of numerical integration."""
-        #----------------------------------------------------------------------------
-        #  | implementation here  |
-        # \ /                    \ /
-        #  v                      v
-        
-        #----------------------------------------------------------------------------
+       
+        #aktueller Zustand
+        z = self.__model__.get_state()
+
+        #Ableitung vom Modell berechnen
+        f = self.__model__.dydt(t)
+
+        #neuen Zustand berechnen
+        z1 = z + dt * f
+
+        #Zustand setzen
+        self.__model__.set_state(z1)
         
