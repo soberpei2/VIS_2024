@@ -28,21 +28,25 @@ def run_simulation():
     # Arrays to store time and position for plotting
     times = np.linspace(0, t_final, num_steps)
     positions = np.zeros_like(times)
+    velocities = np.zeros_like(times)
 
     # Simulation loop
     for step in range(num_steps):
         t = step * dt
         # Store the current position for plotting
         positions[step] = myModel.get_state()[0]
+        velocities[step] = myModel.get_state()[1]
         
         # Take a time step
         mySolver.step(t, dt)
 
     # Plotting the result
-        plt.plot(times,positions)
-        plt.xlabel('Time')
-        plt.ylabel('Position')
-
+    plt.plot(times,positions)
+    plt.xlabel('Time in s')
+    plt.ylabel('Position in m')
+    plt.title('x(t)')
+    plt.grid(True)
+    plt.show()
 
 if __name__ == "__main__":
     run_simulation()
