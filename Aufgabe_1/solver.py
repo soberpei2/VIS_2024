@@ -21,6 +21,11 @@ class SolverExplicit(Solver):
         #  | implementation here  |
         # \ /                    \ /
         #  v                      v
-        
+
+        # Setting current state
+        zk = self.__model__.getstate()
+
+        zk1 = zk + dt * f(tk, zk)
+
         #----------------------------------------------------------------------------
         
