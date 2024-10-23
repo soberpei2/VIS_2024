@@ -31,8 +31,8 @@ class SingleMassOscillator(Model):
         #  | implementation here  |
         # \ /                    \ /
         #  v                      v
-        position = self.get_state[0]
-        velocity = self.get_state[1]
+        position = self.get_state()[0]
+        velocity = self.get_state()[1]
 
         acceleration = -(self.__k__ * position - self.__d__ * velocity) / self.__m__
 
