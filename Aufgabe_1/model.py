@@ -18,7 +18,9 @@ class Model:
 class SingleMassOscillator(Model):
     def __init__(self, iniState, m, k, d):
         super().__init__(iniState)
-        #your implementation here
+        self.m = m
+        self.k = k
+        self.d = 2*d*np.sqrt(self.m*self.k)
 
     def dydt(self, t):
         """Compute the derivatives of the state (velocity and acceleration)."""
@@ -26,10 +28,10 @@ class SingleMassOscillator(Model):
         #  | implementation here  |
         # \ /                    \ /
         #  v                      v
-        position = 0.
-        velocity = 0.
-        acceleration = 0.        
         
+        position = self.state[0]
+        velocity = self.state[1]
+        acceleration = (-self.k * position - self.d * velocity) / self.m
         return np.array([velocity, acceleration]) 
         #----------------------------------------------------------------------------
 

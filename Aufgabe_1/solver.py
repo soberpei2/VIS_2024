@@ -21,6 +21,8 @@ class SolverExplicit(Solver):
         #  | implementation here  |
         # \ /                    \ /
         #  v                      v
-        
+        dydt = self.__model__.dydt(t)
+        new_state = self.__model__.get_state() + dydt * dt
+        self.__model__.set_state(new_state)
         #----------------------------------------------------------------------------
         

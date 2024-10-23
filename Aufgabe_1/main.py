@@ -3,6 +3,7 @@
 import numpy as np
 import model
 import solver
+import matplotlib.pyplot as plt
 
 def run_simulation():
     # Parameters
@@ -11,7 +12,7 @@ def run_simulation():
     d = 0.001      # damping coefficient
 
     # initial conditions
-    iniStates = np.array([0.0, 0.0])
+    iniStates = np.array([1.0, 0.0])
 
     # Time parameters
     t_final = 10.0
@@ -36,6 +37,12 @@ def run_simulation():
         
         # Take a time step
         mySolver.step(t, model, dt)
+        plt.plot(times, positions)
+    plt.xlabel('Time (s)')
+    plt.ylabel('Position (m)')
+    plt.title('Single Mass Oscillator')
+    plt.grid()
+    plt.show()
 
     # Plotting the result
 
