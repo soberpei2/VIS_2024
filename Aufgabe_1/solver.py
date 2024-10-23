@@ -27,7 +27,7 @@ class SolverExplicit(Solver):
 
         
 
-        z(k+1) = z(k) + h * f(t(k),z(k))
+        # z(k+1) = z(k) + h * f(t(k),z(k))
 
 
         

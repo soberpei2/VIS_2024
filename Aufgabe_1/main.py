@@ -1,6 +1,7 @@
 # main.py
 
 import numpy as np
+import matplotlib as plt
 import model
 import solver
 
@@ -8,8 +9,8 @@ def run_simulation():
     # Parameters
     m = 1.0        # mass (kg)
     k = 100*1000   # stiffness (N/m)
-    d = 0.01      # damping coefficient
-
+    d = 0.01       # damping coefficient
+    F = 100        # Force 
     # initial conditions
     iniStates = np.array([0.0, 0.0])
 
