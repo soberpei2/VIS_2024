@@ -17,8 +17,16 @@ class Model:
 
 class SingleMassOscillator(Model):
     def __init__(self, iniState, m, k, d):
+
+        # call parent constructor
         super().__init__(iniState)
         #your implementation here
+
+        # set class variables
+        self.m = m
+        self.k = k
+        self.d = d
+
 
     def dydt(self, t):
         """Compute the derivatives of the state (velocity and acceleration)."""
