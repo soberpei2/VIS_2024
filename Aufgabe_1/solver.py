@@ -21,6 +21,16 @@ class SolverExplicit(Solver):
         #  | implementation here  |
         # \ /                    \ /
         #  v                      v
+        # Euler Explizit 
+
         
+
+        z(k+1) = z(k) + h * f(t(k),z(k))
+
+
+        
+
+
+
         #----------------------------------------------------------------------------
         
