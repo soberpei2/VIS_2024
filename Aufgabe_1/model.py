@@ -16,15 +16,16 @@ class Model:
 
 
 class SingleMassOscillator(Model):
-    def __init__(self, iniState, m, k, d):
+    def __init__(self, iniState, m, k, d, F):
         
         # Call parent constructor
         super().__init__(iniState)
 
         # Set class variables
-        self.m = m
-        self.k = k
-        self.d = d
+        self.__m__ = m      # mass
+        self.__k__ = k      # stiffness
+        self.__d__ = 2 * d * np.sqrt(self.m / self.k)       # damprate
+        self.__F__ = F      # force
 
     def dydt(self, t):
         """Compute the derivatives of the state (velocity and acceleration)."""
@@ -32,9 +33,13 @@ class SingleMassOscillator(Model):
         #  | implementation here  |
         # \ /                    \ /
         #  v                      v
-        position = 0.
-        velocity = 0.
-        acceleration = 0.        
+        
+        # Get position and velocity from member variables
+        position = self.state(0)
+        velocity = self.state(1)
+
+        # Compute accelaration from differential equation
+        acceleration = 1 / self.__m__  * (self.__F__ - self.__k__ * position - self.__d__ * velocity)
         
         return np.array([velocity, acceleration]) 
         #----------------------------------------------------------------------------
