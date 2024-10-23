@@ -1,6 +1,7 @@
 import model
 import numpy as np
 
+
 class Solver:
     def __init__(self, model2Solve):
         if not isinstance(model2Solve, model.Model):
