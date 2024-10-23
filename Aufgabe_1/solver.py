@@ -25,12 +25,13 @@ class SolverExplicit(Solver):
         #  v                      v
         # Euler Explizit 
 
-        
-
         # z(k+1) = z(k) + h * f(t(k),z(k))
 
+        zk = self.__model__.get_state
 
         
+
+        self.__model__.set_state(self.__model__.get_state )
 
 
 
