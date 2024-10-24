@@ -47,6 +47,8 @@ def run_simulation():
         myModel.set_state(newState)
 
     # Plotting the result
+    plt.plot(times, positions)
+    plt.show()
 
 if __name__ == "__main__":
     run_simulation()
