@@ -41,7 +41,10 @@ def run_simulation():
         velocity[step] = myModel.get_state()[1]
 
         # Take a time step
-        mySolver.step(t, dt, positions[step], velocity[step])
+        newState = mySolver.step(t, dt, positions[step], velocity[step])
+
+        # Set new state for model
+        myModel.set_state(newState)
 
     # Plotting the result
 
