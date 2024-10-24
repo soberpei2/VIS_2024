@@ -26,9 +26,10 @@ def run_simulation():
     # Create a solver
     mySolver = solver.SolverExplicit(myModel)
 
-    # Arrays to store time and position for plotting
+    # Arrays to store time, position and velocity for plotting
     times = np.linspace(0, t_final, num_steps)
     positions = np.zeros_like(times)
+    velocity = np.zeros_like(times)
 
     # Simulation loop
     for step in range(num_steps):
@@ -36,8 +37,11 @@ def run_simulation():
         # Store the current position for plotting
         positions[step] = myModel.get_state()[0]
 
+        # Store the current velocity
+        velocity[step] = myModel.get_state()[1]
+
         # Take a time step
-        mySolver.step(t, dt)
+        mySolver.step(t, dt, positions[step], velocity[step])
 
     # Plotting the result
 
