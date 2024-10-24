@@ -28,7 +28,7 @@ class SolverExplicit(Solver):
         vk1 = vk + dt * dydt[1]
 
         # Return updated state
-        return np.array(xk1, vk1)
+        return np.array([xk1, vk1])
 
         #----------------------------------------------------------------------------
         
