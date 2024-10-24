@@ -9,11 +9,11 @@ def run_simulation():
     # Parameters
     m = 1.0          # mass (kg)
     k = 100000.0     # stiffness (N/m)
-    d = 0.01         # damping coefficient
-    F = 50           # force (N)
+    D = 0.01         # Lehrsches Dämpfungsmaß
+    F = 0           # force (N)
 
     # initial conditions
-    iniStates = np.array([0.0, 0.0])
+    iniStates = np.array([1.0, 0.0])
 
     # Time parameters
     t_final = 10.0
@@ -21,7 +21,7 @@ def run_simulation():
     num_steps = int(t_final / dt)
 
     # Create a model (SingleMassOscillator)
-    myModel = model.SingleMassOscillator(iniStates, m, k, d, F)
+    myModel = model.SingleMassOscillator(iniStates, m, k, D, F)
 
     # Create a solver
     mySolver = solver.SolverExplicit(myModel)
