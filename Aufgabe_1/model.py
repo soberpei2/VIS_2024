@@ -32,8 +32,8 @@ class SingleMassOscillator(Model):
         #----------------------------------------------------------------------------
         
         # Get position and velocity from member variables
-        position = self.state(0)
-        velocity = self.state(1)
+        position = self.state[0]
+        velocity = self.state[1]
 
         # Compute accelaration from differential equation
         acceleration = 1 / self.__m__  * (self.__F__ - self.__k__ * position - self.__d__ * velocity)

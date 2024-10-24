@@ -24,8 +24,8 @@ class SolverExplicit(Solver):
         dydt = self.__model__.dydt(t)
 
         # Euler algorithm
-        xk1 = xk + dt * dydt(0)
-        vk1 = vk + dt * dydt(1)
+        xk1 = xk + dt * dydt[0]
+        vk1 = vk + dt * dydt[1]
 
         # Return updated state
         return np.array(xk1, vk1)
