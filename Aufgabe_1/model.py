@@ -24,7 +24,7 @@ class SingleMassOscillator(Model):
         # Set class variables
         self.__m__ = m      # mass
         self.__k__ = k      # stiffness
-        self.__d__ = 2 * d * np.sqrt(self.m / self.k)       # damprate
+        self.__d__ = 2 * d * np.sqrt(self.__m__ / self.__k__)       # damprate
         self.__F__ = F      # force
 
     def dydt(self, t):
