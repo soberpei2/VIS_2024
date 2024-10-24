@@ -30,9 +30,6 @@ class SingleMassOscillator(Model):
     def dydt(self, t):
         """Compute the derivatives of the state (velocity and acceleration)."""
         #----------------------------------------------------------------------------
-        #  | implementation here  |
-        # \ /                    \ /
-        #  v                      v
         
         # Get position and velocity from member variables
         position = self.state(0)
