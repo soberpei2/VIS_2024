@@ -1,4 +1,5 @@
 import model
+import numpy as np
 
 class Solver:
     def __init__(self, model2Solve):
@@ -18,14 +19,20 @@ class SolverExplicit(Solver):
         
         """Perform one step of numerical integration."""
         #----------------------------------------------------------------------------
-        #  | implementation here  |
-        # \ /                    \ /
-        #  v                      v
 
         # Setting current state
-        zk = self.__model__.getstate()
+        xk = self.__model__.getstate(0)
+        vk = self.__model__.getstate(1)
 
-        zk1 = zk + dt * f(tk, zk)
+        # Setting derivatives
+        dydt = self.__model__.dydt(t)
+
+        # Euler algorithm
+        xk1 = xk + dt * dydt(0)
+        vk1 = vk + dt * dydt(1)
+
+        # Return updated state
+        return np.array(xk1, vk1)
 
         #----------------------------------------------------------------------------
         
