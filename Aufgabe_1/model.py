@@ -18,6 +18,10 @@ class Model:
 class SingleMassOscillator(Model):
     def __init__(self, iniState, m, k, d):
         super().__init__(iniState)
+        self.__m__=m
+        self.__k__=k
+        self.__d__=2*d*np.sqrt(self.m*self.k)
+       
         #your implementation here
 
     def dydt(self, t):
@@ -26,8 +30,8 @@ class SingleMassOscillator(Model):
         #  | implementation here  |
         # \ /                    \ /
         #  v                      v
-        position = 0.
-        velocity = 0.
+        position = self.state[0]
+        velocity = self.state[1]
         acceleration = 0.        
         
         return np.array([velocity, acceleration]) 
