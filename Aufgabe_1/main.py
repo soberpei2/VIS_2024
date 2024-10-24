@@ -23,8 +23,6 @@ def run_simulation():
     # Create a model (SingleMassOscillator)
     myModel = model.SingleMassOscillator(iniStates, m, k, d, F)
 
-    print(myModel.m)
-
     # Create a solver
     mySolver = solver.SolverExplicit(myModel)
 
