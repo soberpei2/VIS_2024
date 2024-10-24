@@ -13,7 +13,7 @@ def run_simulation():
     F = 0           # force (N)
 
     # initial conditions
-    iniStates = np.array([1.0, 0.0])
+    iniStates = np.array([1.0, 1.0])
 
     # Time parameters
     t_final = 10.0
@@ -48,6 +48,11 @@ def run_simulation():
 
     # Plotting the result
     plt.plot(times, positions)
+    plt.grid(True)
+    plt.xlabel(r"Zeit $t$ in [s]")
+    plt.ylabel(r"Weg $x$ in [m]")
+    plt.title("Konvergenzanalyse")
+
     plt.show()
 
 if __name__ == "__main__":
