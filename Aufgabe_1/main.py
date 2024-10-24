@@ -21,7 +21,7 @@ def run_simulation():
     num_steps = int(t_final / dt)
 
     # Create a model (SingleMassOscillator)
-    myModel = model.SingleMassOscillator(iniStates, m, k, d)
+    myModel = model.SingleMassOscillator(iniStates, m, k, d, F)
 
     print(myModel.m)
 
