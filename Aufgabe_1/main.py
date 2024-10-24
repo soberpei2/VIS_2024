@@ -8,16 +8,16 @@ import solver
 def run_simulation():
     # Parameters
     m = 1.0          # mass (kg)
-    k = 100000.0     # stiffness (N/m)
+    k = 100.0     # stiffness (N/m)
     D = 0.01         # Lehrsches Dämpfungsmaß
-    F = 0           # force (N)
+    F = 0.0          # force (N)
 
     # initial conditions
-    iniStates = np.array([1.0, 1.0])
+    iniStates = np.array([1.0, 2.0])
 
     # Time parameters
     t_final = 10.0
-    dt = 0.001
+    dt = 0.0001
     num_steps = int(t_final / dt)
 
     # Create a model (SingleMassOscillator)
@@ -47,7 +47,7 @@ def run_simulation():
         myModel.set_state(newState)
 
     # Plotting the result
-    plt.plot(times, positions)
+    plt.plot(times, positions, "g-")
     plt.grid(True)
     plt.xlabel(r"Zeit $t$ in [s]")
     plt.ylabel(r"Weg $x$ in [m]")
