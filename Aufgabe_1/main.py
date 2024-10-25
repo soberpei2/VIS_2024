@@ -1,7 +1,7 @@
 # main.py
 
 import numpy as np
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import model
 import solver
 
@@ -44,12 +44,19 @@ def run_simulation():
         newStates = mySolver.step(t, dt, positions[step])
 
         # save new States 
-        myModel.set_state = newStates
+        myModel.set_state(newStates)
 
         # Take a time step
         mySolver.step(t,dt)
 
-    # Plotting the result
+plt.plot(t, positions, label="Position")
+plt.plot(t, velocity, label="Velocity")
+plt.xlabel("Time (s)")
+plt.ylabel("State")
+plt.legend()
+plt.show()
+
+
 
 if __name__ == "__main__":
     run_simulation()
