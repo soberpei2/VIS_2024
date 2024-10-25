@@ -8,11 +8,11 @@ import solver
 def run_simulation():
     # Parameters
     m = 1.0        # mass (kg)
-    k = 100*1000   # stiffness (N/m)
+    k = 100        # stiffness (N/m)
     d = 0.01       # damping coefficient
-    F = 100        # Force 
+    F = 0          # Force 
     # initial conditions
-    iniStates = np.array([0.0, 0.0])
+    iniStates = np.array([1, 1])
 
     # Time parameters
     t_final = 10.0
@@ -22,7 +22,7 @@ def run_simulation():
     # Create a model (SingleMassOscillator)
     myModel = model.SingleMassOscillator(iniStates, m, k, d)
 
-    # Create a solver
+    # Create/Select a solver
     mySolver = solver.SolverExplicit(myModel)
 
     # Arrays to store time and position for plotting
@@ -40,9 +40,11 @@ def run_simulation():
         # Store the current velocity 
         velocity[step] = myModel.get_state()[1]
         
-        
+        # create new States 
+        newStates = mySolver.step(t, dt, positions[step], velocity [step])
 
-
+        # save new States 
+        myModel.set_state = newStates
 
         # Take a time step
         mySolver.step(t,dt)

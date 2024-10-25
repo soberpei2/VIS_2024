@@ -16,23 +16,16 @@ class SolverExplicit(Solver):
         # your implementation here
 
         
-    def step(self, t, dt, ):
+    def step(self, t, dt, xk):
         
         """Perform one step of numerical integration."""
         #----------------------------------------------------------------------------
-        #  | implementation here  |
-        # \ /                    \ /
-        #  v                      v
         # Euler Explizit 
 
         # z(k+1) = z(k) + h * f(t(k),z(k))
 
-        
-        
-        
-        
+        xk1 = xk + dt * self.__model__.dydt(t)[0]
+        vk1 = self.__model__.dydt(t)[0] + dt * self.__model__.dydt(t)[1]
+    
 
-
-
-        #----------------------------------------------------------------------------
-        
+       #  vk1 = (xk1 - xk) / dt
