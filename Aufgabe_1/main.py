@@ -20,7 +20,7 @@ def run_simulation():
     num_steps = int(t_final / dt)
 
     # Create a model (SingleMassOscillator)
-    myModel = model.SingleMassOscillator(iniStates, m, k, d)
+    myModel = model.SingleMassOscillator(iniStates, m, k, d,F)
 
     # Create/Select a solver
     mySolver = solver.SolverExplicit(myModel)
@@ -41,7 +41,7 @@ def run_simulation():
         velocity[step] = myModel.get_state()[1]
         
         # create new States 
-        newStates = mySolver.step(t, dt, positions[step], velocity [step])
+        newStates = mySolver.step(t, dt, positions[step])
 
         # save new States 
         myModel.set_state = newStates

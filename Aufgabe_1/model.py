@@ -24,14 +24,14 @@ class SingleMassOscillator(Model):
         # set class variables
         self.__m__ = m
         self.__k__ = k
-        self.__d__ = 2*d*np.sqrt(self.m*self.k)
+        self.__d__ = 2*d*np.sqrt(self.__m__*self.__k__)
         self.__F__ = F
 
     def dydt(self, t):
         """Compute the derivatives of the state (velocity and acceleration)."""
         #----------------------------------------------------------------------------
-        position = self.state(0)
-        velocity = self.state(1)
+        position = self.state[0]
+        velocity = self.state[1]
 
         # gleichung des EMS auf a umgeformt
         acceleration =  1 / self.__m__ * (self.__F__ - self.__k__ * position - self.__d__ * velocity)
