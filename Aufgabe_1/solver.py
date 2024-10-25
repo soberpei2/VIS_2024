@@ -57,7 +57,7 @@ class SolverImplicit(Solver):
         dydt = self.__model__.dydt(t)
 
         # Calculating current velocity v(k + 1)
-        vk1 = (dt / self.__model__.m * (self.__model__.F - self.__model__.k * xk)) / (1 + dt * self.__model__.d / self.__model__.m + dt**2 * self.__model__.k / self.__model__.m)
+        vk1 = (vk + dt / self.__model__.__m__ * (self.__model__.__F__ - self.__model__.__k__ * xk)) / (1 + dt * self.__model__.__d__ / self.__model__.__m__ + dt**2 * self.__model__.__k__ / self.__model__.__m__)
 
         # Calculating current position x(k + 1)
         xk1 = xk + dt * vk1
