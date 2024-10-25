@@ -1,4 +1,7 @@
+# solver.py
+
 import model
+import numpy as np
 
 class Solver:
     def __init__(self, model2Solve):
@@ -13,19 +16,19 @@ class Solver:
 class SolverExplicit(Solver):
     def __init__(self, model2Solve):
         super().__init__(model2Solve)
-        # your implementation here
 
-        
     def step(self, t, dt, xk):
-        
         """Perform one step of numerical integration."""
-        #----------------------------------------------------------------------------
         # Euler Explizit 
+        # z(k+1) = z(k) + h * f(t(k), z(k))
+        
+        position = xk[0]  # Aktuelle Position
+        velocity = xk[1]  # Aktuelle Geschwindigkeit
 
-        # z(k+1) = z(k) + h * f(t(k),z(k))
-
-        xk1 = xk + dt * self.__model__.dydt(t)[0]
-        vk1 = self.__model__.dydt(t)[0] + dt * self.__model__.dydt(t)[1]
-    
-
-       #  vk1 = (xk1 - xk) / dt
+        # Berechnung des nächsten Zustands
+        next_state = np.array([
+            position + dt * velocity,
+            velocity + dt * self.__model__.dydt(t)[1]  # Hier ist es wichtig, dass dydt mit dem richtigen t aufgerufen wird
+        ])
+        
+        return next_state

@@ -20,7 +20,7 @@ def run_simulation():
     num_steps = int(t_final / dt)
 
     # Create a model (SingleMassOscillator)
-    myModel = model.SingleMassOscillator(iniStates, m, k, d,F)
+    myModel = model.SingleMassOscillator(iniStates, m, k, d, F)
 
     # Create/Select a solver
     mySolver = solver.SolverExplicit(myModel)
@@ -29,7 +29,6 @@ def run_simulation():
     times = np.linspace(0, t_final, num_steps)
     positions = np.zeros_like(times)
     velocity = np.zeros_like(times)
-
 
     # Simulation loop
     for step in range(num_steps):
@@ -41,22 +40,18 @@ def run_simulation():
         velocity[step] = myModel.get_state()[1]
         
         # create new States 
-        newStates = mySolver.step(t, dt, positions[step])
+        newStates = mySolver.step(t, dt, myModel.get_state())  # Hier den aktuellen Zustand verwenden
 
         # save new States 
-        myModel.set_state(newStates)
+        myModel.set_state(newStates)  # Aufruf der Methode
 
-        # Take a time step
-        mySolver.step(t,dt)
-
-plt.plot(t, positions, label="Position")
-plt.plot(t, velocity, label="Velocity")
-plt.xlabel("Time (s)")
-plt.ylabel("State")
-plt.legend()
-plt.show()
-
-
+    # Plotting the result
+    plt.plot(times, positions, label="Position")
+    plt.plot(times, velocity, label="Velocity")
+    plt.xlabel("Time (s)")
+    plt.ylabel("State")
+    plt.legend()
+    plt.show()
 
 if __name__ == "__main__":
     run_simulation()
