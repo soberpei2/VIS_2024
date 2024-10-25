@@ -2,6 +2,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+from pathlib import Path
 import model
 import solver
 
@@ -10,14 +11,14 @@ def run_simulation():
     m = 1.0          # mass (kg)
     k = 100.0     # stiffness (N/m)
     D = 0.01         # Lehrsches Dämpfungsmaß
-    F = 0.0          # force (N)
+    F = 1000.0          # force (N)
 
     # initial conditions
-    iniStates = np.array([1.0, 2.0])
+    iniStates = np.array([0.0, 0.0])
 
     # Time parameters
     t_final = 10.0
-    dt = 0.0001
+    dt = 0.001
     num_steps = int(t_final / dt)
 
     # Create a model (SingleMassOscillator)
@@ -55,6 +56,15 @@ def run_simulation():
     plt.title("Konvergenzanalyse")
 
     plt.show()
+
+    # Define array with position over time
+    posOverTime = np.array([times, positions])
+
+    # Get path to current script directory
+    workPath = Path.cwd()
+    
+    # Writing results in a .csv-File
+    np.savetxt(workPath + 'PosOverTime.csv', posOverTime)
 
 if __name__ == "__main__":
     run_simulation()
