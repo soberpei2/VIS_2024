@@ -1,6 +1,8 @@
 import model
 import numpy as np
 
+# Parentclass
+#============
 class Solver:
     def __init__(self, model2Solve):
         if not isinstance(model2Solve, model.Model):
@@ -10,7 +12,10 @@ class Solver:
     def step(self, t, dt):
         """Should be implemented in derived classes."""
         raise NotImplementedError("This method should be implemented by subclasses.")
+#=====================================================================================
 
+# Children class - Explicit Solver
+#=================================
 class SolverExplicit(Solver):
     def __init__(self, model2Solve):
         super().__init__(model2Solve)
@@ -18,6 +23,7 @@ class SolverExplicit(Solver):
     def step(self, t, dt, xk, vk):
         
         """Perform one step of numerical integration."""
+
         #----------------------------------------------------------------------------
 
         # Setting derivatives
@@ -29,6 +35,21 @@ class SolverExplicit(Solver):
 
         # Return updated state
         return np.array([xk1, vk1])
+#=====================================================================================
+        
+# Children class - Implicit Solver
+#=================================
+class SolverImplicit(Solver):
+    # Constructor
+    #------------
+    def __init__(self, model2Solve):
+        super().__init__(model2Solve)
+
+    # Calculation step
+    def step(self, t, dt, xk, vk):
+
+        """"Perform one step of numerical integration with implicit Euler."""
 
         #----------------------------------------------------------------------------
+
         
