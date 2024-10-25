@@ -16,7 +16,7 @@ class SolverExplicit(Solver):
         # your implementation here
 
         
-    def step(self, t, dt):
+    def step(self, t, dt, ):
         
         """Perform one step of numerical integration."""
         #----------------------------------------------------------------------------
@@ -27,11 +27,10 @@ class SolverExplicit(Solver):
 
         # z(k+1) = z(k) + h * f(t(k),z(k))
 
-        zk = self.__model__.get_state
-
         
-
-        self.__model__.set_state(self.__model__.get_state )
+        
+        
+        
 
 
 
