@@ -24,7 +24,8 @@ def run_simulation():
     myModel = model.SingleMassOscillator(iniStates, m, k, D, F)
 
     # Create a solver
-    mySolver = solver.SolverExplicit(myModel)
+    #mySolver = solver.SolverExplicit(myModel)
+    mySolver = solver.SolverImplicit(myModel)
 
     # Arrays to store time, position and velocity for plotting
     times = np.linspace(0, t_final, num_steps)
