@@ -46,10 +46,21 @@ class SolverImplicit(Solver):
         super().__init__(model2Solve)
 
     # Calculation step
+    #-----------------
     def step(self, t, dt, xk, vk):
 
         """"Perform one step of numerical integration with implicit Euler."""
 
         #----------------------------------------------------------------------------
 
-        
+        # Setting derivatives
+        dydt = self.__model__.dydt(t)
+
+        # Calculating current velocity v(k + 1)
+        vk1 = (dt / self.__model__.m * (self.__model__.F - self.__model__.k * xk)) / (1 + dt * self.__model__.d / self.__model__.m + dt**2 * self.__model__.k / self.__model__.m)
+
+        # Calculating current position x(k + 1)
+        xk1 = xk + dt * vk1
+
+        # Return updated state
+        return np.array([xk1, vk1])
