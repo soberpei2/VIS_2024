@@ -2,7 +2,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-from pathlib import Path
+import os
 import model
 import solver
 
@@ -55,16 +55,19 @@ def run_simulation():
     plt.ylabel(r"Weg $x$ in [m]")
     plt.title("Konvergenzanalyse")
 
-    plt.show()
+    plt.savefig(os.getcwd() + "fig.png")
 
     # Define array with position over time
-    posOverTime = np.array([times, positions])
+    posOverTime = np.zeros((len(times), 2))
+    posOverTime[:,0] = times
+    posOverTime[:,1] = positions
 
     # Get path to current script directory
-    workPath = Path.cwd()
+    workPath = os.getcwd()
+    fileName = workPath + "PosOverTime.csv"
     
     # Writing results in a .csv-File
-    np.savetxt(workPath + 'PosOverTime.csv', posOverTime)
+    np.savetxt(fileName, posOverTime, delimiter = ' ')
 
 if __name__ == "__main__":
     run_simulation()
