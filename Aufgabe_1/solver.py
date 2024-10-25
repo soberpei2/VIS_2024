@@ -22,13 +22,8 @@ class SolverExplicit(Solver):
         # Euler Explizit 
         # z(k+1) = z(k) + h * f(t(k), z(k))
         
-        position = xk[0]  # Aktuelle Position
-        velocity = xk[1]  # Aktuelle Geschwindigkeit
-
         # Berechnung des nächsten Zustands
-        next_state = np.array([
-            position + dt * velocity,
-            velocity + dt * self.__model__.dydt(t)[1]  # Hier ist es wichtig, dass dydt mit dem richtigen t aufgerufen wird
-        ])
-        
-        return next_state
+        xk1 = xk[0] + dt * self.__model__.dydt(t)[0]  # Position wird aktualisiert
+        yk1 = xk[1] + dt * self.__model__.dydt(t)[1]  # Geschwindigkeit wird aktualisiert
+
+        return np.array([xk1, yk1])  # Rückgabe als NumPy-Array
