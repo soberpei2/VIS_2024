@@ -4,18 +4,41 @@ import numpy as np
 import model
 import solver
 import matplotlib.pyplot as plt
+import xlsxwriter
+
+
+def output_to_excel(time_array, position_array):
+    # Create a new workbook and add a worksheet
+    workbook = xlsxwriter.Workbook('simulation_results_xlsxwriter.xlsx')
+    worksheet = workbook.add_worksheet()
+
+    # Define headers
+    headers = ["Time", "Position"]
+
+    # Write the headers
+    for col_num, header in enumerate(headers):
+        worksheet.write(0, col_num, header)
+
+    # Write the NumPy arrays to the worksheet
+    for row_num in range(len(time_array)):
+        worksheet.write(row_num + 1, 0, time_array[row_num])      # Time
+        worksheet.write(row_num + 1, 1, position_array[row_num])  # Position
+
+    # Close the workbook (this saves the file)
+    workbook.close()
+
 
 def run_simulation():
     # Parameters
     m = 1.0      # mass (kg)
     k = 100.0     # stiffness (N/m)
-    d = 0.01      # damping coefficient D
+    d = 0.1      # damping coefficient D
 
     # initial conditions
     iniStates = np.array([1.0, 0.0])
 
     # Time parameters
-    t_final = 10.0
+    t_final = 3.0
     dt = 0.001
     num_steps = int(t_final / dt)
 
@@ -41,12 +64,15 @@ def run_simulation():
         mySolver.step(t, dt)
 
     # Plotting the result
-    plt.plot(times,positions)
-    plt.xlabel('Time in s')
-    plt.ylabel('Position in m')
-    plt.title('x(t)')
-    plt.grid(True)
+    plt.plot(times, positions)
+    plt.xlabel('Time (s)')
+    plt.ylabel('Position (m)')
+    plt.title('Single Mass Oscillator')
     plt.show()
+
+    # Output results to an Excel file
+    output_to_excel(times, positions)
+
 
 if __name__ == "__main__":
     run_simulation()
