@@ -15,17 +15,42 @@ class SolverExplicit(Solver):
         super().__init__(model2Solve)
 
     def step(self, t, dt):
-        """Perform one step of numerical integration."""
+        """Perform one step of euler explicit integration."""
        
         #aktueller Zustand
-        z = self.__model__.get_state()
+        zk = self.__model__.get_state()
 
         #Ableitung vom Modell berechnen
-        f = self.__model__.dydt(t)
+        deriv = self.__model__.dydt(t)
 
         #neuen Zustand berechnen
-        z1 = z + dt * f
+        zk1 = zk + dt * deriv
 
         #Zustand setzen
-        self.__model__.set_state(z1)
+        self.__model__.set_state(zk1)
         
+
+class SolverImplicit(Solver):
+    def __init__(self, model2Solve):
+        super().__init__(model2Solve)
+
+    def step(self, t, dt):
+        """Perform one step of euler implicit integration."""
+        current_state = self.__model__.get_state()
+
+        def implicit_function(new_state):
+            """Implicit update function."""
+            # Set the state in the model to new_state temporarily
+            self.__model__.set_state(new_state)
+            # Compute dydt at the new state and return the implicit function result
+            return new_state - (current_state + self.__model__.dydt(t + dt) * dt)
+
+        # Initial guess for the new state (using the current state)
+        new_state_guess = current_state.copy()
+
+        # Fixed-point iteration to solve for the new state
+        for _ in range(10):
+            new_state_guess = new_state_guess - 0.5 * implicit_function(new_state_guess)
+
+        # Set the final guessed state in the model
+        self.__model__.set_state(new_state_guess)
