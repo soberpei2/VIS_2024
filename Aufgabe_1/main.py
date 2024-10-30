@@ -14,11 +14,11 @@ def run_simulation():
     F = 1000.0          # force (N)
 
     # initial conditions
-    iniStates = np.array([0.0, 0.0])
+    iniStates = np.array([1.0, 0.0])
 
     # Time parameters
-    t_final = 10.0
-    dt = 0.001
+    t_final = 1.0
+    dt = 0.0001
     num_steps = int(t_final / dt)
 
     # Create a model (SingleMassOscillator)

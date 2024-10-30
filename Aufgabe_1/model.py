@@ -39,5 +39,4 @@ class SingleMassOscillator(Model):
         acceleration = 1 / self.__m__  * (self.__F__ - self.__k__ * position - self.__d__ * velocity)
         
         return np.array([velocity, acceleration]) 
-        #----------------------------------------------------------------------------
 
