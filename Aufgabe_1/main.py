@@ -70,6 +70,7 @@ def run_simulation():
     plt.xlabel('Time (s)')
     plt.ylabel('Position (m)')
     plt.title('Single Mass Oscillator')
+    plt.legend()
     plt.show()
 
     # Output results to an Excel file

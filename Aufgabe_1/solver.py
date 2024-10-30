@@ -28,6 +28,7 @@ class SolverExplicit(Solver):
 class SolverImplicit(Solver):
     def __init__(self, model2Solve):
         super().__init__(model2Solve)
+        # super ruft immer die Mutterklasse auf 
 
     def step(self, t, dt):
         """Perform one step of implicit integration (e.g., implicit Euler)."""
