@@ -1,14 +1,14 @@
 # main.py
 
-import numpy as np
-import model
+import numpy as np          #provides a multidimensional array object (n-dimensional array, denoted ndarray), as well as variations such as masks and matrices, which can be used for various mathematical operations on numerical datatypes
+import model                # import um Module in Programm zu laden. Ein Modul ist eine Datei, die Python-Code enthält, wie Funktionen, Klassen oder Variablen
 import solver
 
 def run_simulation():
     # Parameters
     m = 1.0      # mass (kg)
     k = 10.0     # stiffness (N/m)
-    d = 0.001      # damping coefficient
+    d = 0.001    # damping coefficient
 
     # initial conditions
     iniStates = np.array([0.0, 0.0])
@@ -38,6 +38,11 @@ def run_simulation():
         mySolver.step(t, model, dt)
 
     # Plotting the result
+
+
+
+
+
 
 if __name__ == "__main__":
     run_simulation()
