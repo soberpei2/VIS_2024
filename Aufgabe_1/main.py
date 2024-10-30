@@ -44,7 +44,7 @@ def run_simulation():                           # funtionen
         mySolver.step(t, dt)
 
     # Plotting the result
-    plt.plot(times, positions)
+    plt.plot(times, positions, label="explicit")
 
     # Create a model (SingleMassOscillator)
     myModel = model.SingleMassOscillator(iniStates, m, k, d)
@@ -66,11 +66,12 @@ def run_simulation():                           # funtionen
         mySolver.step(t, dt)
 
     # Plotting the result
-    plt.plot(times, positions)
+    
+    plt.plot(times, positions, label="implicit")
     plt.xlabel('Time (s)')
     plt.ylabel('Position (m)')
     plt.title('Single Mass Oscillator')
-    plt.legend('ei')
+    plt.legend()
     plt.show()
 
     # Output results to an Excel file
