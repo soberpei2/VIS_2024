@@ -15,13 +15,13 @@ def run_simulation():
     # Standard Parameters
     m = 1.0      # mass (kg)
     k = 100000.0     # stiffness (N/m)
-    d = 0.01      # damping coefficient
+    d = 0.0      # damping coefficient
 
     # initial conditions
     iniStates = np.array([1.0, 0.0])
 
     # Time parameters
-    t_final = 1.0
+    t_final = 0.1
     dt = 0.0001
     num_steps = int(t_final / dt)
 
@@ -32,8 +32,8 @@ def run_simulation():
     mySolver = solver.SolverExplicit(myModel)
 
     # Arrays to store time and position for plotting
-    times = np.linspace(0, t_final, num_steps)
-    positions = np.zeros_like(times)
+    times = np.linspace(0, t_final, num_steps)  # array from 0 to "t_final" with amount of steps as "num_steps" 
+    positions = np.zeros_like(times)        # array with same length as "times"
 
     # Simulation loop
     for step in range(num_steps):
@@ -71,6 +71,7 @@ def run_simulation():
     plt.xlabel('Time (s)')
     plt.ylabel('Position (m)')
     plt.title('Single Mass Oscillator')
+    plt.legend()
     plt.show()
 
     # Output results to an Excel file
