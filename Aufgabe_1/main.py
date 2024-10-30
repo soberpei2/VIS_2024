@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import xlsxwriter
 
 # Enable LaTeX in matplotlib
-plt.rcParams['text.usetex'] = True
+# plt.rcParams['text.usetex'] = True
 
 import model
 import solver
