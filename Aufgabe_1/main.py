@@ -7,7 +7,7 @@ import xlsxwriter
 # Enable LaTeX in matplotlib
 plt.rcParams['text.usetex'] = True
 
-import model
+import model #own import
 import solver 
 
 def run_simulation():
