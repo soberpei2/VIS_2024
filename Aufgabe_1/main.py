@@ -8,7 +8,7 @@ import xlsxwriter
 plt.rcParams['text.usetex'] = True
 
 import model
-import solver
+import solver 
 
 def run_simulation():
     # Parameters
