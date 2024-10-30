@@ -1,0 +1,4 @@
+# zum ausnehmen von Datein 
+# also datein welche nicht hochgeladen werden sollten 
+
+*.pyc
