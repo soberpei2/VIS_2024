@@ -23,6 +23,7 @@ def run_simulation():
     t_final = 1.0
     dt = 0.0001
     num_steps = int(t_final / dt)
+    step=0.
 
     # Create a model (SingleMassOscillator)
     myModel = model.SingleMassOscillator(iniStates, m, k, d)
@@ -41,7 +42,8 @@ def run_simulation():
         positions[step] = myModel.get_state()[0]
         
         # Take a time step
-        mySolver.step(t, dt)
+        mySolver.step(model, t, dt)
+        step=step+1
 
     # Plotting the result
     plt.plot(times, positions)
