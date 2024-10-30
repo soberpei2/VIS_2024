@@ -1,6 +1,12 @@
 # main.py
 
 import numpy as np
+import matplotlib.pyplot as plt
+import xlsxwriter
+
+# Enable LaTeX in matplotlib
+plt.rcParams['text.usetex'] = True
+
 import model
 import solver
 import matplotlib.pyplot as plt
@@ -36,6 +42,7 @@ def run_simulation():
 
     # initial conditions
     iniStates = np.array([1.0, 0.0])
+    iniStates = np.array([1.0, 0.0])
 
     # Time parameters
     t_final = 3.0
@@ -46,6 +53,7 @@ def run_simulation():
     myModel = model.SingleMassOscillator(iniStates, m, k, d)
 
     # Create a solver
+    mySolver = solver.SolverExplicit(myModel)
     mySolver = solver.SolverExplicit(myModel)
 
     # Arrays to store time and position for plotting
@@ -61,6 +69,7 @@ def run_simulation():
         velocities[step] = myModel.get_state()[1]
         
         # Take a time step
+        mySolver.step(t, dt)
         mySolver.step(t, dt)
 
     # Plotting the result

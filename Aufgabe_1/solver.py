@@ -15,27 +15,22 @@ class SolverExplicit(Solver):
         super().__init__(model2Solve)
 
     def step(self, t, dt):
-        """Perform one step of euler explicit integration."""
-       
-        #aktueller Zustand
-        zk = self.__model__.get_state()
-
-        #Ableitung vom Modell berechnen
-        deriv = self.__model__.dydt(t)
-
-        #neuen Zustand berechnen
-        zk1 = zk + dt * deriv
-
-        #Zustand setzen
-        self.__model__.set_state(zk1)
+        """Perform one step of numerical integration (e.g., explicit Euler)."""
+        current_state = self.__model__.get_state()
         
+        # Call the model's dydt method to get the derivatives of the state
+        derivatives = self.__model__.dydt(t)
+        
+        # Update the state using the Euler method
+        new_state = current_state + derivatives * dt
+        self.__model__.set_state(new_state)
 
 class SolverImplicit(Solver):
     def __init__(self, model2Solve):
         super().__init__(model2Solve)
 
     def step(self, t, dt):
-        """Perform one step of euler implicit integration."""
+        """Perform one step of implicit integration (e.g., implicit Euler)."""
         current_state = self.__model__.get_state()
 
         def implicit_function(new_state):
