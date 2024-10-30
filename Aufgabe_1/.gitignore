@@ -1,0 +1,4 @@
+*.exe
+# dateinen mit dateityp exe werden nicht auf github geladen
+# Ordner können mit /ORDNERNAME ausgenommen werden
+# Wichtig z.B.: wenn man Dateien die vom Programm beim Programmlauf erstellt werden ausnehmen möchte 
