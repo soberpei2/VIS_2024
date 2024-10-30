@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import xlsxwriter
 
 # Enable LaTeX in matplotlib
-plt.rcParams['text.usetex'] = True
+#plt.rcParams['text.usetex'] = True # Latex zur Visualisierung als Darstellung, da schöner
 
 import model
 import solver
@@ -17,22 +17,22 @@ def run_simulation():
     d = 0.01      # damping coefficient
 
     # initial conditions
-    iniStates = np.array([1.0, 0.0])
+    iniStates = np.array([1.0, 0.0]) # Syntax der numpy array
 
     # Time parameters
     t_final = 1.0
-    dt = 0.0001
+    dt = 0.00001
     num_steps = int(t_final / dt)
 
     # Create a model (SingleMassOscillator)
-    myModel = model.SingleMassOscillator(iniStates, m, k, d)
+    myModel = model.SingleMassOscillator(iniStates, m, k, d) 
 
     # Create a solver
-    mySolver = solver.SolverExplicit(myModel)
+    mySolver = solver.SolverExplicit(myModel) # den Solver den expliziten Solver übergeben
 
     # Arrays to store time and position for plotting
-    times = np.linspace(0, t_final, num_steps)
-    positions = np.zeros_like(times)
+    times = np.linspace(0, t_final, num_steps) # Vektor für die Zeiten
+    positions = np.zeros_like(times) # Vektor/Array für Positionen
 
     # Simulation loop
     for step in range(num_steps):
@@ -95,5 +95,5 @@ def output_to_excel(time_array, position_array):
     # Close the workbook (this saves the file)
     workbook.close()
 
-if __name__ == "__main__":
+if __name__ == "__main__": # nur dann ausgeführt, wenn es hier ausgeführt wird--> steuern wann dies ausgeführt wird
     run_simulation()
