@@ -1,31 +1,28 @@
 # main.py
 
-import numpy as np
-import matplotlib.pyplot as plt
-import xlsxwriter
+import numpy as np  #impotiert numpy und nennt es np
+import matplotlib.pyplot as plt #importiert matplotlib und nennt es plt
+import xlsxwriter 
 
-# Enable LaTeX in matplotlib
-plt.rcParams['text.usetex'] = True
-
-import model
+import model #
 import solver
 
-def run_simulation():
+def run_simulation(): 
     # Parameters
     m = 1.0      # mass (kg)
     k = 100000.0     # stiffness (N/m)
-    d = 0.01      # damping coefficient
+    d = 0.0      # damping coefficient
 
     # initial conditions
-    iniStates = np.array([1.0, 0.0])
+    iniStates = np.array([1.0, 0.0]) 
 
     # Time parameters
     t_final = 1.0
-    dt = 0.0001
+    dt = 0.00001
     num_steps = int(t_final / dt)
 
     # Create a model (SingleMassOscillator)
-    myModel = model.SingleMassOscillator(iniStates, m, k, d)
+    myModel = model.SingleMassOscillator(iniStates, m, k, d) 
 
     # Create a solver
     mySolver = solver.SolverExplicit(myModel)
@@ -95,5 +92,5 @@ def output_to_excel(time_array, position_array):
     # Close the workbook (this saves the file)
     workbook.close()
 
-if __name__ == "__main__":
+if __name__ == "__main__": #Steuern wann wird das als main code ausgeführt (sonst wird zb als modul nicht direkt ausgeführt)
     run_simulation()
