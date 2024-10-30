@@ -13,7 +13,7 @@ def run_simulation():
     d = 0.01       # damping coefficient
     F = 0          # Force 
     # initial conditions
-    iniStates = np.array([1, -2])
+    iniStates = np.array([1, 0])
 
     # Time parameters
     t_final = 10.0
@@ -55,10 +55,6 @@ def run_simulation():
 
     workingPath = os.getcwd()
     print("Aktuelles Arbeitsverzeichnis:", workingPath)
-    # Nach der Simulation, bevor du das Diagramm anzeigst
-    data = np.column_stack((times, positions, velocity))  # Kombiniere die Arrays zu einem 2D-Array  
-    file_path = os.path.join(workingPath, "simulation_data.csv")
-    np.savetxt(file_path, data, header="Time, Position, Velocity", delimiter=",")
-
+    
 if __name__ == "__main__":
     run_simulation()
