@@ -1,23 +1,23 @@
 # main.py
 
-import numpy as np
-import matplotlib.pyplot as plt
-import xlsxwriter
+import numpy as np                              # um numerisch zu rechnen, keine pflicht, aber dann kann ich nur np schreiben
+import matplotlib.pyplot as plt                 
+import xlsxwriter                               # schreibt ergaebnis in excel
 
 # Enable LaTeX in matplotlib
 #plt.rcParams['text.usetex'] = True
 
-import model
+import model                                    # pfad zu meinen datein
 import solver
 
-def run_simulation():
+def run_simulation():                           # funtionen
     # Parameters
     m = 1.0      # mass (kg)
     k = 100000.0     # stiffness (N/m)
     d = 0.01      # damping coefficient
 
     # initial conditions
-    iniStates = np.array([1.0, 0.0])
+    iniStates = np.array([1.0, 0.0])            # syntax von numpy array
 
     # Time parameters
     t_final = 1.0
@@ -95,5 +95,5 @@ def output_to_excel(time_array, position_array):
     # Close the workbook (this saves the file)
     workbook.close()
 
-if __name__ == "__main__":
+if __name__ == "__main__":                      # fuehre nur dann die main aus, wenn sie ueber die main ausgefuehrt wurde
     run_simulation()
