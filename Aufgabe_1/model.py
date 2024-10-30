@@ -18,7 +18,7 @@ class Model:
 class SingleMassOscillator(Model):
     def __init__(self, iniState, m, k, d):
         super().__init__(iniState)
-        self.__m__ = m  # Mass
+        self.__m__ = m  # Mass, __ because private
         self.__k__ = k  # Stiffness
         self.__d__ = 2*d*np.sqrt(self.__m__*self.__k__)  # Damping
 

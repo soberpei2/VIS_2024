@@ -11,8 +11,8 @@ class Solver:
         raise NotImplementedError("This method should be implemented by subclasses.")
 
 class SolverExplicit(Solver):
-    def __init__(self, model2Solve):
-        super().__init__(model2Solve)
+    def __init__(self, model2Solve): #__init__ ist der Konstruktor
+        super().__init__(model2Solve) #super() ruft Mutterklasse auf
 
     def step(self, t, dt):
         """Perform one step of numerical integration (e.g., explicit Euler)."""
