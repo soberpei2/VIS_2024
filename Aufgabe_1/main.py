@@ -1,7 +1,7 @@
 # main.py
 
 import numpy as np                              # um numerisch zu rechnen, keine pflicht, aber dann kann ich nur np schreiben
-import matplotlib.pyplot as plt                 
+import matplotlib.pyplot as plt                 # zum Plotten
 import xlsxwriter                               # schreibt ergaebnis in excel
 
 # Enable LaTeX in matplotlib
@@ -14,14 +14,14 @@ def run_simulation():                           # funtionen
     # Parameters
     m = 1.0      # mass (kg)
     k = 100000.0     # stiffness (N/m)
-    d = 0.01      # damping coefficient
+    d = 0.00      # damping coefficient
 
     # initial conditions
     iniStates = np.array([1.0, 0.0])            # syntax von numpy array
 
     # Time parameters
-    t_final = 1.0
-    dt = 0.0001
+    t_final = 0.2
+    dt = 0.00001
     num_steps = int(t_final / dt)
 
     # Create a model (SingleMassOscillator)
@@ -70,6 +70,7 @@ def run_simulation():                           # funtionen
     plt.xlabel('Time (s)')
     plt.ylabel('Position (m)')
     plt.title('Single Mass Oscillator')
+    plt.legend('ei')
     plt.show()
 
     # Output results to an Excel file

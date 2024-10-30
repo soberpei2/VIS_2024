@@ -8,7 +8,7 @@ class Solver:
 
     def step(self, t, dt):
         """Should be implemented in derived classes."""
-        raise NotImplementedError("This method should be implemented by subclasses.")
+        raise NotImplementedError("This method should be implemented by subclasses.")           # schutz vor error
 
 class SolverExplicit(Solver):
     def __init__(self, model2Solve):
@@ -22,7 +22,7 @@ class SolverExplicit(Solver):
         derivatives = self.__model__.dydt(t)
         
         # Update the state using the Euler method
-        new_state = current_state + derivatives * dt
+        new_state = current_state + derivatives * dt                    # set und get waere nicht notwendig
         self.__model__.set_state(new_state)
 
 class SolverImplicit(Solver):
@@ -49,3 +49,6 @@ class SolverImplicit(Solver):
 
         # Set the final guessed state in the model
         self.__model__.set_state(new_state_guess)
+
+
+        #init ist der constructor, die übergabe selft ist der gesamte inhalt der klasse, super ist hilfefunktion
