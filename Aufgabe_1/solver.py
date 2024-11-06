@@ -17,36 +17,37 @@ class SolverExplicit(Solver):
         super().__init__(model2Solve)
 
     def step(self, t, dt):
-        
-        """Perform one step of numerical integration using forward Euler"""
-        #----------------------------------------------------------------------------
-        #  | implementation here  |
-        # \ /                    \ /
-        #  v                      v
-        #----------------------------------------------------------------------------
+        """Perform one step of numerical integration (e.g., explicit Euler)."""
         current_state = self.__model__.get_state()
-        new_state = current_state + dt * self.__model__.dydt(t)
+        
+        # Call the model's dydt method to get the derivatives of the state
+        derivatives = self.__model__.dydt(t)
+        
+        # Update the state using the Euler method
+        new_state = current_state + derivatives * dt
         self.__model__.set_state(new_state)
 
 class SolverImplicit(Solver):
-    def __init__(self, model2Solve, tolerance=1e-6, max_iterations=100):
+    def __init__(self, model2Solve):
         super().__init__(model2Solve)
-        self.tolerance = tolerance
-        self.max_iterations = max_iterations
 
     def step(self, t, dt):
-        """Perform one step of implicit numerical integration using backward Euler."""
+        """Perform one step of implicit integration (e.g., implicit Euler)."""
         current_state = self.__model__.get_state()
-        new_state = current_state
 
-        for _ in range(self.max_iterations):
-            new_state_next = current_state + dt * self.__model__.dydt(t + dt)
-            
-            # Check for convergence
-            if np.linalg.norm(new_state_next - new_state) < self.tolerance:
-                new_state = new_state_next
-                break
-            
-            new_state = new_state_next
-        
-        self.__model__.set_state(new_state)
+        def implicit_function(new_state):
+            """Implicit update function."""
+            # Set the state in the model to new_state temporarily
+            self.__model__.set_state(new_state)
+            # Compute dydt at the new state and return the implicit function result
+            return new_state - (current_state + self.__model__.dydt(t + dt) * dt)
+
+        # Initial guess for the new state (using the current state)
+        new_state_guess = current_state.copy()
+
+        # Fixed-point iteration to solve for the new state
+        for _ in range(10):
+            new_state_guess = new_state_guess - 0.5 * implicit_function(new_state_guess)
+
+        # Set the final guessed state in the model
+        self.__model__.set_state(new_state_guess)
