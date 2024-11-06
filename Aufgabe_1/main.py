@@ -96,5 +96,6 @@ def output_to_excel(time_array, position_array):
     # Close the workbook (this saves the file)
     workbook.close()
 
+# sollte man immer so machen
 if __name__ == "__main__":
     run_simulation()
