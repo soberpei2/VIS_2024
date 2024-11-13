@@ -1,5 +1,6 @@
-# Import class mbsObject
+# Importieren benötigter Biblitheken
 import mbsObject
+import json
 
 # Open FreeDyne-file
 f = open("Aufgabe_2/test.fdd", "r")
@@ -55,6 +56,18 @@ for line in fileContent:
         currentTextBlock.clear()
         
     currentTextBlock.append(line)
+
+# Informationen in ein json-File schreien
+modelObjects = []
+for object in listOfMbsObjects:
+    modelObjects.append(object.parameter)
+jDataBase = json.dumps({"modelObjects": modelObjects})
+with open("Aufgabe_2/test.json", "w") as outfile:
+    outfile.write(jDataBase)
+
+# Einlesen eines json-Files
+f = open("Aufgabe_2/test.json", "r")
+data = json.load(f)
 
 # Schreiben des Inputfiles (open mit "w" aufrufen, um Schreibrechte zu haben)
 fds = open("Aufgabe_2/test.fdd", "w")
