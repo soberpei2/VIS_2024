@@ -1,4 +1,5 @@
 import mbsObject
+import json
 
 
 # Freedyn File öffnen
@@ -32,5 +33,26 @@ for line in fileContent:                    # für alle Zeilen (line ist Iterato
 
 #print('Number of rigid bodies = ',numOfRigidBodies)
 #print('Number of constraints = ',numOfConstraints)
+
+
+# Standard Möglichkeit, wie man ? daten/dictionarys speichern bzw lesen kann ?
+modelObjects= [] #leeres array
+for object in listOfMbsObjects:
+    modelObjects.append(object.parameter) # man holt sich alle Parameter
+jDataBase = json.dumps({"modelObjects": modelObjects})
+with open("inputfilereader/test.json","w") as outfile:
+    outfile.write(jDataBase)
+
+f = open("inputfilereader/test.json","r")
+data = json.load(f)
+f.close()
+
+
+
+fds = open("inputfilereader/test.fds","w")  # w = write
+for mbsObject_i in listOfMbsObjects:
+    mbsObject_i.writeInputFile(fds)
+fds.close()
+
 
 print(len(listOfMbsObjects))
