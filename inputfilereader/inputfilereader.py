@@ -17,7 +17,7 @@ for line in fileContent:
                 listOfMbsObjects.append(mbsObject.mbsObject("body",currentTextBlock))
             currentBlockType = ""
 
-    for type_i in search4Objects: 
+    for type_i in search4Objects: #sucht nach Objekten und speichert diese
         if(line.find(type_i,1,len(type_i)+1) >= 0):
             currentBlockType = type_i
             currentTextBlock.clear()
