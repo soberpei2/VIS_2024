@@ -1,8 +1,8 @@
 
 class mbsObject:
     def __init__(self,type,subtype,text,parameter):
-        self.__type__ = type
-        self.__subtype__ = subtype
+        self.__type = type
+        self.__subtype = subtype
         self.parameter = parameter
 
         for line in text:
