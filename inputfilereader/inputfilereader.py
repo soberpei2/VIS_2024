@@ -1,14 +1,10 @@
 
-
 import mbsObject
-
 
 f = open("inputfilereader/test.fdd","r")
 
 fileContent = f.read().splitlines()
 f.close()
-
-
 
 currentBlockType = ""
 currentTextBlock = []
