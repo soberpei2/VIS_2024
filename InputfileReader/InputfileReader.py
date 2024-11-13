@@ -14,7 +14,7 @@ for line in fileContent:                #für alle Zeilen
     if(line.find("$")>=0):              #neuer Block gefunden
         if(currentBlockType != ""):
             if(currentBlockType == "RIGID_BODY"):
-                listofmbsObjects.append(mbsObject.mbsObject("body",currentTextBlock))
+                listofmbsObjects.append(mbsObject.rigidBody(currentTextBlock))
             currentBlockType = ""
             
     for type_i in search4Objects:
