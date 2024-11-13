@@ -25,4 +25,4 @@ for line in fileContent:                #für alle Zeilen
 
     currentTextBlock.append(line)
 
-print("List of mbsObjects = ",listofmbsObjects)
+print("List of mbsObjects = ",len(listofmbsObjects))
