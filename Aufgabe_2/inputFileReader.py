@@ -62,15 +62,15 @@ modelObjects = []
 for object in listOfMbsObjects:
     modelObjects.append(object.parameter)
 jDataBase = json.dumps({"modelObjects": modelObjects})
-with open("Aufgabe_2/test.json", "w") as outfile:
+with open("Aufgabe_2/Ausgabe.json", "w") as outfile:
     outfile.write(jDataBase)
 
 # Einlesen eines json-Files
-f = open("Aufgabe_2/test.json", "r")
+f = open("Aufgabe_2/Ausgabe.json", "r")
 data = json.load(f)
 
 # Schreiben des Inputfiles (open mit "w" aufrufen, um Schreibrechte zu haben)
-fds = open("Aufgabe_2/test.fdd", "w")
+fds = open("Aufgabe_2/Ausgabe.fds", "w")
 for mbsObject_i in listOfMbsObjects:
     mbsObject_i.writeInputfile(fds)
 fds.close()
