@@ -1,4 +1,5 @@
 import mbsObject
+import json
 
 f = open("InputfileReader/test.fdd","r")
 
@@ -24,5 +25,22 @@ for line in fileContent:                #für alle Zeilen
             break
 
     currentTextBlock.append(line)
+
+modelObjects = []
+for object in listofmbsObjects:
+    modelObjects.append(object.parameter)
+jDataBase = json.dumps({"modelObjects": modelObjects})
+with open("inputfilereader/test.json","w") as outfile:
+    outfile.write(jDataBase)
+
+f = open("inputfilereader/test.json","r")
+data = json.load(f)
+
+fds = open("InputfileReader/test.fdd","r")
+for mbsObject_i in listofmbsObjects:
+    mbsObject_i.writeInputfile(fds)
+fds.close()    
+
+
 
 print("List of mbsObjects = ",len(listofmbsObjects))
