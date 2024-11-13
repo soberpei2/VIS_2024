@@ -32,7 +32,7 @@ for line in fileContent:
         if(currentBlockType != ""):
             # Count number of rigid bodies
             if(currentBlockType == "RIGID_BODY"):
-                listOfMbsObjects.append(mbsObject.mbsObject("body", currentTextBlock))
+                listOfMbsObjects.append(mbsObject.rigidBody(currentTextBlock))
 
             # Count number of constraints
             #elif(currentBlockType == "CONSTRAINT"):
@@ -55,5 +55,11 @@ for line in fileContent:
         currentTextBlock.clear()
         
     currentTextBlock.append(line)
+
+# Schreiben des Inputfiles (open mit "w" aufrufen, um Schreibrechte zu haben)
+fds = open("Aufgabe_2/test.fdd", "w")
+for mbsObject_i in listOfMbsObjects:
+    mbsObject_i.writeInputfile(fds)
+fds.close()
 
 print(len(listOfMbsObjects))
