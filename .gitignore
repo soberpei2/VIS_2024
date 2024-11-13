@@ -1,4 +1,5 @@
 #ignore all .pyc files
 *.pyc
+/__pycache__
 *.fdd
 *.xlsx
