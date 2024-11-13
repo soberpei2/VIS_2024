@@ -1,0 +1,10 @@
+Body RIGID_EulerParamter_PAI
+	mass = 0.001
+	COG = 0.0,0.0,0.0
+EndBody
+%
+Body RIGID_EulerParamter_PAI
+	mass = 0.001
+	COG = 0.0,0.0,0.0
+EndBody
+%
