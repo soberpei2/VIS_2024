@@ -2,16 +2,17 @@ import mbsObject
 import json
 
 
-def parseText2blocksOfMbsObjects(fileContent,search4Objects):
+def parseText2blocksOfMbsObjects(fileContent,keySign,search4Objects):
     currentBlockType = ""
     currentTextBlock = []
     listOfMbsObjects = []
 
     for line in fileContent:
-        if(line.find("$") >= 0):
-            if(currentBlockType != ""):
-                if(currentBlockType == "RIGID_BODY"):
-                    listOfMbsObjects.append(mbsObject.rigidBody(currentTextBlock))
+        if(line.find(keySign) >= 0):
+            if(currentBlockType != ""):   
+                for obj in search4Objects:             
+                    if(currentBlockType == obj):
+                        listOfMbsObjects.append(mbsObject.mbsObjectFactory(obj,currentTextBlock))
                 currentBlockType = ""
         
         for type_i in search4Objects:
