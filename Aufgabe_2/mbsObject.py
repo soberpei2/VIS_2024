@@ -19,7 +19,7 @@ class mbsObject:
                         parameter[key]["value"] = self.str2vectorInt(splitted[1])
                     elif (parameter[key]["type"] == "string"):
                         parameter[key]["value"] = self.str2str(splitted[1].strip())
-                    elif (parameter[key]["type"] == "boolean"):
+                    elif (parameter[key]["type"] == "bool"):
                         parameter[key]["value"] = self.str2bool(splitted[1])
 
     def writeInputFile(self,file):
@@ -74,7 +74,7 @@ class rigidBody(mbsObject):
             "transparency": {"type": "int", "value": 0},
             "initial velocity": {"type": "vector", "value": [0.,0.,0.]},
             "initial omega": {"type": "vector", "value": [0.,0.,0.]},
-            "consider vel inertia forces": {"type": "boolean", "value": 0},
+            "consider vel inertia forces": {"type": "bool", "value": 0},
             "mass": {"type": "float", "value": 0.},
             "COG": {"type": "vector", "value": [0.,0.,0.]},
             "inertia": {"type": "vector", "value": [0.,0.,0.]},
@@ -105,11 +105,28 @@ class constraint(mbsObject):
 
         mbsObject.__init__(self,"Constraint","Generic",text,parameter)
 
+class force(mbsObject):
+    def __init__(self, text):
+        parameter = {
+            "name": {"type": "string", "value": "testName"},
+            "body1": {"type": "string", "value": "testBody1"},
+            "body2": {"type": "string", "value": "testBody2"},
+            "PointOfApplication_Body1": {"type": "vector", "value": [0.,0.,0.]},
+            "PointOfApplication_Body2": {"type": "vector", "value": [0.,0.,0.]},
+            "mode": {"type": "string", "value": "testMode"},
+            "direction": {"type": "vector", "value": [0.,0.,0.]},
+            "ForceExpression": {"type": "string", "value": "testForceExpression"}
+
+        }
+
+        mbsObject.__init__(self,"Force","Generic",text,parameter)
+
 
 def mbsObjectFactory(object,textblock):
     mbsObjectList = {
         "RIGID_BODY": rigidBody,
         "CONSTRAINT": constraint,
+        "FORCE_GenericForce": force,
     }
 
     return mbsObjectList[object](textblock)
