@@ -1,0 +1,645 @@
+$RIGID_BODY:
+name: upright_front_left
+geometry: C:\Fallstudien\05_Radaufhaengung\01_geometry\upright_front_left.stl
+position: 0.000000, 0.000000, 0.000000
+x_axis: 1.00000000, 0.00000000, 0.00000000
+y_axis: 0.00000000, 1.00000000, 0.00000000
+z_axis:0.00000000, -0.00000000, 1.00000000
+color: 186 214 0   255
+transparency: 0
+initial velocity: 0.000000, 0.000000, 0.000000
+initial omega: 0.000000, 0.000000, 0.000000
+consider vel inertia forces: 1
+mass: 0.004427
+COG: -31.071993, -806.093239, 321.692603
+inertia: 14.889189, 30.601244, 35.198092
+i1_axis: 0.86552569, 0.37147092, 0.33596821
+i2_axis: 0.44859149, -0.27657493, -0.84986586
+i3_axis: -0.22278007, 0.88629322, -0.40602140
+
+$RIGID_BODY:
+name: upper_control_arm
+geometry: C:\Fallstudien\05_Radaufhaengung\01_geometry\upper_control_arm.stl
+position: 0.000000, 0.000000, 0.000000
+x_axis: 1.00000000, 0.00000000, 0.00000000
+y_axis: 0.00000000, 1.00000000, 0.00000000
+z_axis:0.00000000, -0.00000000, 1.00000000
+color: 29 137 221   255
+transparency: 0
+initial velocity: 0.000000, 0.000000, 0.000000
+initial omega: 0.000000, 0.000000, 0.000000
+consider vel inertia forces: 1
+mass: 0.001073
+COG: -0.056424, -510.590333, 444.687861
+inertia: 16.374123, 26.589284, 42.832513
+i1_axis: -0.50959198, 0.85959112, -0.03767115
+i2_axis: -0.85760085, -0.50389859, 0.10299025
+i3_axis: 0.06954707, 0.08478982, 0.99396876
+
+$RIGID_BODY:
+name: tie_rod
+geometry: C:\Fallstudien\05_Radaufhaengung\01_geometry\tie_rod.stl
+position: 0.000000, 0.000000, 0.000000
+x_axis: 1.00000000, 0.00000000, 0.00000000
+y_axis: 0.00000000, 1.00000000, 0.00000000
+z_axis:0.00000000, -0.00000000, 1.00000000
+color: 255 0 0   255
+transparency: 0
+initial velocity: 0.000000, 0.000000, 0.000000
+initial omega: 0.000000, 0.000000, 0.000000
+consider vel inertia forces: 0
+mass: 0.000403
+COG: 125.000000, -487.500000, 392.500000
+inertia: 0.484714, 5.541302, 5.541302
+i1_axis: 0.02529013, 0.99896012, -0.03793519
+i2_axis: 0.83205027, 0.00000000, 0.55470024
+i3_axis: 0.55412342, -0.04559243, -0.83118504
+
+$RIGID_BODY:
+name: bell_crank_front
+geometry: C:\Fallstudien\05_Radaufhaengung\01_geometry\rocker.stl
+position: 0.000000, 0.000000, 0.000000
+x_axis: 1.00000000, 0.00000000, 0.00000000
+y_axis: 0.00000000, 1.00000000, 0.00000000
+z_axis:0.00000000, -0.00000000, 1.00000000
+color: 186 214 0   255
+transparency: 42
+initial velocity: 0.000000, 0.000000, 0.000000
+initial omega: 0.000000, 0.000000, 0.000000
+consider vel inertia forces: 1
+mass: 0.001099
+COG: 63.309578, -214.633067, 572.087093
+inertia: 2.149593, 3.699927, 5.563100
+i1_axis: 0.49884759, 0.57452104, 0.64890420
+i2_axis: -0.81208354, 0.57140630, 0.11838569
+i3_axis: -0.30277288, -0.58602083, 0.75160373
+
+$RIGID_BODY:
+name: pushrod_front
+geometry: C:\Fallstudien\05_Radaufhaengung\01_geometry\pushrod.stl
+position: 0.000000, 0.000000, 0.000000
+x_axis: 1.00000000, 0.00000000, 0.00000000
+y_axis: 0.00000000, 1.00000000, 0.00000000
+z_axis:0.00000000, -0.00000000, 1.00000000
+color: 232 0 0   255
+transparency: 0
+initial velocity: 0.000000, 0.000000, 0.000000
+initial omega: 0.000000, 0.000000, 0.000000
+consider vel inertia forces: 1
+mass: 0.000673
+COG: -37.045097, -471.229723, 371.882163
+inertia: 0.829131, 17.674523, 17.679843
+i1_axis: 0.07689280, 0.84995429, 0.52121512
+i2_axis: -0.62510273, 0.44835639, -0.63892341
+i3_axis: -0.77674582, -0.27668438, 0.56578413
+
+$RIGID_BODY:
+name: Dlca_front
+geometry: Sphere 1.000000
+position: -243.342406, -234.067390, 210.302100
+x_axis: 1.00000000, 0.00000000, 0.00000000
+y_axis: 0.00000000, 1.00000000, 0.00000000
+z_axis:0.00000000, -0.00000000, 1.00000000
+color: 200 200 200   200
+transparency: 50
+initial velocity: 0.000000, 0.000000, 0.000000
+initial omega: 0.000000, 0.000000, 0.000000
+consider vel inertia forces: 0
+mass: 0.000000
+COG: -243.342406, -234.067390, 210.302100
+inertia: 0.000000, 0.000000, 0.000000
+i1_axis: 1.00000000, 0.00000000, 0.00000000
+i2_axis: 0.00000000, 1.00000000, 0.00000000
+i3_axis: 0.00000000, -0.00000000, 1.00000000
+
+$RIGID_BODY:
+name: Dlca_rear
+geometry: Sphere 1.000000
+position: 200.000001, -240.000404, 230.000050
+x_axis: 1.00000000, 0.00000000, 0.00000000
+y_axis: 0.00000000, 1.00000000, 0.00000000
+z_axis:0.00000000, -0.00000000, 1.00000000
+color: 200 200 200   200
+transparency: 50
+initial velocity: 0.000000, 0.000000, 0.000000
+initial omega: 0.000000, 0.000000, 0.000000
+consider vel inertia forces: 0
+mass: 0.000000
+COG: 200.000001, -240.000404, 230.000050
+inertia: 0.000000, 0.000000, 0.000000
+i1_axis: 1.00000000, 0.00000000, 0.00000000
+i2_axis: 0.00000000, 1.00000000, 0.00000000
+i3_axis: 0.00000000, -0.00000000, 1.00000000
+
+$RIGID_BODY:
+name: Dlca_upright
+geometry: Sphere 1.000000
+position: -13.004502, -774.978004, 219.400470
+x_axis: 1.00000000, 0.00000000, 0.00000000
+y_axis: 0.00000000, 1.00000000, 0.00000000
+z_axis:0.00000000, -0.00000000, 1.00000000
+color: 200 200 200   200
+transparency: 50
+initial velocity: 0.000000, 0.000000, 0.000000
+initial omega: 0.000000, 0.000000, 0.000000
+consider vel inertia forces: 0
+mass: 0.000000
+COG: -13.004502, -774.978004, 219.400470
+inertia: 0.000000, 0.000000, 0.000000
+i1_axis: 1.00000000, 0.00000000, 0.00000000
+i2_axis: 0.00000000, 1.00000000, 0.00000000
+i3_axis: 0.00000000, -0.00000000, 1.00000000
+
+$RIGID_BODY:
+name: Dlca_pushrod
+geometry: Sphere 1.000000
+position: -54.999999, -670.000008, 249.999999
+x_axis: 1.00000000, 0.00000000, 0.00000000
+y_axis: 0.00000000, 1.00000000, 0.00000000
+z_axis:0.00000000, -0.00000000, 1.00000000
+color: 200 200 200   200
+transparency: 50
+initial velocity: 0.000000, 0.000000, 0.000000
+initial omega: 0.000000, 0.000000, 0.000000
+consider vel inertia forces: 0
+mass: 0.000000
+COG: -54.999999, -670.000008, 249.999999
+inertia: 0.000000, 0.000000, 0.000000
+i1_axis: 1.00000000, 0.00000000, 0.00000000
+i2_axis: 0.00000000, 1.00000000, 0.00000000
+i3_axis: 0.00000000, -0.00000000, 1.00000000
+
+$RIGID_BODY:
+name: susp_strut_bottom
+geometry: C:\Fallstudien\05_Radaufhaengung\01_geometry\suspension_strut_bottom.stl
+position: 0.000000, 0.000000, 0.000000
+x_axis: 1.00000000, 0.00000000, 0.00000000
+y_axis: 0.00000000, 1.00000000, 0.00000000
+z_axis:0.00000000, -0.00000000, 1.00000000
+color: 244 129 0   255
+transparency: 0
+initial velocity: 0.000000, 0.000000, 0.000000
+initial omega: 0.000000, 0.000000, 0.000000
+consider vel inertia forces: 0
+mass: 0.001000
+COG: 0.000000, 0.000000, 0.000000
+inertia: 0.001000, 0.001000, 0.001000
+i1_axis: 1.00000000, 0.00000000, 0.00000000
+i2_axis: 0.00000000, 1.00000000, 0.00000000
+i3_axis: 0.00000000, -0.00000000, 1.00000000
+
+$RIGID_BODY:
+name: susp_strut_top
+geometry: C:\Fallstudien\05_Radaufhaengung\01_geometry\suspenstion_strut_top.stl
+position: 0.000000, 0.000000, 0.000000
+x_axis: 1.00000000, 0.00000000, 0.00000000
+y_axis: 0.00000000, 1.00000000, 0.00000000
+z_axis:0.00000000, -0.00000000, 1.00000000
+color: 166 166 166   255
+transparency: 0
+initial velocity: 0.000000, 0.000000, 0.000000
+initial omega: 0.000000, 0.000000, 0.000000
+consider vel inertia forces: 0
+mass: 0.001000
+COG: 0.000000, 0.000000, 0.000000
+inertia: 0.001000, 0.001000, 0.001000
+i1_axis: 1.00000000, 0.00000000, 0.00000000
+i2_axis: 0.00000000, 1.00000000, 0.00000000
+i3_axis: 0.00000000, -0.00000000, 1.00000000
+
+$RIGID_BODY:
+name: chassis
+geometry: Box 1.000000 1.000000 1.000000
+position: 0.000000, 0.000000, 0.000000
+x_axis: 1.00000000, 0.00000000, 0.00000000
+y_axis: 0.00000000, 1.00000000, 0.00000000
+z_axis:0.00000000, -0.00000000, 1.00000000
+color: 200 200 200   200
+transparency: 50
+initial velocity: 0.000000, 0.000000, 0.000000
+initial omega: 0.000000, 0.000000, 0.000000
+consider vel inertia forces: 0
+mass: 0.001000
+COG: 0.000000, 0.000000, 0.000000
+inertia: 0.001000, 0.001000, 0.001000
+i1_axis: 1.00000000, 0.00000000, 0.00000000
+i2_axis: 0.00000000, 1.00000000, 0.00000000
+i3_axis: 0.00000000, -0.00000000, 1.00000000
+
+$FLEX_BODY:
+name: lca
+mesh: C:\Fallstudien\05_Radaufhaengung\02_flex\lca_final.fem
+position: -21.617400, -507.361000, 222.037000
+x_axis: 1.00000000, 0.00000000, 0.00000000
+y_axis: 0.00000000, 1.00000000, 0.00000000
+z_axis: 0.00000000, -0.00000000, 1.00000000
+color: 29 137 221   255
+transparency: 11
+show as wireframe: 0
+use fast formulation: 0
+use quadratic terms: 0
+cms_modes: 44
+selected_modes: 30 - 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36
+int_nodes: 4
+2000001 123456
+2000002 123456
+2000003 123456
+2000004 123456
+max deformation [mm]: 0.100000
+deformation_scale: 10.000000
+modal_damping: 0.050000
+
+$CONSTRAINT:
+name: lever_mount
+body1: bell_crank_front
+body2: GROUND
+dx: 1
+dy: 1
+dz: 1
+ax: 1
+ay: 1
+az: 0
+position: 116.628000, -251.249000, 565.991000
+x_axis: 0.49884797, 0.57452097, 0.64890397
+y_axis: -0.81208380, 0.57140586, 0.11838597
+z_axis: -0.30277231, -0.58602100, 0.75160383
+
+$CONSTRAINT:
+name: pushrod_top_mount
+body1: bell_crank_front
+body2: pushrod_front
+dx: 1
+dy: 1
+dz: 1
+ax: 0
+ay: 0
+az: 0
+position: -30.245000, -259.686000, 498.878000
+x_axis: 0.49884797, 0.57452097, 0.64890397
+y_axis: -0.81208380, 0.57140586, 0.11838597
+z_axis: -0.30277231, -0.58602100, 0.75160383
+
+$CONSTRAINT:
+name: tierod_frame
+body1: tie_rod
+body2: GROUND
+dx: 1
+dy: 1
+dz: 1
+ax: 0
+ay: 1
+az: 0
+position: 130.000000, -290.000000, 385.000000
+x_axis: 1.00000000, 0.00000000, 0.00000000
+y_axis: 0.00000000, 1.00000000, 0.00000000
+z_axis: 0.00000000, -0.00000000, 1.00000000
+
+$CONSTRAINT:
+name: tierod_upright
+body1: tie_rod
+body2: upright_front_left
+dx: 1
+dy: 1
+dz: 1
+ax: 0
+ay: 0
+az: 0
+position: 120.000000, -685.000000, 400.000000
+x_axis: 1.00000000, 0.00000000, 0.00000000
+y_axis: 0.00000000, 1.00000000, 0.00000000
+z_axis: 0.00000000, -0.00000000, 1.00000000
+
+$CONSTRAINT:
+name: uca_upright
+body1: upper_control_arm
+body2: upright_front_left
+dx: 1
+dy: 1
+dz: 1
+ax: 0
+ay: 0
+az: 0
+position: 22.000000, -720.000000, 460.000000
+x_axis: 1.00000000, 0.00000000, 0.00000000
+y_axis: 0.00000000, 1.00000000, 0.00000000
+z_axis: 0.00000000, -0.00000000, 1.00000000
+
+$CONSTRAINT:
+name: uca_front
+body1: upper_control_arm
+body2: GROUND
+dx: 1
+dy: 1
+dz: 1
+ax: 0
+ay: 1
+az: 1
+position: -239.649000, -240.138000, 438.544000
+x_axis: 0.99106997, -0.11829000, -0.06154500
+y_axis: 0.11806300, 0.99297904, -0.00733200
+z_axis: 0.06198020, 0.00000034, 0.99807738
+
+$CONSTRAINT:
+name: lca_front
+body1: Dlca_front
+body2: GROUND
+dx: 1
+dy: 1
+dz: 1
+ax: 0
+ay: 0
+az: 0
+position: -243.342406, -234.067390, 210.302100
+x_axis: 0.99892514, -0.01336800, 0.04438301
+y_axis: 0.01335500, 0.99991064, 0.00059300
+z_axis: -0.04438697, 0.00000037, 0.99901441
+
+$CONSTRAINT:
+name: lca_upright
+body1: Dlca_upright
+body2: upright_front_left
+dx: 1
+dy: 1
+dz: 1
+ax: 0
+ay: 0
+az: 0
+position: -13.004502, -774.978004, 219.400470
+x_axis: 1.00000000, 0.00000000, 0.00000000
+y_axis: 0.00000000, 1.00000000, 0.00000000
+z_axis: 0.00000000, -0.00000000, 1.00000000
+
+$CONSTRAINT:
+name: lca_pushrod
+body1: pushrod_front
+body2: Dlca_pushrod
+dx: 1
+dy: 1
+dz: 1
+ax: 0
+ay: 1
+az: 0
+position: -54.999999, -670.000008, 249.999999
+x_axis: 1.00000000, 0.00000000, 0.00000000
+y_axis: 0.05558402, 0.85120036, 0.52188922
+z_axis: 0.00000000, -0.52188922, 0.85120036
+
+$CONSTRAINT:
+name: Dlca_front
+body1: Dlca_front
+body2: lca
+dx: 1
+dy: 1
+dz: 1
+ax: 1
+ay: 1
+az: 1
+position: -243.490401, -233.587990, 210.289000
+int_node: 2000001
+x_axis: 1.00000000, 0.00000000, 0.00000000
+y_axis: 0.00000000, 1.00000000, 0.00000000
+z_axis: 0.00000000, -0.00000000, 1.00000000
+
+$CONSTRAINT:
+name: Dlca_rear
+body1: Dlca_rear
+body2: lca
+dx: 1
+dy: 1
+dz: 1
+ax: 1
+ay: 1
+az: 1
+position: 200.000001, -240.000404, 230.000050
+int_node: 2000002
+x_axis: 1.00000000, 0.00000000, 0.00000000
+y_axis: 0.00000000, 1.00000000, 0.00000000
+z_axis: 0.00000000, -0.00000000, 1.00000000
+
+$CONSTRAINT:
+name: Dlca_upright
+body1: Dlca_upright
+body2: lca
+dx: 1
+dy: 1
+dz: 1
+ax: 1
+ay: 1
+az: 1
+position: -13.004502, -774.978004, 219.400470
+int_node: 2000003
+x_axis: 1.00000000, 0.00000000, 0.00000000
+y_axis: 0.00000000, 1.00000000, 0.00000000
+z_axis: 0.00000000, -0.00000000, 1.00000000
+
+$CONSTRAINT:
+name: Dlca_pushrod
+body1: Dlca_pushrod
+body2: lca
+dx: 1
+dy: 1
+dz: 1
+ax: 1
+ay: 1
+az: 1
+position: -54.999999, -670.000008, 249.999999
+int_node: 2000004
+x_axis: 1.00000000, 0.00000000, 0.00000000
+y_axis: 0.00000000, 1.00000000, 0.00000000
+z_axis: 0.00000000, -0.00000000, 1.00000000
+
+$CONSTRAINT:
+name: lca_rear
+body1: Dlca_rear
+body2: GROUND
+dx: 1
+dy: 1
+dz: 1
+ax: 0
+ay: 0
+az: 0
+position: 200.000001, -240.000404, 230.000050
+x_axis: 0.99892514, -0.01336800, 0.04438301
+y_axis: 0.01335500, 0.99991064, 0.00059300
+z_axis: -0.04438697, 0.00000037, 0.99901441
+
+$CONSTRAINT:
+name: lever_2_strut
+body1: bell_crank_front
+body2: susp_strut_bottom
+dx: 1
+dy: 1
+dz: 1
+ax: 1
+ay: 0
+az: 0
+position: 103.479000, -162.496000, 629.631000
+x_axis: 0.93782215, -0.31799405, 0.13917402
+y_axis: -0.30277199, -0.58602098, 0.75160397
+z_axis: -0.15744669, -0.74700885, -0.64586314
+
+$CONSTRAINT:
+name: strut_2_body
+body1: susp_strut_top
+body2: GROUND
+dx: 1
+dy: 1
+dz: 1
+ax: 1
+ay: 0
+az: 0
+position: 442.033000, -277.292000, 679.873000
+x_axis: 0.93782215, -0.31799405, 0.13917402
+y_axis: -0.30277199, -0.58602098, 0.75160397
+z_axis: -0.15744669, -0.74700885, -0.64586314
+
+$CONSTRAINT:
+name: piston_2_cylinder_susp_strut
+body1: susp_strut_bottom
+body2: susp_strut_top
+dx: 0
+dy: 1
+dz: 1
+ax: 0
+ay: 1
+az: 1
+position: 272.756000, -219.894000, 654.752000
+x_axis: 0.93782215, -0.31799405, 0.13917402
+y_axis: 0.30935249, 0.58380662, -0.75064697
+z_axis: 0.15745055, 0.74702718, 0.64587903
+
+$CONSTRAINT:
+name: new_constraint_17
+body1: chassis
+body2: GROUND
+dx: 1
+dy: 1
+dz: 1
+ax: 1
+ay: 1
+az: 1
+position: 0.000000, 0.000000, 0.000000
+x_axis: 1.00000000, 0.00000000, 0.00000000
+y_axis: 0.00000000, 1.00000000, 0.00000000
+z_axis: 0.00000000, -0.00000000, 1.00000000
+
+$GEAR:
+name: new_gear_0
+body1: upright_front_left
+body2: upper_control_arm
+positionBody1: 0.000000, 0.000000, 0.000000
+positionBody2: 0.000000, 0.000000, 0.000000
+RotVectorBody1: 0.000000, 0.000000, 1.000000
+RotVectorBody2: 0.000000, 0.000000, 1.000000
+GearRatio: 1.000000, 1.000000
+
+$MOTION:
+name: new_motion_0
+body1: upright_front_left
+body2: upper_control_arm
+PointOfApplication_Body1: 0.000000, 0.000000, 0.000000
+PointOfApplication_Body2: 0.000000, 0.000000, 0.000000
+measure: damperVelocity
+MotionExpression: 0
+ActivationPeriod: 0.000000
+
+$FORCE_GenericForce:
+name: springDamper
+body1: susp_strut_top
+body2: susp_strut_bottom
+PointOfApplication_Body1: 442.033000, -277.292000, 679.873000
+PointOfApplication_Body2: 103.479000, -162.496000, 629.631000
+mode: In-line-of-sight
+direction: -0.937822, 0.317994, -0.139174
+ForceExpression: PARVAL[springStiffness]*(MEAVAL[springDisplacement])*(1+0.0002*(MEAVAL[springDisplacement])*(MEAVAL[springDisplacement]))+PARVAL[dampingCoefficient]*MEAVAL[damperVelocity]
+
+$FORCE_GenericForce:
+name: radlast
+body1: upright_front_left
+body2: GROUND
+PointOfApplication_Body1: -31.071993, -806.093239, 321.692603
+PointOfApplication_Body2: 0.000000, 0.000000, 0.000000
+mode: SpaceFixed
+direction: 0.000000, 0.000000, 1.000000
+ForceExpression: AKISPL[SIMTIME[],radLastSpline]
+
+$FORCE_GenericTorque:
+name: new_torque_0
+body1: upright_front_left
+body2: upper_control_arm
+mode: SpaceFixed
+direction: 0.000000, 0.000000, 1.000000
+TorqueExpression: 0
+
+$DATAOBJECT_SPLINE_1D:
+name: radLastSpline
+PathToSplineData: C:\Fallstudien\05_Radaufhaengung\Radlast.txt
+NumberOfHeaderLines: 0
+ColumnXData: 1
+ColumnYData: 2
+
+$DATAOBJECT_PARAMETER:
+name: springStiffness
+InitialValue: 96.000000
+
+$DATAOBJECT_PARAMETER:
+name: dampingCoefficient
+InitialValue: 2.000000
+
+$MEASURE:
+name: springDisplacement
+body1: susp_strut_top
+body2: susp_strut_bottom
+type: TRANS_displacement
+component: 4
+location_body1: 442.033000, -277.292000, 679.873000
+location_body2: 103.479000, -162.496000, 629.631000
+use_initial_value: 1
+
+$MEASURE:
+name: damperVelocity
+body1: susp_strut_top
+body2: susp_strut_bottom
+type: TRANS_velocity
+component: 4
+location_body1: 442.033000, -277.292000, 679.873000
+location_body2: 103.479000, -162.496000, 629.631000
+use_initial_value: 1
+
+$SOLVER:
+SimulationTimeBegin: 0.000000
+SimulationTimeEnd: 4.000000
+OutputTimeBegin: 0.000000
+OutputTimeStepSize: 1.000000e-02
+SimulationMinTimeStep: 1.000000e-14
+SimulationMaxTimeStep: 1.000000e-02
+isExactOutputTimeEnforced: 1
+WriteConstraintForceResultFile: 0
+WriteForceResultFile: 0
+WriteStateResultFile: 1
+WriteVelocityResultFile: 0
+WriteAccelerationResultFile: 0
+WriteExtConstraintLagrangeResultFile: 0
+WriteMeasureResultFile: 1
+DebugLevel: 0
+DebugTimeBegin: 0.000000
+DebugTimeEnd: 4.000000
+useSimTimeInterval: 1
+IsInitialPositionFromFileUsed:  0
+IsInitialVelocityFromFileUsed:  0
+Alpha: -0.300000
+MaxNumberOfInnerIterations: 10, 0
+GlobalErrorTolerance: 1.000000e-05
+ModifyNewmark: 0
+MaxNumOfTimeStepsUsingSameFactorizedJacobian: 0
+UsePardisoScalingAndMatching: 0
+
+$SETTINGS:
+background color: 255 255 255   255
+bounding mode: 0
+COG marker scale: 25.000000
+constraint icon scale: 25.000000
+force icon scale: 0.200000
+gravity_vector: 0.000, 0.000, -9.810
+End of activation period: 0.000000
+
