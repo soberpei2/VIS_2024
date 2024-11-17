@@ -1,3 +1,4 @@
+import vtk
 
 class mbsObject:
     def __init__(self,type,subtype,text,parameter):
@@ -17,7 +18,7 @@ class mbsObject:
                         parameter[key]["value"] = self.str2int(splitted[1])
                     elif (parameter[key]["type"] == "vectorInteger"):
                         parameter[key]["value"] = self.str2vectorInt(splitted[1])
-                    elif (parameter[key]["type"] == "string"):
+                    elif (parameter[key]["type"] == "str"):
                         parameter[key]["value"] = self.str2str(splitted[1].strip())
                     elif (parameter[key]["type"] == "bool"):
                         parameter[key]["value"] = self.str2bool(splitted[1])
@@ -30,6 +31,14 @@ class mbsObject:
                 text.append("\t" + key + " = " + self.float2str(self.parameter[key]["value"]) + "\n")
             elif(self.parameter[key]["type"] == "vector"):
                 text.append("\t" + key + " = " + self.vector2str(self.parameter[key]["value"]) + "\n")
+            elif(self.parameter[key]["type"] == "int"):
+                text.append("\t" + key + " = " + self.int2str(self.parameter[key]["value"]) + "\n")
+            elif(self.parameter[key]["type"] == "vectorInt"):
+                text.append("\t" + key + " = " + self.vectorInt2str(self.parameter[key]["value"]) + "\n")
+            elif(self.parameter[key]["type"] == "str"):
+                text.append("\t" + key + " = " + self.str2str(self.parameter[key]["value"]) + "\n")
+            elif(self.parameter[key]["type"] == "bool"):
+                text.append("\t" + key + " = " + self.bool2str(self.parameter[key]["value"]) + "\n")
         text.append("End" + self.__type + "\n%\n")
         file.writelines(text)
 
@@ -64,8 +73,8 @@ class mbsObject:
 class rigidBody(mbsObject):
     def __init__(self, text):
         parameter = {
-            "name": {"type": "string", "value": "testName"},
-            "geometry": {"type": "string", "value": "testPathGeometry"},
+            "name": {"type": "str", "value": "testName"},
+            "geometry": {"type": "str", "value": "testPathGeometry"},
             "position": {"type": "vector", "value": [0.,0.,0.]},
             "x_axis": {"type": "vector", "value": [0.,0.,0.]},
             "y_axis": {"type": "vector", "value": [0.,0.,0.]},
@@ -84,13 +93,14 @@ class rigidBody(mbsObject):
         }
 
         mbsObject.__init__(self,"Body","Rigid_EulerParamter_PAI",text,parameter)
+    
 
 class constraint(mbsObject):
     def __init__(self, text):
         parameter = {
-            "name": {"type": "string", "value": "testName"},
-            "body1": {"type": "string", "value": "testBody1"},
-            "body2": {"type": "string", "value": "testBody2"},
+            "name": {"type": "str", "value": "testName"},
+            "body1": {"type": "str", "value": "testBody1"},
+            "body2": {"type": "str", "value": "testBody2"},
             "dx": {"type": "int", "value": 0},
             "dy": {"type": "int", "value": 0},
             "dz": {"type": "int", "value": 0},
@@ -108,14 +118,14 @@ class constraint(mbsObject):
 class force(mbsObject):
     def __init__(self, text):
         parameter = {
-            "name": {"type": "string", "value": "testName"},
-            "body1": {"type": "string", "value": "testBody1"},
-            "body2": {"type": "string", "value": "testBody2"},
+            "name": {"type": "str", "value": "testName"},
+            "body1": {"type": "str", "value": "testBody1"},
+            "body2": {"type": "str", "value": "testBody2"},
             "PointOfApplication_Body1": {"type": "vector", "value": [0.,0.,0.]},
             "PointOfApplication_Body2": {"type": "vector", "value": [0.,0.,0.]},
-            "mode": {"type": "string", "value": "testMode"},
+            "mode": {"type": "str", "value": "testMode"},
             "direction": {"type": "vector", "value": [0.,0.,0.]},
-            "ForceExpression": {"type": "string", "value": "testForceExpression"}
+            "ForceExpression": {"type": "str", "value": "testForceExpression"}
 
         }
 
