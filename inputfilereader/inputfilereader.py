@@ -38,7 +38,6 @@ f = open("inputfilereader/test.json","r")   # r für read
 data = json.load(f)
 f.close()
 
-
 fds = open("inputfilereader/test.fds","w") # w ... write | a für append wenn es vorhanden ist
 for mbsObject_i in listOfMbsObjects:
     mbsObject_i.writeInputfile(fds)
