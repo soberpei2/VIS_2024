@@ -3,7 +3,7 @@ import json
 
 
 # Freedyn File öffnen
-f = open("inputfilereader/test.fdd","r")    # r steht für read
+f = open("Aufgabe 2/test.fdd","r")    # r steht für read
 fileContent = f.read().splitlines()         # das was auf der Festplatte steht kommt in den Arbeitsspeicher
 f.close                                     # sauber arbeiten
 
@@ -40,16 +40,16 @@ modelObjects= [] #leeres array
 for object in listOfMbsObjects:
     modelObjects.append(object.parameter) # man holt sich alle Parameter
 jDataBase = json.dumps({"modelObjects": modelObjects})
-with open("inputfilereader/test.json","w") as outfile:
+with open("Aufgabe 2/test.json","w") as outfile:
     outfile.write(jDataBase)
 
-f = open("inputfilereader/test.json","r")
+f = open("Aufgabe 2/test.json","r")
 data = json.load(f)
 f.close()
 
 
 
-fds = open("inputfilereader/test.fds","w")  # w = write
+fds = open("Aufgabe 2/test.fds","w")  # w = write
 for mbsObject_i in listOfMbsObjects:
     mbsObject_i.writeInputFile(fds)
 fds.close()
