@@ -1,7 +1,7 @@
 
 class mbsObject:
     # Constructor
-    #------------
+    #============
     def __init__(self, type, subtype, text, parameter):
         # Save the type to the protected variable __type
         self.__type = type
@@ -34,10 +34,11 @@ class mbsObject:
                         # Save value under key mass to variable
                         parameter[key]["value"] = self.str2vectorInt(splitted[1])
 
-                    # Überprüfen ob der Parametertyp bool ist
-                    elif(parameter[key]["type"] == "bool"):
+                    # Überprüfen ob der Parametertyp int ist
+                    elif(parameter[key]["type"] == "int"):
                         # Save value under key mass to variable
-                        parameter[key]["value"] = self.str2bool(splitted[1])
+                        parameter[key]["value"] = self.str2int(splitted[1])
+    #===================================================================================================
 
     # Memberfunktion -> Inputfile schreiben
     #--------------------------------------
@@ -57,15 +58,16 @@ class mbsObject:
             elif(self.parameter[key]["type"] == "vectorInt"):
                 text.append("\t" + key + " = " + self.vector2str(self.parameter[key]["value"]) + "\n")
 
-            # Umwandlung eines bool in string
-            elif(self.parameter[key]["type"] == "bool"):
-                text.append("\t" + key + " = " + self.bool2str(self.parameter[key]["value"]) + "\n") 
+            # Umwandlung eines int in string
+            elif(self.parameter[key]["type"] == "int"):
+                text.append("\t" + key + " = " + self.int2str(self.parameter[key]["value"]) + "\n") 
 
         # Anfügen von 2 Leerzeichen am Ende des Files
         text.append("End" + self.__type + "\n%\n")
 
         # Schreiben der Zeilen in die Variable text
         file.writelines(text)
+    #===================================================================================================
 
     # Memberfunktion -> Umwandlung eines string in float
     #---------------------------------------------------
@@ -76,6 +78,7 @@ class mbsObject:
     #---------------------------------------------------
     def float2str(self, inFloat):
         return str(inFloat)
+    #===================================================================================================
     
     # Memberfunktion -> Umwandlung eines string in vector
     #----------------------------------------------------
@@ -86,21 +89,23 @@ class mbsObject:
     #----------------------------------------------------
     def vector2str(self, inVector):
         return str(inVector[0]) + "," + str(inVector[1]) + "," + str(inVector[2])
+    #===================================================================================================
 
     # Memberfunktion -> Umwandlung eines string in einen Integer-vector
     #------------------------------------------------------------------
     def str2vectorInt(self, inString):
         return [int(inString.split()[0]), int(inString.split()[1]), int(inString.split()[2])]
+    #===================================================================================================
     
     # Memberfunktion -> Umwandlung eines string in bool
     #--------------------------------------------------
-    def str2bool(self, inString):
-        return bool(inString)
+    def str2int(self, inString):
+        return int(inString)
     
     # Memberfunktion -> Umwandlung eines bool in string
     #---------------------------------------------------
-    def bool2str(self, inBool):
-        return str(inBool)
+    def int2str(self, inInt):
+        return str(inInt)
                
 #=======================================================================================================
 
@@ -145,32 +150,32 @@ class constraint(mbsObject):
         #-----------------------------------------------------
         parameter = {
                         "dx":   {
-                                    "type": "boolean",
+                                    "type": "int",
                                     "value": 0
                                 },
 
                         "dy":   {
-                                    "type": "boolean",
+                                    "type": "int",
                                     "value": 0
                                 },
 
                         "dz":   {
-                                    "type": "boolean",
+                                    "type": "int",
                                     "value": 0
                                 },
 
                         "ax":   {
-                                    "type": "boolean",
+                                    "type": "int",
                                     "value": 0
                                 },
 
                         "ay":   {
-                                    "type": "boolean",
+                                    "type": "int",
                                     "value": 0
                                 },
 
                         "az":   {
-                                    "type": "boolean",
+                                    "type": "int",
                                     "value": 0
                                 },
 
