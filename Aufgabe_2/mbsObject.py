@@ -1,3 +1,4 @@
+import vtk
 
 class mbsObject:
     def __init__(self,type,subtype,text,parameter):
@@ -12,6 +13,7 @@ class mbsObject:
                         parameter[key]["value"] = self.str2float(splitted[1])
                     elif(parameter[key]["type"] == "vector"):
                         parameter[key]["value"] = self.str2vector(splitted[1])
+        elf.vtk_actor = None  # Der VTK Actor für die spätere Visualisierung
 
     
     def writeInputfile(self,file):
