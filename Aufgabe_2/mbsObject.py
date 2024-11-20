@@ -29,6 +29,8 @@ class mbsObject:
                         # Save value under key mass to variable
                         parameter[key]["value"] = self.str2vector(splitted[1])
 
+                        
+
     # Memberfunktion -> Inputfile schreiben
     #--------------------------------------
     def writeInputfile(self, file):
@@ -67,9 +69,7 @@ class mbsObject:
     # Memberfunktion -> Umwandlung eines vector in string
     #----------------------------------------------------
     def vector2str(self, inVector):
-        return str(inVector[0]) + "," + str(inVector[1]) + "," + str(inVector[2])
-
-            
+        return str(inVector[0]) + "," + str(inVector[1]) + "," + str(inVector[2])           
 #=============================================================================
 
 class rigidBody(mbsObject):
@@ -78,15 +78,44 @@ class rigidBody(mbsObject):
     def __init__(self, text):
         # Initialisieren eines Dictionaries mit den Parametern
         parameter = {
-                        "mass": {
-                                    "type": "float",
-                                    "value": 1.
-                                },
-                        "COG": {
-                                    "type": "vector",
-                                    "value": [0., 0., 0.]
-                               }
+                        "position":     { "type": "vector", "value": [0., 0., 0.] },
+                        "color":        { "type": "vector", "value": [0., 0., 0.] },
+                        "mass":         { "type": "float", "value": 1. },
+                        "COG":          { "type": "vector", "value": [0., 0., 0.] }
                     }
 
         # Aufrufen des Mutterklassenkonstruktors (Ginge auch mit super, dann müsste man self nicht übergeben)
         mbsObject.__init__(self, "rigidBody", "Rigid_EulerParameter_PAI", text, parameter)
+#=============================================================================
+
+class constraint(mbsObject):
+    # Constructor
+    #------------
+    def __init__(self, text):
+        # Initialisieren eines Dictionaries mit den Parametern
+        parameter = {
+                        "dx":   {
+                                    "type": "boolean",
+                                    "value": 0
+                                },
+                        "dy":   {
+                                    "type": "boolean",
+                                    "value": 0
+                                },
+                        "dz":   {
+                                    "type": "boolean",
+                                    "value": 0
+                                },
+                        "ax":   {
+                                    "type": "boolean",
+                                    "value": 0
+                                },
+                        "ay":   {
+                                    "type": "boolean",
+                                    "value": 0
+                                },
+                        "az":   {
+                                    "type": "boolean",
+                                    "value": 0
+                                },
+                    }
