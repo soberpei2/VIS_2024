@@ -36,14 +36,14 @@ def readInputFile(filePath):
     for object in listOfMbsObjects:
         modelObjects.append(object.parameter)
     jDataBase = json.dumps({"modelObjects": modelObjects})
-    with open("inputfilereader/test.json", "w") as outfile:
+    with open("Aufgabe_2/test.json", "w") as outfile:
         outfile.write(jDataBase)
 
-    f = open("inputfilereader/test.json","r")
+    f = open("Aufgabe_2/test.json","r")
     data = json.load(f)
     f.close()
 
-    fds = open("inputfilereader/test.fds","w")
+    fds = open("Aufgabe_2/test.fds","w")
     for mbsObject_i in listOfMbsObjects:
         mbsObject_i.writeInputfile(fds)
     fds.close()
