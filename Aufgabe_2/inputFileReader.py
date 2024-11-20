@@ -35,13 +35,13 @@ def inputFileReader(file):
             # Testing, if current Block has a type -> counting number certain objects
             #------------------------------------------------------------------------
             if(currentBlockType != ""):
-                # Count number of rigid bodies
+                # Wenn Rigid Body -> Objekt vom Typ rigidBody anlegen
                 if(currentBlockType == "RIGID_BODY"):
                     listOfMbsObjects.append(mbsObject.rigidBody(currentTextBlock))
 
-                # Count number of constraints
-                #elif(currentBlockType == "CONSTRAINT"):
-                #    numOfConstraints +=1
+                # Wenn Constraint -> Objekt vom Typ constraint anlegen
+                elif(currentBlockType == "CONSTRAINT"):
+                    listOfMbsObjects.append(mbsObject.constraint(currentTextBlock))
 
                 # Set current block Type to empty
                 currentBlockType = ""
