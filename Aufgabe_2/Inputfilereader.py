@@ -1,8 +1,9 @@
 
 import mbsObject
 import json
+import vtk
 
-f = open("inputfilereader/test.fdd","r")
+f = open("Aufgabe 2/inputfilereader/test.fdd","r")
 
 fileContent = f.read().splitlines()
 f.close()
@@ -13,6 +14,8 @@ currentBlockType = ""
 currentTextBlock = []
 listOfMbsObjects = []
 search4Objects = ["RIGID_BODY","CONSTRAINT"]#mögliche Schlagwörter
+
+##Lesen der Zeilen im Inputfile 
 for line in fileContent:#Für alle Zeilen (line ist Iterator, alle Zeilen von Filevonten)
     if(line.find("$")>=0):#new block found, im fdd file ist immer das Schlagwort
         if(currentBlockType !=""):
