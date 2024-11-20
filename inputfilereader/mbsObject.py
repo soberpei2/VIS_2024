@@ -11,7 +11,7 @@ class mbsObject:
                 if(splitted[0].strip() == key):            # strip: Leerzeichen entfernen
                     if(parameter[key]["type"] == "float"):
                         parameter[key]["value"] = self.str2float(splitted[1])
-                    elif(parameter[key]["type"] == "float"):
+                    elif(parameter[key]["type"] == "vector"):
                         parameter[key]["value"] = self.str2vector(splitted[1])
 
     def writeInputfile(self,file):
@@ -36,11 +36,31 @@ class mbsObject:
     def vector2str(self,inVector):
         return str(inVector[0])+","+str(inVector[1])+ "," +str(inVector[2])
 
+#====================================================================================================================
+
 class rigidBody(mbsObject):
     def __init__(self,text):
         parameter = {
-            "mass": {"type": "float", "value": 1.},
-            "COG": {"type": "vector", "value": [0.,0.,0.]}
+            #"name": {"type":"string", "value": " "},
+            "position":     {"type": "vector", "value": [1.,1.,1.]},
+            "color":        {"type": "int", "value":0,},
+            "mass":         {"type": "float", "value": 1.},
+            "COG":          {"type": "vector", "value": [0.,0.,0.]},
         }
 
         mbsObject.__init__(self,"rigidBody","Rigid_EulerParameter_PAI",text,parameter)
+
+#====================================================================================================================
+
+class constraint(mbsObject):
+    def __init__(self,text):
+        parameter = {
+            "dx":           {"type": "boolean", "value": 0},
+            "dy":           {"type": "boolean", "value": 0},
+            "dz":           {"type": "boolean", "value": 0},
+            "ax":           {"type": "boolean", "value": 0},
+            "ay":           {"type": "boolean", "value": 0},
+            "az":           {"type": "boolean", "value": 0}
+        }
+
+        mbsObject.__init__(self,"constraint","Rigid_EulerParameter_PAI",text,parameter)

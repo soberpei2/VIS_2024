@@ -1,10 +1,18 @@
 rigidBody Rigid_EulerParameter_PAI
+	position=0.0,0.0,0.0
 	mass=0.001
 	COG=0.0,0.0,0.0
 EndrigidBody
 %
 rigidBody Rigid_EulerParameter_PAI
+	position=25.0,0.0,10.0
 	mass=0.001
 	COG=0.0,0.0,0.0
 EndrigidBody
+%
+constraint Rigid_EulerParameter_PAI
+Endconstraint
+%
+constraint Rigid_EulerParameter_PAI
+Endconstraint
 %
