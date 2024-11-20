@@ -12,6 +12,10 @@ def inputFileReader(file):
     # Read opened file (save to variable) -> each line is saved as a string
     fileContent = f.read().splitlines()
 
+    # Hinzufügen eines $-Zeichens am Ende der Liste, damit der letzte Block
+    # abgeschlossen werden kann und mitaufgenommen wird
+    fileContent.append("$")
+
     # Close file after saving its content
     f.close()
 
