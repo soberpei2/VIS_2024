@@ -1,2 +1,19 @@
-import Inputfilereader_modularisiert
-import 
+import InputFileReader_modularisiert
+
+# Datei einlesen
+fileContent = InputFileReader_modularisiert.read_file("Aufgabe_2/test.fdd")
+
+# Datei analysieren
+listOfMbsObjects = InputFileReader_modularisiert.analyse_file(fileContent)
+
+# JSON erstellen
+InputFileReader_modularisiert.write_json(listOfMbsObjects, "Aufgabe_2/test.json")
+
+# JSON lesen
+data = InputFileReader_modularisiert.read_json("Aufgabe_2/test.json")
+
+# FDS schreiben
+InputFileReader_modularisiert.write_fds(listOfMbsObjects, "Aufgabe_2/test.fds")
+
+# Anzahl der Objekte ausgeben
+print(len(listOfMbsObjects))
