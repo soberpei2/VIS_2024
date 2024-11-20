@@ -3,31 +3,36 @@ import vtk
 
 #listOfMyObjects = inputfilereader.readInput4Output("inputfilereader/test.fdd","inputfilereader/test1.json","inputfilereader/test1.fds")
 
-cone = vtk.vtkConeSource() 
-cone.SetHeight(3.0) 
-cone.SetRadius(1.0) 
-cone.SetResolution(6)
+ColorBackground = [0.0, 0.0, 0.0]
+FirstobjPath = r"inputfilereader/quader.obj"
+reader = vtk.vtkOBJReader()
+reader.SetFileName(FirstobjPath)
+reader.Update()
 
-coneMapper = vtk.vtkPolyDataMapper() 
-coneMapper.SetInputConnection(cone.GetOutputPort())
 
-coneActor = vtk.vtkActor() 
-coneActor.SetMapper(coneMapper)
+mapper = vtk.vtkPolyDataMapper()
+if vtk.VTK_MAJOR_VERSION <= 5:
+     mapper.SetInput(reader.GetOutput())
+else:
+     mapper.SetInputConnection(reader.GetOutputPort())
 
-ren1 = vtk.vtkRenderer() 
-ren1.AddActor(coneActor) 
-ren1.SetBackground(0.1, 0.2, 0.4)
+actor = vtk.vtkActor()
+actor.SetMapper(mapper)
 
-renWin = vtk.vtkRenderWindow() 
-renWin.AddRenderer(ren1) 
-renWin.SetSize(300, 300)
+# Create a rendering window and renderer
+ren = vtk.vtkRenderer()
+ren.SetBackground(ColorBackground)
+renWin = vtk.vtkRenderWindow()
+renWin.AddRenderer(ren)
 
-for i in range(360): 
-    renWin.Render() 
-    ren1.GetActiveCamera().Azimuth(1)
+# Create a renderwindowinteractor
+iren = vtk.vtkRenderWindowInteractor()
+iren.SetRenderWindow(renWin)
 
-iren = vtk.vtkRenderWindowInteractor() 
-iren.SetRenderWindow(renWin) 
+# Assign actor to the renderer
+ren.AddActor(actor)
+
+# Enable user interface interactor
+iren.Initialize()
+renWin.Render()
 iren.Start()
-
-vtk.vtkOBJReader
