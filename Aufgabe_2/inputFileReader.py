@@ -23,7 +23,7 @@ def inputFileReader(file):
     currentTextBlock = []
 
     # Define list of objects, which should be searched
-    search4Objects = ["RIGID_BODY", "CONSTRAINT"]
+    search4Objects = ["RIGID_BODY", "CONSTRAINT", "SETTINGS"]
 
     #############################
     # Read lines of fileContent #
@@ -42,6 +42,10 @@ def inputFileReader(file):
                 # Wenn Constraint -> Objekt vom Typ constraint anlegen
                 elif(currentBlockType == "CONSTRAINT"):
                     listOfMbsObjects.append(mbsObject.constraint(currentTextBlock))
+                
+                # Wenn Setting -> Objekt vom Typ setting anlegen
+                elif(currentBlockType == "SETTINGS"):
+                    listOfMbsObjects.append(mbsObject.setting(currentTextBlock))
 
                 # Set current block Type to empty
                 currentBlockType = ""
@@ -61,7 +65,7 @@ def inputFileReader(file):
             
         currentTextBlock.append(line)
 
-    # Informationen in ein json-File schreien
+    # Informationen in ein json-File schreiben
     modelObjects = []
     for object in listOfMbsObjects:
         modelObjects.append(object.parameter)
