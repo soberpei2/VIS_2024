@@ -1,10 +1,12 @@
 rigidBody Rigid_EulerParameter_PAI
+	name= new_body_0
 	position=0.0,0.0,0.0
 	mass=0.001
 	COG=0.0,0.0,0.0
 EndrigidBody
 %
 rigidBody Rigid_EulerParameter_PAI
+	name= new_body_1
 	position=25.0,0.0,10.0
 	mass=0.001
 	COG=0.0,0.0,0.0
