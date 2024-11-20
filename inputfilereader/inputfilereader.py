@@ -18,7 +18,7 @@ for line in fileContent:
     if(line.find("$") >= 0):            #new block found
         if(currentBlockType != ""):
             if(currentBlockType == "RIGID_BODY"):
-                listOfMbsObjects.append(mbsObject.rigidBody(currentTextBlock))       # -------*
+                listOfMbsObjects.append(mbsObject.rigidBody(currentTextBlock))       
             currentBlockType = ""
             
     for type_i in searchForObjects:
@@ -50,3 +50,4 @@ print(len(listOfMbsObjects))
 print("Hargaßner Dominik")
 
 print(len(listOfMbsObjects))
+
