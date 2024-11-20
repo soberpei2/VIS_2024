@@ -1,14 +1,8 @@
-# Importieren benötigter Biblitheken
 import mbsObject
 import json
 
-# Open FreeDyne-file
 f = open("Aufgabe_2/test.fdd", "r")
-
-# Read opened file (save to variable) -> each line is saved as a string
 fileContent = f.read().splitlines()
-
-# Close file after saving its content
 f.close()
 
 # List of Mbs Objects
