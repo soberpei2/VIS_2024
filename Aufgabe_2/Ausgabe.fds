@@ -1,10 +1,12 @@
 rigidBody Rigid_EulerParameter_PAI
 	mass = 0.001
 	COG = 0.0,0.0,0.0
+	position = 0.0,0.0,0.0
 EndrigidBody
 %
 rigidBody Rigid_EulerParameter_PAI
 	mass = 0.001
 	COG = 0.0,0.0,0.0
+	position = 25.0,0.0,10.0
 EndrigidBody
 %

@@ -47,26 +47,13 @@ class mbsObject:
 class rigidBody(mbsObject):
     def __init__(self, text):
         parameter = {
-                        "mass": {
-                                    "type": "float",
-                                    "value": 1.
-                                },
-                        "COG": {
-                                    "type": "vector",
-                                    "value": [0., 0., 0.]
-                               }
+                       "name": {"type": "string"},
+                        "mass": {"type": "float", "value": 1.},
+                        "COG": {"type": "vector", "value": [0., 0., 0.]},
+                        "position": {"type": "vector", "value": [0., 0., 0.]},
+                        "geometry": {"type": "string", "value": "models/default_geometry.obj"}
                     }
 
         mbsObject.__init__(self, "rigidBody", "Rigid_EulerParameter_PAI", text, parameter)
 
 #######################################################################################
-
-class constraint(mbsObject):
-    def __init__(self, text):
-        parameter = {
-            "Constraint"
-        }
-        
-
-
-        mbsObject.__init__(self, "constraint", "Rigid_EulerParameter_PAI", text, parameter)
