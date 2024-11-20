@@ -15,6 +15,7 @@ def readInput4Output(inputfilepath, jsonfilepath, fdsfilepath):
 
     search4Objects = ["RIGID_BODY", "CONSTRAINT"]
     for line in fileContent:
+        
         if(line.find("$") >= 0): #new block found 
             if(currentBlockType != ""):
                 if(currentBlockType == "RIGID_BODY"):

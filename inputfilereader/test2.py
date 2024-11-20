@@ -29,3 +29,5 @@ for i in range(360):
 iren = vtk.vtkRenderWindowInteractor() 
 iren.SetRenderWindow(renWin) 
 iren.Start()
+
+vtk.vtkOBJReader
