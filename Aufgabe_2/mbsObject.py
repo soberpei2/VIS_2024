@@ -97,12 +97,12 @@ class mbsObject:
         return [int(inString.split()[0]), int(inString.split()[1]), int(inString.split()[2])]
     #===================================================================================================
     
-    # Memberfunktion -> Umwandlung eines string in bool
+    # Memberfunktion -> Umwandlung eines string in int
     #--------------------------------------------------
     def str2int(self, inString):
         return int(inString)
     
-    # Memberfunktion -> Umwandlung eines bool in string
+    # Memberfunktion -> Umwandlung eines int in string
     #---------------------------------------------------
     def int2str(self, inInt):
         return str(inInt)
@@ -190,3 +190,42 @@ class constraint(mbsObject):
         # Aufrufen des Mutterklassenkonstruktors (Ginge auch mit super, dann müsste man self nicht
         # übergeben)
         mbsObject.__init__(self, "Constraint", "Rigid_EulerParameter_PAI", text, parameter)
+#=======================================================================================================
+
+class setting(mbsObject):
+    # Constructor
+    #============
+    def __init__(self, text):
+        # Initialisieren eines Dictionaries mit den Parametern
+        #-----------------------------------------------------
+        parameter = {
+                        "background color": {
+                                                "type": "vectorInt",
+                                                "value": [0, 0, 0]
+                                            },
+
+                        "COG marker scale": {
+                                                "type": "float",
+                                                "value": 0.
+                                            },
+
+                        "constraint icon scale":    {
+                                                        "type": "float",
+                                                        "value": 0.
+                                                    },
+
+                        "force icon scale": {
+                                                "type": "float",
+                                                "value": 0.
+                                            },
+
+                        "gravity_vector":   {
+                                                "type": "vector",
+                                                "value": [0., 0., 0.]
+                                            }
+                    }
+        #-----------------------------------------------------------------------------------------------
+        
+        # Aufrufen des Mutterklassenkonstruktors (Ginge auch mit super, dann müsste man self nicht
+        # übergeben)
+        mbsObject.__init__(self, "Settings", "Rigid_EulerParameter_PAI", text, parameter)

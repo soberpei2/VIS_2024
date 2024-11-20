@@ -1,8 +1,8 @@
 # Importieren benötigter Klassen
-import inputFileReader
+import inputFileReader as ifr
 
 # Definieren des einzulesenden Files
 file = "Aufgabe_2/test.fdd"
 
 # Aufrufen des Inputfilereaders
-inputFileReader.inputFileReader(file)
+ifr.inputFileReader(file)
