@@ -1,0 +1,8 @@
+Body Rigid_EulerParamter_PAI
+	COG=0.0,0.0,0.0
+EndBody
+%
+Body Rigid_EulerParamter_PAI
+	COG=0.0,0.0,0.0
+EndBody
+%
