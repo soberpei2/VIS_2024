@@ -2,42 +2,45 @@
 import mbsObject
 import json
 
-f = open("inputfilereader/test.fdd","r")
 
-fileContent = f.read().splitlines()
-f.close()
+def inputfilereader(file):  #als Funktion definiert
 
-numOfRigidBodys = 0
-numOfConstraints = 0
-currentBlockType = ""
-currentTextBlock = []
-listOfMbsObjects =[]
-search4Objects = ["RIGID_BODY" , "CONSTRAINT"]
+    f = open(file,"r")
 
-for line in fileContent:
-    if(line.find("$") >= 0):                                      #new block found
-        if(currentBlockType != ""):
-            if(currentBlockType == "RIGID_BODY"):
-                listOfMbsObjects.append(mbsObject.rigidBody(currentTextBlock))
-            currentBlockType = ""
+    fileContent = f.read().splitlines()
+    f.close()
 
-    for type_i in search4Objects:
-        if(line.find(type_i,1,len(type_i)+1) >= 0):
-            currentBlockType = type_i
-            currentTextBlock.clear()
-    
-    currentTextBlock.append(line)
+    numOfRigidBodys = 0
+    numOfConstraints = 0
+    currentBlockType = ""
+    currentTextBlock = []
+    listOfMbsObjects =[]
+    search4Objects = ["RIGID_BODY" , "CONSTRAINT"]
 
-    modelObjects=[]
-    for object in listOfMbsObjects:
-        modelObjects.append(object.parameter)
-    jDataBase = json.dumps({"modelObjects":modelObjects})
-    with open("inputfilereader/test.vis3","w")as outfile:
-        outfile.write(jDataBase)
+    for line in fileContent:
+        if(line.find("$") >= 0):                                      #new block found
+            if(currentBlockType != ""):
+                if(currentBlockType == "RIGID_BODY"):
+                    listOfMbsObjects.append(mbsObject.rigidBody(currentTextBlock))
+                currentBlockType = ""
 
-    fds = open("inputfilereader/test.fds","w")
-    for mbsObjects_i in listOfMbsObjects:
-        mbsObjects_i.writeInputfile(fds)
-    fds.close
+        for type_i in search4Objects:
+            if(line.find(type_i,1,len(type_i)+1) >= 0):
+                currentBlockType = type_i
+                currentTextBlock.clear()
+        
+        currentTextBlock.append(line)
 
-print(len(listOfMbsObjects))
+        modelObjects=[]
+        for object in listOfMbsObjects:
+            modelObjects.append(object.parameter)
+        jDataBase = json.dumps({"modelObjects":modelObjects})
+        with open("inputfilereader/test.vis3","w")as outfile:
+            outfile.write(jDataBase)
+
+        fds = open("inputfilereader/test.fds","w")
+        for mbsObjects_i in listOfMbsObjects:
+            mbsObjects_i.writeInputfile(fds)
+        fds.close
+
+    print(len(listOfMbsObjects))
