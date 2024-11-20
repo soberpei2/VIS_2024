@@ -19,17 +19,20 @@ class mbsObject:
             for key in parameter.keys():
                 # Search for key "mass" (.strip() -> removes Leerzeichen)
                 if(splitted[0].strip() == key):
-                    #Überprüfen ob der Parametertyp float ist
+                    # Überprüfen ob der Parametertyp float ist
                     if(parameter[key]["type"] == "float"):
                         # Save value under key mass to variable
                         parameter[key]["value"] = self.str2float(splitted[1])
 
-                    #Überprüfen ob der Parametertyp vector ist
+                    # Überprüfen ob der Parametertyp vector ist
                     elif(parameter[key]["type"] == "vector"):
                         # Save value under key mass to variable
                         parameter[key]["value"] = self.str2vector(splitted[1])
 
-                        
+                    # Überprüfen ob der Parametertyp vector ist
+                    elif(parameter[key]["type"] == "vectorInt"):
+                        # Save value under key mass to variable
+                        parameter[key]["value"] = self.str2vectorInt(splitted[1])
 
     # Memberfunktion -> Inputfile schreiben
     #--------------------------------------
@@ -43,6 +46,10 @@ class mbsObject:
 
             # Umwandlung eines Vektors in string
             elif(self.parameter[key]["type"] == "vector"):
+                text.append("\t" + key + " = " + self.vector2str(self.parameter[key]["value"]) + "\n")
+
+            # Umwandlung eines Integer-Vektors in string
+            elif(self.parameter[key]["type"] == "vectorInt"):
                 text.append("\t" + key + " = " + self.vector2str(self.parameter[key]["value"]) + "\n") 
 
         # Anfügen von 2 Leerzeichen am Ende des Files
@@ -69,7 +76,13 @@ class mbsObject:
     # Memberfunktion -> Umwandlung eines vector in string
     #----------------------------------------------------
     def vector2str(self, inVector):
-        return str(inVector[0]) + "," + str(inVector[1]) + "," + str(inVector[2])           
+        return str(inVector[0]) + "," + str(inVector[1]) + "," + str(inVector[2])
+
+    # Memberfunktion -> Umwandlung eines string in einen Integer-vector
+    #------------------------------------------------------------------
+    def str2vectorInt(self, inString):
+        return [int(inString.split()[0]), int(inString.split()[1]), int(inString.split()[2])]
+               
 #=============================================================================
 
 class rigidBody(mbsObject):
@@ -79,7 +92,7 @@ class rigidBody(mbsObject):
         # Initialisieren eines Dictionaries mit den Parametern
         parameter = {
                         "position":     { "type": "vector", "value": [0., 0., 0.] },
-                        "color":        { "type": "vector", "value": [0., 0., 0.] },
+                        "color":        { "type": "vectorInt", "value": [0, 0, 0] },
                         "mass":         { "type": "float", "value": 1. },
                         "COG":          { "type": "vector", "value": [0., 0., 0.] }
                     }
