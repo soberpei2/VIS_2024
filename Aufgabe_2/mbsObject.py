@@ -5,6 +5,7 @@ class mbsObject:
         self.__type = type 
         self.__subtype = subtype
         self.parameter = parameter              # hier speichern wir den Paramtersatz ab, ist eine Membervariable. Weise ich eine Referenz auf parameter (unten erstell)zu
+        self.vtk_actor = None  # Der VTK Actor für die spätere Visualisierung
         for line in text:
             splitted = line.split(":")
             for key in parameter.keys():        #er geht jetzt jedes dieser Objekte durch
@@ -13,8 +14,6 @@ class mbsObject:
                         parameter[key]["value"] = self.str2float(splitted[1])
                     elif(parameter[key]["type"] == "vector"):
                         parameter[key]["value"] = self.str2vector(splitted[1])
-        elf.vtk_actor = None  # Der VTK Actor für die spätere Visualisierung
-
     
     def writeInputfile(self,file):
         text = []
@@ -41,6 +40,14 @@ class mbsObject:
     
     def vector2str(self,inVector):
         return str(inVector[0])+","+str(inVector[1])+","+str(inVector[2])
+    
+    def add_vtk_representation(self):
+        # Standardimplementierung, wenn keine spezifische Darstellung definiert ist
+        print(f"Keine VTK-Darstellung für {self.__type} {self.__subtype} definiert.")
+        return None
+    
+    def get_vtk_actor(self):
+        return self.vtk_actor
   
 
 #wir wollen das erweiteren damit nicht nur abstrakte Klasse
@@ -52,3 +59,14 @@ class rigidbody(mbsObject):
         }
 
         mbsObject.__init__(self,"Body","Rigid_EulerParamter_PAI",text,parameter)
+
+    def add_vtk_representation(self):
+        reader = vtk.vtkOBJReader()
+        reader.SetFileName("path/to/your/model.obj")
+        reader.Update()
+        mapper = vtk.vtkPolyDataMapper()
+        mapper.SetInputConnection(reader.GetOutputPort())
+        self.vtk_actor = vtk.vtkActor()
+        self.vtk_actor.SetMapper(mapper)
+        self.vtk_actor.GetProperty().SetColor(0.5, 0.5, 1.0)
+
