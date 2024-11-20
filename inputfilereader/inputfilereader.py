@@ -9,13 +9,13 @@ fdd = open("inputfilereader/test.fdd","r")
 fileContent = fdd.read().splitlines()
 fdd.close()
 
-currentBlockType = ""
-currentTextBlock = []
-listOfMbsObjects = []
+currentBlockType = ""       # init 
+currentTextBlock = []       # init
+listOfMbsObjects = []       # init
 search4Objects  = ["RIGID_BODY", "CONSTRAINT"]
 for line in fileContent:
-    if(line.find("$") >= 0):#new block found
-        if(currentBlockType != ""):
+    if(line.find("$") >= 0):        #new block found
+        if(currentBlockType != ""):     
             if(currentBlockType == "RIGID_BODY"):
                 listOfMbsObjects.append(mbsObject.rigidBody(currentTextBlock))
             currentBlockType = ""
