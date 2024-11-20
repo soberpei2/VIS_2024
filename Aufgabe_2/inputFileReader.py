@@ -5,14 +5,9 @@ f = open("Aufgabe_2/test.fdd", "r")
 fileContent = f.read().splitlines()
 f.close()
 
-# List of Mbs Objects
 listOfMbsObjects = []
-
-# Definition of a current textblock
 currentBlockType = ""
 currentTextBlock = []
-
-# Define list of objects, which should be searched
 search4Objects = ["RIGID_BODY", "CONSTRAINT"]
 
 #############################

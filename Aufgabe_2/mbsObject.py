@@ -63,6 +63,9 @@ class rigidBody(mbsObject):
 
 class constraint(mbsObject):
     def __init__(self, text):
+        parameter = {
+            "Constraint"
+        }
         
 
 
