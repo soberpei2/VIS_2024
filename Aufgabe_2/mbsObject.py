@@ -29,10 +29,15 @@ class mbsObject:
                         # Save value under key mass to variable
                         parameter[key]["value"] = self.str2vector(splitted[1])
 
-                    # Überprüfen ob der Parametertyp vector ist
+                    # Überprüfen ob der Parametertyp Integer-vector ist
                     elif(parameter[key]["type"] == "vectorInt"):
                         # Save value under key mass to variable
                         parameter[key]["value"] = self.str2vectorInt(splitted[1])
+
+                    # Überprüfen ob der Parametertyp bool ist
+                    elif(parameter[key]["type"] == "bool"):
+                        # Save value under key mass to variable
+                        parameter[key]["value"] = self.str2bool(splitted[1])
 
     # Memberfunktion -> Inputfile schreiben
     #--------------------------------------
@@ -50,7 +55,11 @@ class mbsObject:
 
             # Umwandlung eines Integer-Vektors in string
             elif(self.parameter[key]["type"] == "vectorInt"):
-                text.append("\t" + key + " = " + self.vector2str(self.parameter[key]["value"]) + "\n") 
+                text.append("\t" + key + " = " + self.vector2str(self.parameter[key]["value"]) + "\n")
+
+            # Umwandlung eines bool in string
+            elif(self.parameter[key]["type"] == "bool"):
+                text.append("\t" + key + " = " + self.bool2str(self.parameter[key]["value"]) + "\n") 
 
         # Anfügen von 2 Leerzeichen am Ende des Files
         text.append("End" + self.__type + "\n%\n")
@@ -82,8 +91,18 @@ class mbsObject:
     #------------------------------------------------------------------
     def str2vectorInt(self, inString):
         return [int(inString.split()[0]), int(inString.split()[1]), int(inString.split()[2])]
+    
+    # Memberfunktion -> Umwandlung eines string in bool
+    #--------------------------------------------------
+    def str2bool(self, inString):
+        return bool(inString)
+    
+    # Memberfunktion -> Umwandlung eines bool in string
+    #---------------------------------------------------
+    def bool2str(self, inBool):
+        return str(inBool)
                
-#=============================================================================
+#=======================================================================================================
 
 class rigidBody(mbsObject):
     # Constructor
@@ -91,44 +110,78 @@ class rigidBody(mbsObject):
     def __init__(self, text):
         # Initialisieren eines Dictionaries mit den Parametern
         parameter = {
-                        "position":     { "type": "vector", "value": [0., 0., 0.] },
-                        "color":        { "type": "vectorInt", "value": [0, 0, 0] },
-                        "mass":         { "type": "float", "value": 1. },
-                        "COG":          { "type": "vector", "value": [0., 0., 0.] }
-                    }
+                        "position": { 
+                                        "type": "vector", 
+                                        "value": [0., 0., 0.]
+                                    },
 
-        # Aufrufen des Mutterklassenkonstruktors (Ginge auch mit super, dann müsste man self nicht übergeben)
-        mbsObject.__init__(self, "rigidBody", "Rigid_EulerParameter_PAI", text, parameter)
-#=============================================================================
+                        "color":    { 
+                                        "type": "vectorInt",
+                                        "value": [0, 0, 0] 
+                                    },
+
+                        "mass":     {
+                                        "type": "float",
+                                        "value": 1.
+                                    },
+
+                         "COG":     {
+                                        "type": "vector",
+                                        "value": [0., 0., 0.]
+                                    }
+                    }
+        #-----------------------------------------------------------------------------------------------
+
+        # Aufrufen des Mutterklassenkonstruktors (Ginge auch mit super, dann müsste man self nicht
+        # übergeben)
+        mbsObject.__init__(self, "Body", "Rigid_EulerParameter_PAI", text, parameter)
+#=======================================================================================================
 
 class constraint(mbsObject):
     # Constructor
-    #------------
+    #============
     def __init__(self, text):
         # Initialisieren eines Dictionaries mit den Parametern
+        #-----------------------------------------------------
         parameter = {
                         "dx":   {
                                     "type": "boolean",
                                     "value": 0
                                 },
+
                         "dy":   {
                                     "type": "boolean",
                                     "value": 0
                                 },
+
                         "dz":   {
                                     "type": "boolean",
                                     "value": 0
                                 },
+
                         "ax":   {
                                     "type": "boolean",
                                     "value": 0
                                 },
+
                         "ay":   {
                                     "type": "boolean",
                                     "value": 0
                                 },
+
                         "az":   {
                                     "type": "boolean",
                                     "value": 0
                                 },
+
+                        "position": {
+                                        "type": "vector", 
+                                        "value": [0., 0., 0.]
+                                    } 
+                        
                     }
+        #-----------------------------------------------------------------------------------------------
+        
+        # Aufrufen des Mutterklassenkonstruktors (Ginge auch mit super, dann müsste man self nicht
+        # übergeben)
+        mbsObject.__init__(self, "Constraint", "Rigid_EulerParameter_PAI", text, parameter)
