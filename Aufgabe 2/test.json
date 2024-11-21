@@ -1,6 +1,10 @@
 {
     "modelObjects": [
         {
+            "name": {
+                "type": "str",
+                "value": "new_body_0"
+            },
             "mass": {
                 "type": "float",
                 "value": 0.001
@@ -16,9 +20,85 @@
             "geometry": {
                 "type": "str",
                 "value": "Aufgabe2/quader.obj"
+            },
+            "x_axis": {
+                "type": "vector",
+                "value": [
+                    1.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "y_axis": {
+                "type": "vector",
+                "value": [
+                    0.0,
+                    1.0,
+                    0.0
+                ]
+            },
+            "z_axis": {
+                "type": "vector",
+                "value": [
+                    0.0,
+                    0.0,
+                    1.0
+                ]
+            },
+            "inertia": {
+                "type": "vector",
+                "value": [
+                    0.001,
+                    0.001,
+                    0.001
+                ]
+            },
+            "initial_velocity": {
+                "type": "vector",
+                "value": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "initial_omega": {
+                "type": "vector",
+                "value": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "i1_axis": {
+                "type": "vector",
+                "value": [
+                    1.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "i2_axis": {
+                "type": "vector",
+                "value": [
+                    0.0,
+                    1.0,
+                    0.0
+                ]
+            },
+            "i3_axis": {
+                "type": "vector",
+                "value": [
+                    0.0,
+                    0.0,
+                    1.0
+                ]
             }
         },
         {
+            "name": {
+                "type": "str",
+                "value": "new_body_1"
+            },
             "mass": {
                 "type": "float",
                 "value": 0.001
@@ -34,6 +114,78 @@
             "geometry": {
                 "type": "str",
                 "value": "Aufgabe2\\quader.obj"
+            },
+            "x_axis": {
+                "type": "vector",
+                "value": [
+                    1.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "y_axis": {
+                "type": "vector",
+                "value": [
+                    0.0,
+                    1.0,
+                    0.0
+                ]
+            },
+            "z_axis": {
+                "type": "vector",
+                "value": [
+                    0.0,
+                    0.0,
+                    1.0
+                ]
+            },
+            "inertia": {
+                "type": "vector",
+                "value": [
+                    0.001,
+                    0.001,
+                    0.001
+                ]
+            },
+            "initial_velocity": {
+                "type": "vector",
+                "value": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "initial_omega": {
+                "type": "vector",
+                "value": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "i1_axis": {
+                "type": "vector",
+                "value": [
+                    1.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "i2_axis": {
+                "type": "vector",
+                "value": [
+                    0.0,
+                    1.0,
+                    0.0
+                ]
+            },
+            "i3_axis": {
+                "type": "vector",
+                "value": [
+                    0.0,
+                    0.0,
+                    1.0
+                ]
             }
         }
     ]

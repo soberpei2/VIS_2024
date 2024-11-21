@@ -21,6 +21,8 @@ class mbsObject:
                         parameter[key]["value"] = self.str2vector(splitted[1])
                     elif(parameter[key]["type"] == "str"):                          # Behandlung, wenn key ein string ist
                         parameter[key]["value"] = self.str2str(splitted[1].strip())
+                    elif(parameter[key]["type"] == "bool"):                          # Behandlung, wenn key ein bool ist
+                        parameter[key]["value"] = self.str2bool(splitted[1])
 
     def add_vtk_actor(self, actor):
         """Fügt einen VTK-Actor zur Liste hinzu."""
@@ -52,6 +54,9 @@ class mbsObject:
     
     def str2str(self,inString):
         return str(inString)
+    
+    def str2bool(self,inString):
+        return bool(inString)
 
 
 #in den Unterklassen wird dann nach den Eigenschaften gesucht
@@ -61,9 +66,19 @@ class mbsObject:
 class rigidBody(mbsObject):
     def __init__(self,text):                            #type brauchen wir nicht, weil ich bin ein Rigid Body
         parameter = {                                   #dictionary (key & value) mit den parametern
+            "name": {"type": "str", "value": "name"},
             "mass": {"type": "float", "value": 1.},     #sollte die Masse nicht gefunden werden, wird der default Wert 1 gesetzt bleiben
             "COG": {"type": "vector", "value": [1.,1.,1.]},
-            "geometry": {"type": "str", "value": "body.obj"}  # Standardmäßige Geometrie
+            "geometry": {"type": "str", "value": "body.obj"},  # Standardmäßige Geometrie
+            "x_axis": {"type": "vector", "value": [1.,1.,1.]},
+            "y_axis": {"type": "vector", "value": [1.,1.,1.]},
+            "z_axis": {"type": "vector", "value": [1.,1.,1.]},
+            "inertia": {"type": "vector", "value": [1.,1.,1.]},
+            "initial_velocity": {"type": "vector", "value": [1.,1.,1.]},
+            "initial_omega": {"type": "vector", "value": [1.,1.,1.]},
+            "i1_axis": {"type": "vector", "value": [1.,1.,1.]},
+            "i2_axis": {"type": "vector", "value": [1.,1.,1.]},
+            "i3_axis": {"type": "vector", "value": [1.,1.,1.]}
         } 
 
         mbsObject.__init__(self,"Body","Rigid_EulerParameter_PAI",text,parameter)       #wenn man es so aufruft, braucht man auch das init
@@ -83,8 +98,19 @@ class rigidBody(mbsObject):
 class constraint(mbsObject):
     def __init__(self, text):
         parameter = {
-            "type": {"type": "string", "value": "hinge"},
-            "location": {"type": "vector", "value": [0.0, 0.0, 0.0]},
+            "name": {"type": "str", "value": "nameDEF"},
+            "body1": {"type": "str", "value": "body1DEF"},
+            "body2": {"type": "str", "value": "body2DEF"},
+            "dx": {"type": "bool", "value": "0"},
+            "dy": {"type": "bool", "value": "0"},
+            "dz": {"type": "bool", "value": "0"},
+            "ax": {"type": "bool", "value": "0"},
+            "ay": {"type": "bool", "value": "0"},
+            "az": {"type": "bool", "value": "0"},
+            "position": {"type": "vector", "value": [0.0, 0.0, 0.0]},
+            "x_axis": {"type": "vector", "value": [0.0, 0.0, 0.0]},
+            "y_axis": {"type": "vector", "value": [0.0, 0.0, 0.0]},
+            "z_axis": {"type": "vector", "value": [0.0, 0.0, 0.0]}
         }
         super().__init__("Constraint", "GenericConstraint", text, parameter)
         self.add_constraint_actor()

@@ -19,7 +19,7 @@ i3_axis: 0.00000000, 0.00000000, 1.00000000
 
 $RIGID_BODY:
 name: new_body_1
-geometry: Aufgabe2\quader.obj
+geometry: Aufgabe2/quader.obj
 position: 25.000000, 0.000000, 10.000000
 x_axis: 1.00000000, 0.00000000, 0.00000000
 y_axis: 0.00000000, 1.00000000, 0.00000000
