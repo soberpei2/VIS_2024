@@ -24,7 +24,7 @@ def importFddFile(filepath):
 
 
     search4Objects = ["$RIGID_BODY","$CONSTRAINT","$MOTION","$FORCE","$MEASURE"]
-    search4Subtypes = ["GenericForce","TireForce","GenericTorque","revolute","spherical","fix","hooke"]
+    search4Subtypes = ["GenericForce","GenericTorque","revolute","spherical","fix","hooke"]
 
     #for loop over all lines in file
     for line in fileContent:
@@ -57,8 +57,6 @@ def importFddFile(filepath):
             elif(currentBlockType == "$FORCE"):
                 if(currentBlockSubType == "GenericForce"):
                     objectList.append(force.genForce(currentTextBlock))
-                if(currentBlockSubType == "TireForce"):
-                    objectList.append(force.tireForce(currentTextBlock))
                 if(currentBlockSubType == "GenericTorque"):
                     objectList.append(force.genTorque(currentTextBlock))
             elif(currentBlockType == "$DATAOBJECT_PARAMETER"):

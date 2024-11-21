@@ -39,8 +39,6 @@ class model:
             elif(modelObject["type"] == "force"):
                 if(modelObject["subtype"] == "genericForce"):
                     self.__objectList.append(force.genForce(modelObject["parameter"]))
-                elif(modelObject["subtype"] == "tireForce"):
-                    self.__objectList.append(force.tireForce(modelObject["parameter"]))
                 elif(modelObject["subtype"] == "genericTorque"):
                     self.__objectList.append(force.genTorque(modelObject["parameter"]))
             elif(modelObject["type"] == "dataobjectParameter"):

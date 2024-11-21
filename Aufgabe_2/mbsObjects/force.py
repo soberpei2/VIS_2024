@@ -24,17 +24,6 @@ class force(mbsObj.mbsObject):
             })
             mbsObj.mbsObject.__init__(self,"force",subtype,input,parameter)
 
-class tireForce(force):
-    def __init__(self,input):
-        if isinstance(input,dict):
-            force.__init__(self,"tireForce",input,[])
-        else:
-            parameter = {
-                "path2par": {"type":"string", "value":"init"},
-                "unit": {"type":"string", "value":"init"}
-            }
-            force.__init__(self,"tireForce",input,parameter)
-
 class genForce(force):
     def __init__(self,input):
         if isinstance(input,dict):
