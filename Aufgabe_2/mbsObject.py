@@ -43,7 +43,7 @@ class mbsObject:
                     elif(parameter[key]["type"] == "string"):
                         # Save value under key mass to variable
                         parameter[key]["value"] = splitted[1] + ":" + splitted[2]
-                        parameter[key]["value"].replace("\\", "/")
+                        parameter[key]["value"] = parameter[key]["value"].replace("\\", "/")
     #===================================================================================================
 
     # Memberfunktion -> Inputfile schreiben
@@ -66,7 +66,11 @@ class mbsObject:
 
             # Umwandlung eines int in string
             elif(self.parameter[key]["type"] == "int"):
-                text.append("\t" + key + " = " + self.int2str(self.parameter[key]["value"]) + "\n") 
+                text.append("\t" + key + " = " + self.int2str(self.parameter[key]["value"]) + "\n")
+
+            # Ausgabe wenn type = string
+            elif(self.parameter[key]["type"] == "string"):
+                text.append("\t" + key + " = " + self.parameter[key]["value"] + "\n")
 
         # Anfügen von 2 Leerzeichen am Ende des Files
         text.append("End" + self.__type + "\n%\n")
