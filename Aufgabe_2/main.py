@@ -20,7 +20,6 @@ bodyReader.SetFileName(listOfMbsObjects[0].parameter["geometry"]["value"])
 bodyReader.Update()
 body = bodyReader.GetOutputPort()
 
-
 # Erzeugen eines Filters mit dem Eingang body
 bodyMapper = vtk.vtkPolyDataMapper()
 bodyMapper.SetInputConnection(body)
