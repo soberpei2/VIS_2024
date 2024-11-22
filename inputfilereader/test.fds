@@ -1,20 +1,44 @@
 rigidBody Rigid_EulerParameter_PAI
-	name= new_body_0
-	position=0.0,0.0,0.0
-	mass=0.001
-	COG=0.0,0.0,0.0
+	name = new_body_0
+	position = 0.0,0.0,0.0
+	color = 200 200 200
+	transparency = 50
+	mass = 0.001
+	COG = 0.0,0.0,0.0
 EndrigidBody
 %
 rigidBody Rigid_EulerParameter_PAI
-	name= new_body_1
-	position=25.0,0.0,10.0
-	mass=0.001
-	COG=0.0,0.0,0.0
+	name = new_body_1
+	position = 25.0,0.0,10.0
+	color = 200 200 200
+	transparency = 50
+	mass = 0.001
+	COG = 0.0,0.0,0.0
 EndrigidBody
 %
 constraint Rigid_EulerParameter_PAI
+	name = new_constraint_0
+	body1 = new_body_0
+	body2 = GROUND
+	dx = True
+	dy = True
+	dz = True
+	ax = True
+	ay = True
+	az = True
+	position = 0.0,0.0,0.0
 Endconstraint
 %
 constraint Rigid_EulerParameter_PAI
+	name = new_constraint_1
+	body1 = new_body_0
+	body2 = new_body_1
+	dx = True
+	dy = True
+	dz = True
+	ax = True
+	ay = True
+	az = True
+	position = 25.0,0.0,0.0
 Endconstraint
 %

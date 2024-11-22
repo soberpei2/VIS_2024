@@ -24,7 +24,7 @@ def inputfilereader(file):  #als Funktion definiert
                     listOfMbsObjects.append(mbsObject.rigidBody(currentTextBlock))
                 elif(currentBlockType == "CONSTRAINT"):
                     listOfMbsObjects.append(mbsObject.constraint(currentTextBlock))
-                    numOfConstraints+=1
+                    #numOfConstraints+=1
                 currentBlockType = ""
 
         for type_i in search4Objects:
