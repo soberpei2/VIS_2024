@@ -10,10 +10,11 @@ def read_fdd_file(file_path):
     :param file_path: Pfad zur .fdd-Datei.
     :return: Liste der MbsObjects.
     """
-    search4Objects = ["RIGID_BODY", "CONSTRAINT"]  # Fix definierte Schlagwörter
+    search4Objects = ["RIGID_BODY", "CONSTRAINT","SETTINGS"]  # Fix definierte Schlagwörter
 
     with open(file_path, "r") as f:
         fileContent = f.read().splitlines()
+        fileContent.append("$")                     #damit der letzte Block auch noch erkannt wird
         f.close                                     # sauber arbeiten
 
     currentBlockType = ""
@@ -23,9 +24,14 @@ def read_fdd_file(file_path):
     for line in fileContent:
         if "$" in line:
             if currentBlockType:
+                # Weitere Typen können hier hinzugefügt werden
                 if currentBlockType == "RIGID_BODY":
                     listOfMbsObjects.append(mbsObject.rigidBody(currentTextBlock))
-                # Weitere Typen können hier hinzugefügt werden
+                elif currentBlockType == "CONSTRAINT":
+                    listOfMbsObjects.append(mbsObject.constraint(currentTextBlock))
+                elif currentBlockType == "SETTINGS":
+                    listOfMbsObjects.append(mbsObject.settings(currentTextBlock))
+                
                 currentBlockType = ""
 
         for type_i in search4Objects:

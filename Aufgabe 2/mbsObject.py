@@ -23,6 +23,8 @@ class mbsObject:
                         parameter[key]["value"] = self.str2str(splitted[1].strip())
                     elif(parameter[key]["type"] == "bool"):                          # Behandlung, wenn key ein bool ist
                         parameter[key]["value"] = self.str2bool(splitted[1])
+                    elif(parameter[key]["type"] == "intvec"):                        # Behandlung, wenn key ein intvec (color) ist
+                        parameter[key]["value"] = self.str2intvec(splitted[1])
 
     def add_vtk_actor(self, actor):
         """Fügt einen VTK-Actor zur Liste hinzu."""
@@ -57,6 +59,9 @@ class mbsObject:
     
     def str2bool(self,inString):
         return bool(inString)
+    
+    def str2intvec(self,inString):
+        return [int(inString.split()[0]),int(inString.split()[1]),int(inString.split()[2])]
 
 
 #in den Unterklassen wird dann nach den Eigenschaften gesucht
@@ -73,6 +78,7 @@ class rigidBody(mbsObject):
             "x_axis": {"type": "vector", "value": [1.,1.,1.]},
             "y_axis": {"type": "vector", "value": [1.,1.,1.]},
             "z_axis": {"type": "vector", "value": [1.,1.,1.]},
+            "color": {"type": "intvec", "value": [0,0,0]},
             "inertia": {"type": "vector", "value": [1.,1.,1.]},
             "initial_velocity": {"type": "vector", "value": [1.,1.,1.]},
             "initial_omega": {"type": "vector", "value": [1.,1.,1.]},
@@ -113,19 +119,29 @@ class constraint(mbsObject):
             "z_axis": {"type": "vector", "value": [0.0, 0.0, 0.0]}
         }
         super().__init__("Constraint", "GenericConstraint", text, parameter)
-        self.add_constraint_actor()
+        #self.add_constraint_actor()
 
-    def add_constraint_actor(self):
-        """Erstellt eine grafische Darstellung für Constraints."""
-        sphere = vtk.vtkSphereSource()
-        sphere.SetCenter(self.parameter["location"]["value"])
-        sphere.SetRadius(0.1)
-        mapper = vtk.vtkPolyDataMapper()
-        mapper.SetInputConnection(sphere.GetOutputPort())
-        actor = vtk.vtkActor()
-        actor.SetMapper(mapper)
-        actor.GetProperty().SetColor(1.0, 0.0, 0.0)  # Rot für Constraints
-        self.add_vtk_actor(actor)
+    # def add_constraint_actor(self):
+    #     """Erstellt eine grafische Darstellung für Constraints."""
+    #     sphere = vtk.vtkSphereSource()
+    #     sphere.SetCenter(self.parameter["location"]["value"])
+    #     sphere.SetRadius(0.1)
+    #     mapper = vtk.vtkPolyDataMapper()
+    #     mapper.SetInputConnection(sphere.GetOutputPort())
+    #     actor = vtk.vtkActor()
+    #     actor.SetMapper(mapper)
+    #     actor.GetProperty().SetColor(1.0, 0.0, 0.0)  # Rot für Constraints
+    #     self.add_vtk_actor(actor)
+
+# -----------------------------------------------------------------------
+
+class settings(mbsObject):
+    def __init__(self,text):
+        parameter = {                                   
+            "gravity_vector": {"type": "vector", "value": [1.,1.,1.]},
+        } 
+
+        mbsObject.__init__(self,"Settings","Settings",text,parameter)
 
 # -----------------------------------------------------------------------
 
@@ -136,17 +152,18 @@ class gravityForce(mbsObject):
             "direction": {"type": "vector", "value": [0.0, -1.0, 0.0]},
         }
         super().__init__("Force", "Gravity", text, parameter)
-        self.add_gravity_actor()
+        
+        #self.add_gravity_actor()
 
-    def add_gravity_actor(self):
-        """Erstellt eine Pfeildarstellung für die Schwerkraft."""
-        arrow = vtk.vtkArrowSource()
-        mapper = vtk.vtkPolyDataMapper()
-        mapper.SetInputConnection(arrow.GetOutputPort())
-        actor = vtk.vtkActor()
-        actor.SetMapper(mapper)
-        actor.GetProperty().SetColor(0.0, 0.0, 1.0)  # Blau für Gravity
-        self.add_vtk_actor(actor)
+    # def add_gravity_actor(self):
+    #     """Erstellt eine Pfeildarstellung für die Schwerkraft."""
+    #     arrow = vtk.vtkArrowSource()
+    #     mapper = vtk.vtkPolyDataMapper()
+    #     mapper.SetInputConnection(arrow.GetOutputPort())
+    #     actor = vtk.vtkActor()
+    #     actor.SetMapper(mapper)
+    #     actor.GetProperty().SetColor(0.0, 0.0, 1.0)  # Blau für Gravity
+    #     self.add_vtk_actor(actor)
 
 # -----------------------------------------------------------------------
 

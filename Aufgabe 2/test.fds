@@ -26,3 +26,21 @@ Body Rigid_EulerParameter_PAI
 	i3_axis = 0.0,0.0,1.0
 EndBody
 %
+Constraint GenericConstraint
+	position = 0.0,0.0,0.0
+	x_axis = 1.0,0.0,0.0
+	y_axis = 0.0,1.0,0.0
+	z_axis = 0.0,0.0,1.0
+EndConstraint
+%
+Constraint GenericConstraint
+	position = 25.0,0.0,0.0
+	x_axis = 1.0,0.0,0.0
+	y_axis = 0.0,1.0,0.0
+	z_axis = 0.0,0.0,1.0
+EndConstraint
+%
+Settings Settings
+	gravity_vector = 0.0,0.0,-9810.0
+EndSettings
+%

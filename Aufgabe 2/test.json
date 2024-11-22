@@ -45,6 +45,14 @@
                     1.0
                 ]
             },
+            "color": {
+                "type": "intvec",
+                "value": [
+                    200,
+                    200,
+                    200
+                ]
+            },
             "inertia": {
                 "type": "vector",
                 "value": [
@@ -113,7 +121,7 @@
             },
             "geometry": {
                 "type": "str",
-                "value": "Aufgabe2\\quader.obj"
+                "value": "Aufgabe2/quader.obj"
             },
             "x_axis": {
                 "type": "vector",
@@ -137,6 +145,14 @@
                     0.0,
                     0.0,
                     1.0
+                ]
+            },
+            "color": {
+                "type": "intvec",
+                "value": [
+                    200,
+                    200,
+                    200
                 ]
             },
             "inertia": {
@@ -185,6 +201,156 @@
                     0.0,
                     0.0,
                     1.0
+                ]
+            }
+        },
+        {
+            "name": {
+                "type": "str",
+                "value": "new_constraint_0"
+            },
+            "body1": {
+                "type": "str",
+                "value": "new_body_0"
+            },
+            "body2": {
+                "type": "str",
+                "value": "GROUND"
+            },
+            "dx": {
+                "type": "bool",
+                "value": true
+            },
+            "dy": {
+                "type": "bool",
+                "value": true
+            },
+            "dz": {
+                "type": "bool",
+                "value": true
+            },
+            "ax": {
+                "type": "bool",
+                "value": true
+            },
+            "ay": {
+                "type": "bool",
+                "value": true
+            },
+            "az": {
+                "type": "bool",
+                "value": true
+            },
+            "position": {
+                "type": "vector",
+                "value": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "x_axis": {
+                "type": "vector",
+                "value": [
+                    1.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "y_axis": {
+                "type": "vector",
+                "value": [
+                    0.0,
+                    1.0,
+                    0.0
+                ]
+            },
+            "z_axis": {
+                "type": "vector",
+                "value": [
+                    0.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "name": {
+                "type": "str",
+                "value": "new_constraint_1"
+            },
+            "body1": {
+                "type": "str",
+                "value": "new_body_0"
+            },
+            "body2": {
+                "type": "str",
+                "value": "new_body_1"
+            },
+            "dx": {
+                "type": "bool",
+                "value": true
+            },
+            "dy": {
+                "type": "bool",
+                "value": true
+            },
+            "dz": {
+                "type": "bool",
+                "value": true
+            },
+            "ax": {
+                "type": "bool",
+                "value": true
+            },
+            "ay": {
+                "type": "bool",
+                "value": true
+            },
+            "az": {
+                "type": "bool",
+                "value": true
+            },
+            "position": {
+                "type": "vector",
+                "value": [
+                    25.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "x_axis": {
+                "type": "vector",
+                "value": [
+                    1.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "y_axis": {
+                "type": "vector",
+                "value": [
+                    0.0,
+                    1.0,
+                    0.0
+                ]
+            },
+            "z_axis": {
+                "type": "vector",
+                "value": [
+                    0.0,
+                    0.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "gravity_vector": {
+                "type": "vector",
+                "value": [
+                    0.0,
+                    0.0,
+                    -9810.0
                 ]
             }
         }
