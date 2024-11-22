@@ -1,5 +1,6 @@
 import Inputfilereader_modularisiert
 import vtk
+from mbsObject import rigidbody  # Hier wird die Klasse rigidbody importiert
 
 # Datei einlesen
 file = "Aufgabe_2/test.fdd"
@@ -16,68 +17,92 @@ Inputfilereader_modularisiert.write_json(listOfMbsObjects, "Aufgabe_2/test.json"
 data = Inputfilereader_modularisiert.read_json("Aufgabe_2/test.json")
 
 # FDS schreiben
-Inputfilereader_modularisiert.write_fds(listOfMbsObjects, "Aufgabe_2/test.fds")
+Inputfilereader_modularisiert.write_fds(listOfMbsObjects, "Aufgabe_2/test.fds")# Iteriere durch die Liste der MBS-Objekte und visualisiere jedes mit vtk_body
 
-# Anzahl der Objekte ausgeben
-print(len(listOfMbsObjects))
 
-#-----------------------
-#Visualisieren eines OBJ-Files
-#-----------------------
-#Erzeugen eines Readers
-bodyReader = vtk.vtkOBJReader()
+# Erstellen des Renderers und des Renderfensters
+renderer = vtk.vtkRenderer()
+renderWindow = vtk.vtkRenderWindow()
+renderWindow.AddRenderer(renderer)
+renderWindow.SetSize(800, 800)
 
-#Erzeugen einer Quelle
-body = bodyReader.SetFileName("C:/vis2024/VIS_2024/Aufgabe_2/quader.obj")
-bodyReader.Update()
+# Erstellen eines Interactors
+iren = vtk.vtkRenderWindowInteractor()
+iren.SetRenderWindow(renderWindow)
 
-#Erzeugen eines Filters mit dem Eingang body
-bodymapper = vtk.vtkPolyDataMapper()
-bodymapper.SetInputConnection(bodyReader.GetOutputPort())
-
-#Erzeugen eines Aktors (Filter als Eingang) 
-bodyActor = vtk.vtkActor()
-bodyActor.SetMapper(bodymapper)
-
-#Erzeugen eines Renderers, Hinzugfügen eines Atkors und Hintergrund
-bodyrenderer = vtk.vtkRenderer()
-bodyrenderer.AddActor(bodyActor)
-bodyrenderer.SetBackground(0.1, 0.2, 0.4)
-
-#Erzeugen eines Render Fensters und hinzufügen des Renders
-renWin = vtk.vtkRenderWindow()
-renWin.AddRenderer(bodyrenderer)
-renWin.SetSize(600, 600)
-renWin.Render()
-#Renders des Fensters und Kamera rotieren
-
-#---------------
-#Testen 
-#---------------
+# Iteriere durch die Liste der MBS-Objekte und visualisiere jedes mit vtk_body
+for obj in listOfMbsObjects:
+    if isinstance(obj, rigidbody):  # Sicherstellen, dass es ein Rigid Body ist
+        obj.vtk_body(renderer)  # Füge das Objekt dem gemeinsamen Renderer hinzu
 
 # Koordinatensystem hinzufügen
 axes = vtk.vtkAxesActor()
 axes.SetTotalLength(30, 30, 30)  # Länge der Achsen (X, Y, Z)
 axes.SetShaftTypeToCylinder()    # Darstellung der Achsen als Zylinder
 axes.SetAxisLabels(1)            # Achsenbeschriftungen anzeigen (X, Y, Z)
-bodyrenderer.AddActor(axes)
+renderer.AddActor(axes)
 
-# Verschiebe das Objekt zu einer neuen Position
-bodyActor.SetPosition(0, 0, 0)
-
-# Rotiere das Objekt
-bodyActor.SetOrientation(0, 90, 0)
-
-# Skaliere das Objekt
-bodyActor.SetScale(1.5, 2.0, 1.0)
-
-# Position und Orientierung prüfen
-print("Position:", bodyActor.GetPosition())
-print("Orientation:", bodyActor.GetOrientation())
-
-
-#Start der Interaktion
-iren = vtk.vtkRenderWindowInteractor()
-iren.SetRenderWindow(renWin)
+# Rendern und Interaktion starten
+renderWindow.Render()
 iren.Start()
+
+# Anzahl der Objekte ausgeben
+print(len(listOfMbsObjects))
+
+# #Erzeugen eines Readers
+# bodyReader = vtk.vtkOBJReader()
+
+# #Erzeugen einer Quelle
+# body = bodyReader.SetFileName("C:/vis2024/VIS_2024/Aufgabe_2/quader.obj")
+# bodyReader.Update()
+
+# #Erzeugen eines Filters mit dem Eingang body
+# bodymapper = vtk.vtkPolyDataMapper()
+# bodymapper.SetInputConnection(bodyReader.GetOutputPort())
+
+# #Erzeugen eines Aktors (Filter als Eingang) 
+# bodyActor = vtk.vtkActor()
+# bodyActor.SetMapper(bodymapper)
+
+# #Erzeugen eines Renderers, Hinzugfügen eines Atkors und Hintergrund
+# bodyrenderer = vtk.vtkRenderer()
+# bodyrenderer.AddActor(bodyActor)
+# bodyrenderer.SetBackground(0.1, 0.2, 0.4)
+
+# #Erzeugen eines Render Fensters und hinzufügen des Renders
+# renWin = vtk.vtkRenderWindow()
+# renWin.AddRenderer(bodyrenderer)
+# renWin.SetSize(600, 600)
+# renWin.Render()
+# #Renders des Fensters und Kamera rotieren
+
+# #---------------
+# #Testen 
+# #---------------
+
+# # Koordinatensystem hinzufügen
+# axes = vtk.vtkAxesActor()
+# axes.SetTotalLength(30, 30, 30)  # Länge der Achsen (X, Y, Z)
+# axes.SetShaftTypeToCylinder()    # Darstellung der Achsen als Zylinder
+# axes.SetAxisLabels(1)            # Achsenbeschriftungen anzeigen (X, Y, Z)
+# bodyrenderer.AddActor(axes)
+
+# # Verschiebe das Objekt zu einer neuen Position
+# bodyActor.SetPosition(0, 0, 0)
+
+# # Rotiere das Objekt
+# bodyActor.SetOrientation(0, 90, 0)
+
+# # Skaliere das Objekt
+# bodyActor.SetScale(1.5, 2.0, 1.0)
+
+# # Position und Orientierung prüfen
+# print("Position:", bodyActor.GetPosition())
+# print("Orientation:", bodyActor.GetOrientation())
+
+
+# #Start der Interaktion
+# iren = vtk.vtkRenderWindowInteractor()
+# iren.SetRenderWindow(renWin)
+# iren.Start()
 

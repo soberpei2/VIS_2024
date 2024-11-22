@@ -18,12 +18,15 @@ class mbsObject:
                         # Den gesamten Pfad nach 'geometry' extrahieren
                         path = " ".join(splitted[1:]).strip()  # Extrahiere den Pfad
     
-                        # Entferne das Leerzeichen nach "C" und füge den Doppelpunkt hinzu
-                        if path.startswith("C "):  # Wenn der Pfad mit "C " beginnt
-                            path = "C:" + path[2:]  # Ersetze das Leerzeichen durch den Doppelpunkt
+                        # Korrigiere den Pfad: Füge Doppelpunkt nach 'C' hinzu, falls nötig
+                        if path.startswith("C "):  
+                            path = "C:" + path[2:]
     
                         # Ersetze Backslashes durch Schrägstriche
                         path = path.replace("\\", "/")
+    
+                        # Setze den Wert des Parameters
+                        parameter[key]["value"] = self.str2str(path)
     
                         # Setze den Wert des Parameters
                         parameter[key]["value"] = self.str2str(path)
@@ -44,12 +47,13 @@ class mbsObject:
             elif(self.parameter[key]["type"] == "int"):
                 text.append("\t"+ key +"="+self.int2str(self.parameter[key]["value"])+"\n")
             elif(self.parameter[key]["type"] == "string"):
-                text.append("\t"+ key +"="+self.str2str(self.parameter[key]["value"])+"\n")    
-            #elif(self.paramter[key]["type"]== "rotMat"):
-                #text.append("\t"+ key + " = " + self.floatMatrix3x3toString(self.parameter[key]["Value"])+"\n")
-        
-        text.append("End" + self.__type+"\n%\n")
-
+                path = self.parameter[key]["value"].strip()
+                # Einfach den Doppelpunkt an den richtigen Stellen setzen
+                if len(path) > 1 and path[1] == " " and path[0].isalpha():
+                    path = path[0] + ":" + path[2:]  # Doppelpunkt anfügen
+                path = path.replace("\\", "/")  # Backslashes durch Slashes ersetzen
+                text.append(f"\t{key}={path}\n")
+        text.append("End" + self.__type + "\n%\n")
         file.writelines(text)
                 
     def show (self, renderer):
@@ -115,16 +119,66 @@ class rigidbody(mbsObject):
         }
 
         mbsObject.__init__(self,"Body","Rigid_EulerParamter_PAI",text,parameter)
+        self.bodyActor = None
 
-    def vtk_body(self):
-        reader = vtk.vtkOBJReader()
-        reader.SetFileName("path/to/your/model.obj")
-        reader.Update()
-        mapper = vtk.vtkPolyDataMapper()
-        mapper.SetInputConnection(reader.GetOutputPort())
-        self.vtk_actor = vtk.vtkActor()
-        self.vtk_actor.SetMapper(mapper)
-        self.vtk_actor.GetProperty().SetColor(0.5, 0.5, 1.0)
+    def vtk_body(self, renderer):
+        # Erstelle den Reader und mapper wie zuvor
+        body_data = self.parameter
+        bodyReader = vtk.vtkOBJReader()
+        bodyReader.SetFileName(body_data["geometry"]["value"])
+        bodyReader.Update()
+
+        bodymapper = vtk.vtkPolyDataMapper()
+        bodymapper.SetInputConnection(bodyReader.GetOutputPort())
+
+        # Erstelle den Actor
+        self.bodyActor = vtk.vtkActor()
+        self.bodyActor.SetMapper(bodymapper)
+
+        # Setze Farbe und Transparenz des Actors
+        color = body_data["color"]["value"]
+        r, g, b = color[0] / 255.0, color[1] / 255.0, color[2] / 255.0  # Umwandlung auf 0-1 Skala
+        self.bodyActor.GetProperty().SetColor(r, g, b)
+
+        transparency = body_data["transparency"]["value"]
+        self.bodyActor.GetProperty().SetOpacity(transparency)
+
+        # Setze Position des Actors
+        position = body_data["position"]["value"]
+        self.bodyActor.SetPosition(position[0], position[1], position[2])
+
+        # Füge den Actor dem übergebenen Renderer hinzu
+        renderer.AddActor(self.bodyActor)
+        
+        # Setze den Hintergrund auf die im FDS gespeicherte Hintergrundfarbe
+        #bg_color = self.parameter.get("background color", {"value": [0.1, 0.2, 0.4]})["value"]
+        #bodyrenderer.SetBackground(bg_color[0], bg_color[1], bg_color[2])
+        
+        # #Erzeugen eines Renderers, Hinzugfügen eines Atkors und Hintergrund
+        # bodyrenderer = vtk.vtkRenderer()
+        # bodyrenderer.AddActor(bodyActor)
+        # bodyrenderer.SetBackground(0.1, 0.2, 0.4)
+
+        #Erzeugen eines Render Fensters und hinzufügen des Renders
+        # renWin = vtk.vtkRenderWindow()
+        # renWin.AddRenderer(bodyrenderer)
+        # renWin.SetSize(600, 600)
+        # renWin.Render()
+
+        # # Interactor für die Interaktivität
+        # iren = vtk.vtkRenderWindowInteractor()
+        # iren.SetRenderWindow(renWin)
+        # iren.Start()
+
+    # def vtk_body(self):
+    #     reader = vtk.vtkOBJReader()
+    #     reader.SetFileName("path/to/your/model.obj")
+    #     reader.Update()
+    #     mapper = vtk.vtkPolyDataMapper()
+    #     mapper.SetInputConnection(reader.GetOutputPort())
+    #     self.vtk_actor = vtk.vtkActor()
+    #     self.vtk_actor.SetMapper(mapper)
+    #     self.vtk_actor.GetProperty().SetColor(0.5, 0.5, 1.0)
 
 class constraint(mbsObject):
     def __init__(self, text):
@@ -139,15 +193,37 @@ class constraint(mbsObject):
         }
         mbsObject.__init__(self,"Constraint", "Fixed", text, parameter)
 
-    def add_vtk_representation(self):
-        sphere = vtk.vtkSphereSource()
-        sphere.SetRadius(0.05)
-        sphere.SetCenter(self.parameter["COG"]["value"])
-        mapper = vtk.vtkPolyDataMapper()
-        mapper.SetInputConnection(sphere.GetOutputPort())
-        self.vtk_actor = vtk.vtkActor()
-        self.vtk_actor.SetMapper(mapper)
-        self.vtk_actor.GetProperty().SetColor(1.0, 0.0, 0.0)
+    #Visualisieren eines OBJ-Files
+    #-----------------------
+    def vtk_body(self):
+        body_data=self.parameter
+        
+        #Erzeugen eines Readers
+        bodyReader = vtk.vtkOBJReader()
+
+        #Erzeugen einer Quelle
+        body = bodyReader.SetFileName("C:/vis2024/VIS_2024/Aufgabe_2/quader.obj")
+        bodyReader.Update()
+
+        #Erzeugen eines Filters mit dem Eingang body
+        bodymapper = vtk.vtkPolyDataMapper()
+        bodymapper.SetInputConnection(bodyReader.GetOutputPort())
+
+        #Erzeugen eines Aktors (Filter als Eingang) 
+        bodyActor = vtk.vtkActor()
+        bodyActor.SetMapper(bodymapper)
+
+        #Erzeugen eines Renderers, Hinzugfügen eines Atkors und Hintergrund
+        bodyrenderer = vtk.vtkRenderer()
+        bodyrenderer.AddActor(bodyActor)
+        bodyrenderer.SetBackground(0.1, 0.2, 0.4)
+
+        #Erzeugen eines Render Fensters und hinzufügen des Renders
+        renWin = vtk.vtkRenderWindow()
+        renWin.AddRenderer(bodyrenderer)
+        renWin.SetSize(600, 600)
+        renWin.Render()
+
 
     def writeInputfile(self, file):
         super().writeInputfile(file)

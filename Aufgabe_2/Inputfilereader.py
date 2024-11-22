@@ -13,7 +13,7 @@ numOfConstraints = 0
 currentBlockType = ""
 currentTextBlock = []
 listOfMbsObjects = []
-search4Objects = ["RIGID_BODY","CONSTRAINT"]#mögliche Schlagwörter
+search4Objects = ["RIGID_BODY","CONSTRAINT",C]#mögliche Schlagwörter
 
 ##Lesen der Zeilen im Inputfile 
 for line in fileContent:#Für alle Zeilen (line ist Iterator, alle Zeilen von Filevonten)
@@ -21,8 +21,8 @@ for line in fileContent:#Für alle Zeilen (line ist Iterator, alle Zeilen von Fi
         if(currentBlockType !=""):
             if(currentBlockType == "RIGID_BODY"):
                 listOfMbsObjects.append(mbsObject.rigidbody(currentTextBlock))
-            #elif(currentBlockType == "CONSTRAINT"):
-                #numOfConstraints += 1
+            elif(currentBlockType == "CONSTRAINT"):
+                numOfConstraints += 1
             currentBlockType = ""
 
 
