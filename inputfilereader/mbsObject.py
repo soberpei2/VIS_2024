@@ -21,6 +21,8 @@ class mbsObject:
                         parameter[key]["value"] = self.Path2str(line)         # für constraint 
                     elif(parameter[key]["type"] == "integer"):
                         parameter[key]["value"] = self.str2integer(splitted[1])        # für constraint 
+                    elif(parameter[key]["type"] == "color"):
+                        parameter[key]["value"] = self.color2vec(splitted[1])        
 
 
     def writeInputfile(self, file):
@@ -37,6 +39,8 @@ class mbsObject:
                 text.append("\t" + key + " = " + (self.parameter[key]["value"])+"\n")
             elif(self.parameter[key]["type"] == "integer"):
                 text.append("\t" + key + " = " + self.integer2str(self.parameter[key]["value"])+"\n")
+            elif(self.parameter[key]["type"] == "color"):
+                text.append("\t" + key + " = " + self.vector2str(self.parameter[key]["value"])+"\n")
         text.append("End" + self.__type + "\n%\n")
 
         file.writelines(text)
@@ -56,6 +60,10 @@ class mbsObject:
         return int(inString)
     def integer2str(self,inInteger):
         return str(inInteger)
+    def color2vec(self,inString):
+        stringcolor = inString[:12].split()
+        return [float(v) for v in stringcolor]
+        
 
 class rigidBody(mbsObject):
     def __init__(self, text):
@@ -68,7 +76,8 @@ class rigidBody(mbsObject):
             "transparency": {"type": "float", "value": 0.},
             "x_axis": {"type": "vector", "value": [0.,0.,0.]}, # Ausrichtung in x 
             "y_axis": {"type": "vector", "value": [0.,0.,0.]}, # Ausrichtung in y
-            "z_axis": {"type": "vector", "value": [0.,0.,0.]} # Ausrichtung in z
+            "z_axis": {"type": "vector", "value": [0.,0.,0.]}, # Ausrichtung in z
+            "color": {"type": "color", "value": [0.,0.,0.]} # Ausrichtung in z
             
         }
         mbsObject.__init__(self,"Body","Rigid_EulerParameter_PAI", text,parameter)  # euler koordinaten und PAI pricip ... inertia
