@@ -95,7 +95,7 @@ MaxNumOfTimeStepsUsingSameFactorizedJacobian: 0
 UsePardisoScalingAndMatching: 0
 
 $SETTINGS:
-background color: 255 255 255 
+background color: 255 255 255   255
 bounding mode: 0
 COG marker scale: 0.010000
 constraint icon scale: 0.010000

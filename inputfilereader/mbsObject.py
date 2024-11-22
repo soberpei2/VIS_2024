@@ -65,9 +65,11 @@ class rigidBody(mbsObject):
             "COG": {"type": "vector", "value": [0.,0.,0.]}, #center of gravity
             "position": {"type": "vector", "value": [0.,0.,0.]}, # position des Vektors
             "geometry": {"type": "path", "value": "unbekannt"}, # Pfad der Geometrie
+            "transparency": {"type": "float", "value": 0.},
             "x_axis": {"type": "vector", "value": [0.,0.,0.]}, # Ausrichtung in x 
             "y_axis": {"type": "vector", "value": [0.,0.,0.]}, # Ausrichtung in y
             "z_axis": {"type": "vector", "value": [0.,0.,0.]} # Ausrichtung in z
+            
         }
         mbsObject.__init__(self,"Body","Rigid_EulerParameter_PAI", text,parameter)  # euler koordinaten und PAI pricip ... inertia
 
@@ -85,7 +87,8 @@ class rigidBody(mbsObject):
 
         # Transformation basierend auf der Position und Orientierung
         self.apply_transformations()
-
+        self.actor.GetProperty().SetOpacity(self.parameter["transparency"]["value"]/100) # Transparentz übernehmen/ einstellen
+        
     def apply_transformations(self):
         """Wendet die Position und Orientierung an den Actor an."""
         transform = vtk.vtkTransform()
@@ -126,7 +129,28 @@ class constraint(mbsObject):
 
         }
         mbsObject.__init__(self,"Constraint","Constraint_EulerParameter_PAI", text,parameter)
+        # Position und Achsen laden
+        pos = self.parameter["position"]["value"]
+        x_axis = self.parameter["x_axis"]["value"]
+        y_axis = self.parameter["y_axis"]["value"]
+        z_axis = self.parameter["z_axis"]["value"]
 
+        # Constraint als Linie darstellen (optional: Achsen-Pfeile hinzufügen)
+        self.visualize_constraint(pos, x_axis, y_axis, z_axis)
+
+    def visualize_constraint(self, position, x_axis, y_axis, z_axis):
+        """Visualisiert den Constraint an der gegebenen Position."""
+        # Nutze einen Punkt und Linien für die Darstellung
+        sphere_source = vtk.vtkSphereSource()
+        sphere_source.SetCenter(position)
+        sphere_source.SetRadius(1)
+
+        # Mapping und Actor
+        sphere_mapper = vtk.vtkPolyDataMapper()
+        sphere_mapper.SetInputConnection(sphere_source.GetOutputPort())
+
+        self.actor.SetMapper(sphere_mapper)
+        self.actor.GetProperty().SetColor(1.0, 1.0, 0.0)  # Gelbe Farbe für Constraints
 
 
 

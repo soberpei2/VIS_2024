@@ -11,7 +11,9 @@ renderer.SetBackground(0.1, 0.1, 0.2)  # Dunkelblauer Hintergrund
 for obj in listOfMyObjects:
     if isinstance(obj, inputfilereader.mbsObject.rigidBody):  # Nur RigidBody-Objekte
         renderer.AddActor(obj.actor)
-
+    elif isinstance(obj, inputfilereader.mbsObject.constraint):  # Constraint-Objekte
+        renderer.AddActor(obj.actor)
+        
 # Render-Fenster einrichten
 renderWindow = vtk.vtkRenderWindow()
 renderWindow.AddRenderer(renderer)
