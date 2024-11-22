@@ -1,16 +1,25 @@
 import json
 import mbsObject
 
-# Modul-Funktion: Datei einlesen
-def read_file(file_path):
-    """Liest die Datei und gibt die Zeilen als Liste zurück."""
-    with open(file_path, "r") as file:
-        return file.read().splitlines()
+# Funktion zum Einlesen
+def inputFileReader(file):
+    # Open FreeDyne-file
+    f = open(file, "r")
+    fileContent = f.read().splitlines()
 
+    # Hinzufügen eines $-Zeichens am Ende der Liste, damit der letzte Block
+    # abgeschlossen werden kann und mitaufgenommen wird
+    fileContent.append("$")
+
+    # Close file after saving its content
+    f.close()
+
+    return fileContent
+    
 # Modul-Funktion: Datei analysieren
 def analyse_file(file_content):
     """Analysiert die Datei und extrahiert MBS-Objekte."""
-    search4Objects = ["RIGID_BODY", "CONSTRAINT"]  # mögliche Schlagwörter
+    search4Objects = ["RIGID_BODY", "CONSTRAINT","SETTINGS"]  # mögliche Schlagwörter
     currentBlockType = ""
     currentTextBlock = []
     listOfMbsObjects = []
@@ -20,8 +29,10 @@ def analyse_file(file_content):
             if currentBlockType != "":
                 if currentBlockType == "RIGID_BODY":
                     listOfMbsObjects.append(mbsObject.rigidbody(currentTextBlock))  # Hier wird ein 'rigidbody' erzeugt
-                # elif currentBlockType == "CONSTRAINT":
-                #     numOfConstraints += 1
+                elif currentBlockType == "CONSTRAINT":
+                    listOfMbsObjects.append(mbsObject.constraint(currentTextBlock))
+                elif currentBlockType == "SETTINGS":
+                    listOfMbsObjects.append(mbsObject.settings(currentTextBlock))
                 currentBlockType = ""
 
         for type_i in search4Objects:
@@ -53,3 +64,4 @@ def write_fds(listOfMbsObjects, fds_path):
     with open(fds_path, "w") as fds_file:
         for mbsObject_i in listOfMbsObjects:
             mbsObject_i.writeInputfile(fds_file)
+
