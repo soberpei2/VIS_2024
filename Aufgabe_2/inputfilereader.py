@@ -13,11 +13,15 @@ def readInputFile(filePath):
     currentTextBlock = []
     listOfMbsObjects = []
     search4Objects  = ["RIGID_BODY", "CONSTRAINT"]
+
     for line in fileContent:
         if(line.find("$") >= 0):#new block found
             if(currentBlockType != ""):
                 if(currentBlockType == "RIGID_BODY"):
                     listOfMbsObjects.append(mbsObject.rigidBody(currentTextBlock))
+                
+                elif(currentBlockType == "CONSTRAINT"):
+                    listOfMbsObjects.append(mbsObject.constraint(currentTextBlock))
                 currentBlockType = ""
 
         for type_i in search4Objects:
