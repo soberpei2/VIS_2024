@@ -1,3 +1,5 @@
+# Importieren benötigter Biblotheken
+import vtk
 
 class mbsObject:
     # Constructor
@@ -117,6 +119,35 @@ class mbsObject:
     #---------------------------------------------------
     def int2str(self, inInt):
         return str(inInt)
+    #===================================================================================================
+
+    # Memberfunktion - Visualisierung von MBS-Objekten
+    #=================================================
+    def showMbsObject(self, object):
+        # Erzeugen eines Filters mit dem Eingang body
+        Mapper = vtk.vtkPolyDataMapper()
+        Mapper.SetInputConnection(object)
+
+        # Erzeugen eines Aktors (Filter als Eingang)
+        Actor = vtk.vtkActor()
+        Actor.SetMapper(Mapper)
+
+        # Zeichnen des Bildes
+        ren1 = vtk.vtkRenderer()
+        ren1.AddActor(Actor)
+        ren1.SetBackground(0.1, 0.2, 0.4)
+
+        # Definieren einer Leinwand
+        renWin = vtk.vtkRenderWindow()
+        renWin.AddRenderer(ren1)
+        renWin.SetSize(300, 300)
+        renWin.Render()
+
+        # Interaktionseinstellungen
+        iren = vtk.vtkRenderWindowInteractor()
+        iren.SetRenderWindow(renWin)
+        iren.Start()
+
                
 #=======================================================================================================
 
