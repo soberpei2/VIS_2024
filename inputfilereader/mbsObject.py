@@ -18,9 +18,7 @@ class mbsObject:
                     elif(parameter[key]["type"] == "string"):
                         parameter[key]["value"] = (splitted[1])         # für constraint
                     elif(parameter[key]["type"] == "path"):
-                        parameter[key]["value"] = self.Path2str(line)         # für constraint
-                    elif(parameter[key]["type"] == "force"):
-                        parameter[key]["value"] = self.str2vector(splitted[1])         
+                        parameter[key]["value"] = self.Path2str(line)         # für constraint 
 
 
     def writeInputfile(self, file):
@@ -49,7 +47,7 @@ class mbsObject:
     def vector2str(self,inVector):
         return str(inVector[0]) + "," + str(inVector[1]) + "," + str(inVector[2])
     def Path2str(self,inString):
-        return inString[9:]
+        return inString[10:]
 
 class rigidBody(mbsObject):
     def __init__(self, text):
@@ -57,13 +55,48 @@ class rigidBody(mbsObject):
             # dictonary mit keys 
             "mass": {"type": "float", "value": 1.},
             "COG": {"type": "vector", "value": [0.,0.,0.]}, #center of gravity
-            "position": {"type": "vector", "value": [0.,0.,0.]},
-            "geometry": {"type": "path", "value": "unbekannt"},
+            "position": {"type": "vector", "value": [0.,0.,0.]}, # position des Vektors
+            "geometry": {"type": "path", "value": "unbekannt"}, # Pfad der Geometrie
+            "x_axis": {"type": "vector", "value": [0.,0.,0.]}, # Ausrichtung in x 
+            "y_axis": {"type": "vector", "value": [0.,0.,0.]}, # Ausrichtung in y
+            "z_axis": {"type": "vector", "value": [0.,0.,0.]} # Ausrichtung in z
         }
         mbsObject.__init__(self,"Body","Rigid_EulerParameter_PAI", text,parameter)  # euler koordinaten und PAI pricip ... inertia
 
+        # Einlesen der Geometrie
         reader = vtk.vtkOBJReader()
         reader.SetFileName(self.parameter["geometry"]["value"])
+        reader.Update()
+
+        mapper = vtk.vtkPolyDataMapper()
+        mapper.SetInputConnection(reader.GetOutputPort())
+
+        # Actor erstellen
+        self.actor.SetMapper(mapper)
+        self.actor.GetProperty().SetColor(1.0, 0.5, 0.3)
+
+        # Transformation basierend auf der Position und Orientierung
+        self.apply_transformations()
+
+    def apply_transformations(self):
+        """Wendet die Position und Orientierung an den Actor an."""
+        transform = vtk.vtkTransform()
+        
+        # Setze Translation
+        pos = self.parameter["position"]["value"]
+        transform.Translate(pos[0], pos[1], pos[2])
+
+        # Setze Orientierung (Rotationsmatrix aus x_axis, y_axis, z_axis)
+        x_axis = self.parameter["x_axis"]["value"]
+        y_axis = self.parameter["y_axis"]["value"]
+        z_axis = self.parameter["z_axis"]["value"]
+        transform.Concatenate([x_axis[0], y_axis[0], z_axis[0], 0,
+                               x_axis[1], y_axis[1], z_axis[1], 0,
+                               x_axis[2], y_axis[2], z_axis[2], 0,
+                               0, 0, 0, 1])
+
+        # Transformation dem Actor zuweisen
+        self.actor.SetUserTransform(transform)
 
 class constraint(mbsObject):
     def __init__(self, text):
