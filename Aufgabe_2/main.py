@@ -18,6 +18,6 @@ bodyReader = vtk.vtkOBJReader()
 # Erzeugen einer Quelle
 bodyReader.SetFileName(listOfMbsObjects[0].parameter["geometry"]["value"])
 bodyReader.Update()
-body = bodyReader.GetOutputPort()
+body1 = bodyReader.GetOutputPort()
 
-listOfMbsObjects[0].showMbsObject(body)
+listOfMbsObjects[0].showMbsObject(body1)

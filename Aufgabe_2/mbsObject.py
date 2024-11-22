@@ -123,10 +123,10 @@ class mbsObject:
 
     # Memberfunktion - Visualisierung von MBS-Objekten
     #=================================================
-    def showMbsObject(self, object):
+    def showMbsObject(self, source):
         # Erzeugen eines Filters mit dem Eingang body
         Mapper = vtk.vtkPolyDataMapper()
-        Mapper.SetInputConnection(object)
+        Mapper.SetInputConnection(source)
 
         # Erzeugen eines Aktors (Filter als Eingang)
         Actor = vtk.vtkActor()
@@ -153,7 +153,7 @@ class mbsObject:
 
 class rigidBody(mbsObject):
     # Constructor
-    #------------
+    #============
     def __init__(self, text):
         # Initialisieren eines Dictionaries mit den Parametern
         parameter = {
@@ -187,6 +187,8 @@ class rigidBody(mbsObject):
         # Aufrufen des Mutterklassenkonstruktors (Ginge auch mit super, dann müsste man self nicht
         # übergeben)
         mbsObject.__init__(self, "Body", "Rigid_EulerParameter_PAI", text, parameter)
+    #=======================================================================================================
+
 #=======================================================================================================
 
 class constraint(mbsObject):
