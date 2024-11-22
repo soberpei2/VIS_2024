@@ -43,6 +43,7 @@ class mbsObject:
                     elif(parameter[key]["type"] == "string"):
                         # Save value under key mass to variable
                         parameter[key]["value"] = splitted[1] + ":" + splitted[2]
+                        parameter[key]["value"].replace("\\", "/")
     #===================================================================================================
 
     # Memberfunktion -> Inputfile schreiben
