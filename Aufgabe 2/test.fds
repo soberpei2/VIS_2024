@@ -1,9 +1,12 @@
 Body Rigid_EulerParameter_PAI
+	name = new_body_0
 	mass = 0.001
 	COG = 0.0,0.0,0.0
+	geometry = Aufgabe2/quader.obj
 	x_axis = 1.0,0.0,0.0
 	y_axis = 0.0,1.0,0.0
 	z_axis = 0.0,0.0,1.0
+	color = 200,200,200
 	inertia = 0.001,0.001,0.001
 	initial_velocity = 1.0,1.0,1.0
 	initial_omega = 1.0,1.0,1.0
@@ -13,11 +16,14 @@ Body Rigid_EulerParameter_PAI
 EndBody
 %
 Body Rigid_EulerParameter_PAI
+	name = new_body_1
 	mass = 0.001
 	COG = 0.0,0.0,0.0
+	geometry = Aufgabe2/quader.obj
 	x_axis = 1.0,0.0,0.0
 	y_axis = 0.0,1.0,0.0
 	z_axis = 0.0,0.0,1.0
+	color = 200,200,200
 	inertia = 0.001,0.001,0.001
 	initial_velocity = 1.0,1.0,1.0
 	initial_omega = 1.0,1.0,1.0
@@ -27,6 +33,15 @@ Body Rigid_EulerParameter_PAI
 EndBody
 %
 Constraint GenericConstraint
+	name = new_constraint_0
+	body1 = new_body_0
+	body2 = GROUND
+	dx = True
+	dy = True
+	dz = True
+	ax = True
+	ay = True
+	az = True
 	position = 0.0,0.0,0.0
 	x_axis = 1.0,0.0,0.0
 	y_axis = 0.0,1.0,0.0
@@ -34,6 +49,15 @@ Constraint GenericConstraint
 EndConstraint
 %
 Constraint GenericConstraint
+	name = new_constraint_1
+	body1 = new_body_0
+	body2 = new_body_1
+	dx = True
+	dy = True
+	dz = True
+	ax = True
+	ay = True
+	az = True
 	position = 25.0,0.0,0.0
 	x_axis = 1.0,0.0,0.0
 	y_axis = 0.0,1.0,0.0

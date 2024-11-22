@@ -36,12 +36,19 @@ class mbsObject:
         for key in self.parameter.keys():
             if(self.parameter[key]["type"] == "float"):
                 text.append("\t" + key + " = " + self.float2str(self.parameter[key]["value"]) + "\n")
-            if(self.parameter[key]["type"] == "vector"):
+            elif(self.parameter[key]["type"] == "vector"):
                 text.append("\t" + key + " = " + self.vector2str(self.parameter[key]["value"]) + "\n")
+            elif(self.parameter[key]["type"] == "str"):
+                text.append("\t" + key + " = " + self.str2str(self.parameter[key]["value"]) + "\n")
+            elif(self.parameter[key]["type"] == "bool"):
+                 text.append("\t" + key + " = " + self.bool2str(self.parameter[key]["value"]) + "\n")
+            elif(self.parameter[key]["type"] == "intvec"):
+                 text.append("\t" + key + " = " + self.intvec2str(self.parameter[key]["value"]) + "\n")
         text.append("End" + self.__type + "\n%\n")
 
         file.writelines(text)   #writelines ist eine Zugriffsfunktion auf Datei
 
+    # Datentypen konvertieren
     def str2float(self,inString):  # string in Float konvertieren
         return float(inString)
     
@@ -60,8 +67,14 @@ class mbsObject:
     def str2bool(self,inString):
         return bool(inString)
     
+    def bool2str(self,inBool):
+        return str(inBool)
+    
     def str2intvec(self,inString):
         return [int(inString.split()[0]),int(inString.split()[1]),int(inString.split()[2])]
+    
+    def intvec2str(self,inintvec):
+        return str(inintvec[0]) + "," + str(inintvec[1]) + "," + str(inintvec[2])
 
 
 #in den Unterklassen wird dann nach den Eigenschaften gesucht
