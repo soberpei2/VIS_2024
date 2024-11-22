@@ -12,7 +12,7 @@ listOfMbsObjects = ifr.inputFileReader(file)
 # Visualisieren eines OBJ-Files
 #=======================================================================
 
-path = listOfMbsObjects[0].parameter["geometry"]["value"].strip()
+path = listOfMbsObjects[0].parameter["geometry"]["value"]
 print(path)
 
 # Erzeugen eines obj-Readers

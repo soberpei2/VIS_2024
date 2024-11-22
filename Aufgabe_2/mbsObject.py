@@ -44,6 +44,7 @@ class mbsObject:
                         # Save value under key mass to variable
                         parameter[key]["value"] = splitted[1] + ":" + splitted[2]
                         parameter[key]["value"] = parameter[key]["value"].replace("\\", "/")
+                        parameter[key]["value"] = parameter[key]["value"].strip()
     #===================================================================================================
 
     # Memberfunktion -> Inputfile schreiben
