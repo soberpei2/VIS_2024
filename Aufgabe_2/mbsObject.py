@@ -38,6 +38,11 @@ class mbsObject:
                     elif(parameter[key]["type"] == "int"):
                         # Save value under key mass to variable
                         parameter[key]["value"] = self.str2int(splitted[1])
+
+                    # Überprüfen ob der Parametertyp string ist
+                    elif(parameter[key]["type"] == "string"):
+                        # Save value under key mass to variable
+                        parameter[key]["value"] = splitted[1] + ":" + splitted[2]
     #===================================================================================================
 
     # Memberfunktion -> Inputfile schreiben
@@ -115,6 +120,11 @@ class rigidBody(mbsObject):
     def __init__(self, text):
         # Initialisieren eines Dictionaries mit den Parametern
         parameter = {
+                        "geometry": {
+                                        "type": "string",
+                                        "value": ""
+                                    },
+
                         "position": { 
                                         "type": "vector", 
                                         "value": [0., 0., 0.]
