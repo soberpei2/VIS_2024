@@ -88,3 +88,5 @@ def inputFileReader(file):
     fds.close()
 
     print(len(listOfMbsObjects))
+
+    return listOfMbsObjects
