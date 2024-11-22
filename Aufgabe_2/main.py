@@ -6,17 +6,20 @@ import vtk
 file = "C:/Users/Startklar/OneDrive/Desktop/10_Studium/02_Master/03_Semester/Visualisierung_Datenaufbereitung/02_Aufgabe/test.fdd"
 
 # Aufrufen des Inputfilereaders
-ifr.inputFileReader(file)
+listOfMbsObjects = ifr.inputFileReader(file)
 
 #=======================================================================
 # Visualisieren eines OBJ-Files
 #=======================================================================
 
+path = listOfMbsObjects[0].parameter["geometry"]["value"].strip()
+print(path)
+
 # Erzeugen eines obj-Readers
 bodyReader = vtk.vtkOBJReader()
 
 # Erzeugen einer Quelle
-bodyReader.SetFileName("C:/Users/Startklar/OneDrive/Desktop/10_Studium/02_Master/03_Semester/Visualisierung_Datenaufbereitung/02_Aufgabe/quader.obj")
+bodyReader.SetFileName(path)
 bodyReader.Update()
 body = bodyReader.GetOutputPort()
 
