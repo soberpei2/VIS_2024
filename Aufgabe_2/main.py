@@ -3,7 +3,7 @@ import inputFileReader as ifr
 import vtk
 
 # Definieren des einzulesenden Files
-file = "Aufgabe_2/test.fdd"
+file = "C:/Users/Startklar/OneDrive/Desktop/10_Studium/02_Master/03_Semester/Visualisierung_Datenaufbereitung/02_Aufgabe/test.fdd"
 
 # Aufrufen des Inputfilereaders
 ifr.inputFileReader(file)
