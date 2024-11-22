@@ -22,3 +22,7 @@ Constraint Constraint_EulerParameter_PAI
 	body2 =  new_body_1
 EndConstraint
 %
+Settings Visualization
+	gravity_vector = 0.0,0.0,-9810.0
+EndSettings
+%

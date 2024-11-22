@@ -5,7 +5,7 @@ class mbsObject:
         self.__type = type
         self.__subtype = subtype
         self.parameter = parameter
-        actor = vtk.vtkActor()      # wird immer benötigt
+        self.actor = vtk.vtkActor()      # wird immer benötigt
 
         for line in text:
             splitted = line.split(":")
@@ -19,6 +19,9 @@ class mbsObject:
                         parameter[key]["value"] = (splitted[1])         # für constraint
                     elif(parameter[key]["type"] == "path"):
                         parameter[key]["value"] = self.Path2str(line)         # für constraint
+                    elif(parameter[key]["type"] == "force"):
+                        parameter[key]["value"] = self.str2vector(splitted[1])         
+
 
     def writeInputfile(self, file):
         text = []
@@ -62,8 +65,6 @@ class rigidBody(mbsObject):
         reader = vtk.vtkOBJReader()
         reader.SetFileName(self.parameter["geometry"]["value"])
 
-
-        
 class constraint(mbsObject):
     def __init__(self, text):
         parameter = {
@@ -73,6 +74,16 @@ class constraint(mbsObject):
         }
         mbsObject.__init__(self,"Constraint","Constraint_EulerParameter_PAI", text,parameter)
 
+
+class settings(mbsObject):
+    def __init__(self,  text):
+        parameter = {
+            #dict
+    	    "gravity_vector": {"type": "vector", "value": [0.,0.,-9.81]},
+        }
+        mbsObject.__init__(self,"Settings","Visualization", text,parameter)
+        
+"""""
 def visualizeBody(FirstobjPath):
         # input: filepath of the geometrie
         import vtk    
@@ -109,4 +120,4 @@ def visualizeBody(FirstobjPath):
         iren.Initialize()
         renWin.Render()
         iren.Start()
-
+"""

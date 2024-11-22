@@ -6,14 +6,14 @@ def readInput4Output(inputfilepath, jsonfilepath, fdsfilepath):
     # Dateiinhalt lesen
     with open(inputfilepath, "r") as f:
         fileContent = f.read().splitlines()
-
+        fileContent.append("$")
 
     currentBlockType = ""
     currentTextBlock = []
     listOfMbsObjects = []
     # Wörter nach denen in der Liste "search4Objects" gesucht wird
 
-    search4Objects = ["RIGID_BODY", "CONSTRAINT"]
+    search4Objects = ["RIGID_BODY", "CONSTRAINT", "SETTINGS"]
     for line in fileContent:
         
         if(line.find("$") >= 0): #new block found 
@@ -22,6 +22,9 @@ def readInput4Output(inputfilepath, jsonfilepath, fdsfilepath):
                     listOfMbsObjects.append(mbsObject.rigidBody(currentTextBlock))
                 elif(currentBlockType == "CONSTRAINT"):
                     listOfMbsObjects.append(mbsObject.constraint(currentTextBlock))
+                # muss dazu gefügt werden
+                elif(currentBlockType == "SETTINGS"):
+                    listOfMbsObjects.append(mbsObject.settings(currentTextBlock))
                 currentBlockType = ""
 
         for type_i in search4Objects: #sucht nach Objekten und speichert diese
