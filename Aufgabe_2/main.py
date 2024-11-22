@@ -12,14 +12,11 @@ listOfMbsObjects = ifr.inputFileReader(file)
 # Visualisieren eines OBJ-Files
 #=======================================================================
 
-path = listOfMbsObjects[0].parameter["geometry"]["value"]
-print(path)
-
 # Erzeugen eines obj-Readers
 bodyReader = vtk.vtkOBJReader()
 
 # Erzeugen einer Quelle
-bodyReader.SetFileName(path)
+bodyReader.SetFileName(listOfMbsObjects[0].parameter["geometry"]["value"])
 bodyReader.Update()
 body = bodyReader.GetOutputPort()
 
