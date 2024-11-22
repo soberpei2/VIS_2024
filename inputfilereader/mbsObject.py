@@ -19,6 +19,8 @@ class mbsObject:
                         parameter[key]["value"] = (splitted[1])         # für constraint
                     elif(parameter[key]["type"] == "path"):
                         parameter[key]["value"] = self.Path2str(line)         # für constraint 
+                    elif(parameter[key]["type"] == "integer"):
+                        parameter[key]["value"] = self.str2integer(splitted[1])        # für constraint 
 
 
     def writeInputfile(self, file):
@@ -33,6 +35,8 @@ class mbsObject:
                 text.append("\t" + key + " = " + (self.parameter[key]["value"])+"\n")
             elif(self.parameter[key]["type"] == "path"):
                 text.append("\t" + key + " = " + (self.parameter[key]["value"])+"\n")
+            elif(self.parameter[key]["type"] == "integer"):
+                text.append("\t" + key + " = " + self.integer2str(self.parameter[key]["value"])+"\n")
         text.append("End" + self.__type + "\n%\n")
 
         file.writelines(text)
@@ -48,6 +52,10 @@ class mbsObject:
         return str(inVector[0]) + "," + str(inVector[1]) + "," + str(inVector[2])
     def Path2str(self,inString):
         return inString[10:]
+    def str2integer(self,inString):
+        return int(inString)
+    def integer2str(self,inInteger):
+        return str(inInteger)
 
 class rigidBody(mbsObject):
     def __init__(self, text):
@@ -104,8 +112,22 @@ class constraint(mbsObject):
             # dict
             "body1": {"type": "string", "value": "leer"},
             "body2": {"type": "string", "value": "leer"},
+            "position": {"type": "vector", "value": [0.,0.,0.]}, # position des Vektors
+            "x_axis": {"type": "vector", "value": [0.,0.,0.]}, # Ausrichtung in x 
+            "y_axis": {"type": "vector", "value": [0.,0.,0.]}, # Ausrichtung in y
+            "z_axis": {"type": "vector", "value": [0.,0.,0.]}, # Ausrichtung in z
+            "dx": {"type": "integer", "value": [0]},
+            "dy": {"type": "integer", "value": [0]},
+            "dz": {"type": "integer", "value": [0]},
+            "ax": {"type": "integer", "value": [0]},
+            "ay": {"type": "integer", "value": [0]},
+            "az": {"type": "integer", "value": [0]}
+            
+
         }
         mbsObject.__init__(self,"Constraint","Constraint_EulerParameter_PAI", text,parameter)
+
+
 
 
 class settings(mbsObject):
