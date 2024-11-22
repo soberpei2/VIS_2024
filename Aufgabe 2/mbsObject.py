@@ -13,7 +13,7 @@ class mbsObject:
 
         for line in text:
             splitted = line.split(":")
-            for key in parameter.keys():                    #über dictionary drüber suchen... parameter.keys() = mass und COG
+            for key in parameter.keys():                    #über dictionary drüber suchen... parameter.keys() = mass, COG...
                 if(splitted[0].strip() == key):             # strip = alle unnötigen Leerzeichen weg
                     if(parameter[key]["type"] == "float"):                          # Behandlung, wenn key ein float ist
                         parameter[key]["value"] = self.str2float(splitted[1])
@@ -25,6 +25,10 @@ class mbsObject:
                         parameter[key]["value"] = self.str2bool(splitted[1])
                     elif(parameter[key]["type"] == "intvec"):                        # Behandlung, wenn key ein intvec (color) ist
                         parameter[key]["value"] = self.str2intvec(splitted[1])
+                    elif(parameter[key]["type"] == "int"):                        # Behandlung, wenn key ein int ist
+                        parameter[key]["value"] = self.str2int(splitted[1])
+                    elif(parameter[key]["type"] == "geom_path"):                        # Behandlung, wenn key ein geom_path ist
+                        parameter[key]["value"] = self.str2str(line[10:])
 
     def add_vtk_actor(self, actor):
         """Fügt einen VTK-Actor zur Liste hinzu."""
@@ -44,6 +48,10 @@ class mbsObject:
                  text.append("\t" + key + " = " + self.bool2str(self.parameter[key]["value"]) + "\n")
             elif(self.parameter[key]["type"] == "intvec"):
                  text.append("\t" + key + " = " + self.intvec2str(self.parameter[key]["value"]) + "\n")
+            elif(self.parameter[key]["type"] == "int"):
+                 text.append("\t" + key + " = " + self.int2str(self.parameter[key]["value"]) + "\n")
+            elif(self.parameter[key]["type"] == "geom_path"):
+                 text.append("\t" + key + " = " + self.str2str(self.parameter[key]["value"]) + "\n")
         text.append("End" + self.__type + "\n%\n")
 
         file.writelines(text)   #writelines ist eine Zugriffsfunktion auf Datei
@@ -73,8 +81,14 @@ class mbsObject:
     def str2intvec(self,inString):
         return [int(inString.split()[0]),int(inString.split()[1]),int(inString.split()[2])]
     
-    def intvec2str(self,inintvec):
-        return str(inintvec[0]) + "," + str(inintvec[1]) + "," + str(inintvec[2])
+    def intvec2str(self,inIntvec):
+        return str(inIntvec[0]) + "," + str(inIntvec[1]) + "," + str(inIntvec[2])
+    
+    def str2int(self,inString):
+        return int(inString)
+    
+    def int2str(self,inInt):
+        return str(inInt)
 
 
 #in den Unterklassen wird dann nach den Eigenschaften gesucht
@@ -87,11 +101,12 @@ class rigidBody(mbsObject):
             "name": {"type": "str", "value": "name"},
             "mass": {"type": "float", "value": 1.},     #sollte die Masse nicht gefunden werden, wird der default Wert 1 gesetzt bleiben
             "COG": {"type": "vector", "value": [1.,1.,1.]},
-            "geometry": {"type": "str", "value": "body.obj"},  # Standardmäßige Geometrie
+            "geometry": {"type": "geom_path", "value": "C:\test"},  # Standardmäßige Geometrie
             "x_axis": {"type": "vector", "value": [1.,1.,1.]},
             "y_axis": {"type": "vector", "value": [1.,1.,1.]},
             "z_axis": {"type": "vector", "value": [1.,1.,1.]},
             "color": {"type": "intvec", "value": [0,0,0]},
+            "transparency": {"type": "int", "value": 0}, 
             "inertia": {"type": "vector", "value": [1.,1.,1.]},
             "initial_velocity": {"type": "vector", "value": [1.,1.,1.]},
             "initial_omega": {"type": "vector", "value": [1.,1.,1.]},

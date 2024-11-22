@@ -18,8 +18,8 @@
                 ]
             },
             "geometry": {
-                "type": "str",
-                "value": "Aufgabe2/quader.obj"
+                "type": "geom_path",
+                "value": "C:\\VIS3UE\\VIS_2024\\Aufgabe 2\\quader.obj"
             },
             "x_axis": {
                 "type": "vector",
@@ -52,6 +52,10 @@
                     200,
                     200
                 ]
+            },
+            "transparency": {
+                "type": "int",
+                "value": 50
             },
             "inertia": {
                 "type": "vector",
@@ -120,8 +124,8 @@
                 ]
             },
             "geometry": {
-                "type": "str",
-                "value": "Aufgabe2/quader.obj"
+                "type": "geom_path",
+                "value": "C:\\VIS3UE\\VIS_2024\\Aufgabe 2\\quader.obj"
             },
             "x_axis": {
                 "type": "vector",
@@ -154,6 +158,10 @@
                     200,
                     200
                 ]
+            },
+            "transparency": {
+                "type": "int",
+                "value": 50
             },
             "inertia": {
                 "type": "vector",
