@@ -101,6 +101,7 @@ class rigidBody(mbsObject):
             "name": {"type": "str", "value": "name"},
             "mass": {"type": "float", "value": 1.},     #sollte die Masse nicht gefunden werden, wird der default Wert 1 gesetzt bleiben
             "COG": {"type": "vector", "value": [1.,1.,1.]},
+            "position": {"type": "vector", "value": [0.,0.,0.]},
             "geometry": {"type": "geom_path", "value": "C:\test"},  # Standardmäßige Geometrie
             "x_axis": {"type": "vector", "value": [1.,1.,1.]},
             "y_axis": {"type": "vector", "value": [1.,1.,1.]},
@@ -116,16 +117,39 @@ class rigidBody(mbsObject):
         } 
 
         mbsObject.__init__(self,"Body","Rigid_EulerParameter_PAI",text,parameter)       #wenn man es so aufruft, braucht man auch das init
-    
-    # def add_geometry_actor(self):
-    #     """Lädt eine OBJ-Datei und erstellt einen VTK-Actor."""
-    #     reader = vtk.vtkOBJReader()
-    #     reader.SetFileName(self.parameter["geometry"]["value"])
-    #     mapper = vtk.vtkPolyDataMapper()
-    #     mapper.SetInputConnection(reader.GetOutputPort())
-    #     actor = vtk.vtkActor()
-    #     actor.SetMapper(mapper)
-    #     self.add_vtk_actor(actor)
+
+    def show(self, renderer):
+        """
+        Erstellt die VTK-Darstellung des RigidBody-Objekts basierend auf seinen Eigenschaften.
+        """
+        # Lese Geometrie
+        geometry_path = self.parameter["geometry"]["value"]
+        reader = vtk.vtkOBJReader()
+        reader.SetFileName(geometry_path)
+        reader.Update()
+
+        # Erstelle Mapper
+        mapper = vtk.vtkPolyDataMapper()
+        mapper.SetInputConnection(reader.GetOutputPort())
+
+        # Erstelle Actor
+        actor = vtk.vtkActor()
+        actor.SetMapper(mapper)
+
+        # Setze Position
+        position = self.parameter["position"]["value"]
+        actor.SetPosition(position)
+
+        # Setze Farbe
+        color = self.parameter["color"]["value"]
+        actor.GetProperty().SetColor(color[0] / 255, color[1] / 255, color[2] / 255)
+
+        # Setze Transparenz
+        transparency = self.parameter["transparency"]["value"]
+        actor.GetProperty().SetOpacity(1 - transparency / 100)
+
+        # Füge Actor zum Renderer hinzu
+        renderer.AddActor(actor)
 
 # -----------------------------------------------------------------------
 
@@ -149,17 +173,33 @@ class constraint(mbsObject):
         super().__init__("Constraint", "GenericConstraint", text, parameter)
         #self.add_constraint_actor()
 
-    # def add_constraint_actor(self):
-    #     """Erstellt eine grafische Darstellung für Constraints."""
-    #     sphere = vtk.vtkSphereSource()
-    #     sphere.SetCenter(self.parameter["location"]["value"])
-    #     sphere.SetRadius(0.1)
-    #     mapper = vtk.vtkPolyDataMapper()
-    #     mapper.SetInputConnection(sphere.GetOutputPort())
-    #     actor = vtk.vtkActor()
-    #     actor.SetMapper(mapper)
-    #     actor.GetProperty().SetColor(1.0, 0.0, 0.0)  # Rot für Constraints
-    #     self.add_vtk_actor(actor)
+    def show(self, renderer):
+        """
+        Erstellt die VTK-Darstellung des Constraint-Objekts als Kugel an der Position.
+        """
+        # Erstelle eine Kugel
+        sphere = vtk.vtkSphereSource()
+        sphere.SetRadius(10)  # Radius der Kugel
+        sphere.SetPhiResolution(10)
+        sphere.SetThetaResolution(10)
+        
+        # Erstelle Mapper
+        sphere_mapper = vtk.vtkPolyDataMapper()
+        sphere_mapper.SetInputConnection(sphere.GetOutputPort())
+
+        # Erstelle Actor
+        sphere_actor = vtk.vtkActor()
+        sphere_actor.SetMapper(sphere_mapper)
+
+        # Setze Position der Kugel
+        position = self.parameter["position"]["value"]
+        sphere_actor.SetPosition(position)  # Position des Constraints
+
+        # Setze Farbe (hier = Blau)
+        sphere_actor.GetProperty().SetColor(0, 0, 1)  # RGB-Werte
+
+        # Füge Actor zum Renderer hinzu
+        renderer.AddActor(sphere_actor)
 
 # -----------------------------------------------------------------------
 
@@ -170,72 +210,3 @@ class settings(mbsObject):
         } 
 
         mbsObject.__init__(self,"Settings","Settings",text,parameter)
-
-# -----------------------------------------------------------------------
-
-# class gravityForce(mbsObject):
-#     def __init__(self, text):
-#         parameter = {
-#             "magnitude": {"type": "float", "value": 9.81},
-#             "direction": {"type": "vector", "value": [0.0, -1.0, 0.0]},
-#         }
-#         super().__init__("Force", "Gravity", text, parameter)
-        
-        #self.add_gravity_actor()
-
-    # def add_gravity_actor(self):
-    #     """Erstellt eine Pfeildarstellung für die Schwerkraft."""
-    #     arrow = vtk.vtkArrowSource()
-    #     mapper = vtk.vtkPolyDataMapper()
-    #     mapper.SetInputConnection(arrow.GetOutputPort())
-    #     actor = vtk.vtkActor()
-    #     actor.SetMapper(mapper)
-    #     actor.GetProperty().SetColor(0.0, 0.0, 1.0)  # Blau für Gravity
-    #     self.add_vtk_actor(actor)
-
-# -----------------------------------------------------------------------
-
-# class genericTorque(mbsObject):
-#     def __init__(self, text):
-#         parameter = {
-#             "magnitude": {"type": "float", "value": 1.0},
-#             "location": {"type": "vector", "value": [0.0, 0.0, 0.0]},
-#         }
-#         super().__init__("Force", "GenericTorque", text, parameter)
-#         self.add_torque_actor()
-
-#     def add_torque_actor(self):
-#         """Erstellt eine Darstellung für das Drehmoment."""
-#         cone = vtk.vtkConeSource()
-#         cone.SetCenter(self.parameter["location"]["value"])
-#         cone.SetRadius(0.2)
-#         cone.SetHeight(0.5)
-#         mapper = vtk.vtkPolyDataMapper()
-#         mapper.SetInputConnection(cone.GetOutputPort())
-#         actor = vtk.vtkActor()
-#         actor.SetMapper(mapper)
-#         actor.GetProperty().SetColor(1.0, 1.0, 0.0)  # Gelb für Drehmoment
-#         self.add_vtk_actor(actor)
-
-# -----------------------------------------------------------------------
-
-# class measure(mbsObject):
-#     def __init__(self, text):
-#         parameter = {
-#             "type": {"type": "string", "value": "distance"},
-#             "points": {"type": "vector", "value": [0.0, 0.0, 0.0, 1.0, 1.0, 1.0]},
-#         }
-#         super().__init__("Measure", "DistanceMeasure", text, parameter)
-#         self.add_measure_actor()
-
-#     def add_measure_actor(self):
-#         """Erstellt eine Darstellung für Messungen."""
-#         line = vtk.vtkLineSource()
-#         line.SetPoint1(self.parameter["points"]["value"][:3])
-#         line.SetPoint2(self.parameter["points"]["value"][3:])
-#         mapper = vtk.vtkPolyDataMapper()
-#         mapper.SetInputConnection(line.GetOutputPort())
-#         actor = vtk.vtkActor()
-#         actor.SetMapper(mapper)
-#         actor.GetProperty().SetColor(0.0, 1.0, 0.0)  # Grün für Measures
-#         self.add_vtk_actor(actor)

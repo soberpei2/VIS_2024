@@ -17,6 +17,14 @@
                     0.0
                 ]
             },
+            "position": {
+                "type": "vector",
+                "value": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
             "geometry": {
                 "type": "geom_path",
                 "value": "C:\\VIS3UE\\VIS_2024\\Aufgabe 2\\quader.obj"
@@ -121,6 +129,14 @@
                     0.0,
                     0.0,
                     0.0
+                ]
+            },
+            "position": {
+                "type": "vector",
+                "value": [
+                    100.0,
+                    100.0,
+                    100.0
                 ]
             },
             "geometry": {

@@ -2,6 +2,7 @@ Body Rigid_EulerParameter_PAI
 	name = new_body_0
 	mass = 0.001
 	COG = 0.0,0.0,0.0
+	position = 0.0,0.0,0.0
 	geometry = C:\VIS3UE\VIS_2024\Aufgabe 2\quader.obj
 	x_axis = 1.0,0.0,0.0
 	y_axis = 0.0,1.0,0.0
@@ -20,6 +21,7 @@ Body Rigid_EulerParameter_PAI
 	name = new_body_1
 	mass = 0.001
 	COG = 0.0,0.0,0.0
+	position = 100.0,100.0,100.0
 	geometry = C:\VIS3UE\VIS_2024\Aufgabe 2\quader.obj
 	x_axis = 1.0,0.0,0.0
 	y_axis = 0.0,1.0,0.0
