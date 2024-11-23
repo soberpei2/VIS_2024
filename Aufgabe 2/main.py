@@ -3,6 +3,8 @@ import inputfilereader as ifr
 import mbsModel
 import sys
 
+# ALTER CODE
+
 # # Freedyn File lesen
 # fdd_file_path = "Aufgabe 2/test.fdd"
 # listOfMbsObjects = ifr.read_fdd_file(fdd_file_path)
@@ -18,46 +20,64 @@ import sys
 # fds_file_path = "Aufgabe 2/test.fds"
 # ifr.write_fds_file(listOfMbsObjects, fds_file_path)
 
-#---------------------------------------------------------------------
 
 def main(input_file_path):
     # Erstelle ein mbsModel-Objekt
     model = mbsModel.mbsModel()
 
-    # Lese die FDD-Datei und erhalte eine Liste der MKS-Objekte
+    #Einlesen des FDD Files mittels Inputfilereader
     listOfMbsObjects = ifr.read_fdd_file(input_file_path)
 
-    # Füge alle MKS-Objekte zum Modell hinzu
+    #mbsModel erstellen mithilfe der vom IFR eingelesenen Daten
     for obj in listOfMbsObjects:
         model.add_object(obj)
 
-    # Initialisiere VTK Renderer
+    #Anlegen des Renderers
     renderer = vtk.vtkRenderer()
+    renderer.SetBackground(1,1,1)
 
-    # Zeige das Modell im Renderer an
+    #Anzeige der Objekte lt. mbsModel
     model.show(renderer)
 
-    # Koordinatensystem anzeigen
+    #Ursprung-Koordinatensystem anzeigen
     axes = vtk.vtkAxesActor()
-    axes.SetTotalLength(20, 20, 20)  # Längen der Achsen
+    axes.SetTotalLength(20, 20, 20)
     renderer.AddActor(axes)
 
-    # Initialisiere das Renderfenster
+    #Renderfenster anlegen
     render_window = vtk.vtkRenderWindow()
     render_window.AddRenderer(renderer)
-    render_window.SetSize(800, 600)
+    def windowtype(type):
+        #kleines Fenster
+        if type == 1:
+            render_window.SetSize(800, 600)
+            render_window.SetWindowName("MKS Reader by fpointin")
+        #Fullscreen
+        if type == 2:
+            render_window.SetFullScreen(True)
+            text_actor = vtk.vtkTextActor()
+            text_actor.SetInput("MKS Reader by fpointin: Press 'q' to exit.")
+            text_actor.GetTextProperty().SetFontSize(24)
+            text_actor.GetTextProperty().SetColor(0, 0, 0)  #Schwarzer Text
+            text_actor.SetPosition(10, 10)  #Position unten links
+            renderer.AddActor2D(text_actor)
+    windowtype(2)
 
-    # Initialisiere den Interaktor für das Renderfenster
+    #Interaktor anlegen
     render_interactor = vtk.vtkRenderWindowInteractor()
     render_interactor.SetRenderWindow(render_window)
 
-    # Starte die Visualisierung
+    #Starten
     render_window.Render()
     render_interactor.Start()
 
+
+#Aufruf geht nur direkt über main file
 if __name__ == "__main__":
+    #Fehlermeldung wenn nicht genau 2 Argumente (main.py und Filename) eingegeben werden
     if len(sys.argv) != 2:
-        print("Usage: python main.py <path_to_inputfile>")
+        print("\n\n" + "VERWENDUNG DES PROGRAMMS" +"\n" + "in Konsole 'python main.py test.fdd' eingeben!" + "\n" + "Achtung auf korrekten Ordner, ggf. mit cd .. oder cd ''Ordner'' arbeiten!""\n\n")
+    #Start des Prozederes mit gewünschtem user input fdd file lt. Konsole
     else:
         input_file_path = sys.argv[1]
         main(input_file_path)

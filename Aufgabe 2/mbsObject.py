@@ -166,7 +166,7 @@ class constraint(mbsObject):
         """
         # Erstelle eine Kugel
         sphere = vtk.vtkSphereSource()
-        sphere.SetRadius(10)  # Radius der Kugel
+        sphere.SetRadius(5)  # Radius der Kugel
         sphere.SetPhiResolution(10)
         sphere.SetThetaResolution(10)
         
