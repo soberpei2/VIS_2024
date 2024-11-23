@@ -1,9 +1,5 @@
 import vtk
 
-#------------------------------------------------------------------------------------------------------------------
-
-# MUTTERKLASSE
-
 class mbsObject:
     def __init__(self,type,subtype,text,parameter):
         self.__type = type
@@ -29,10 +25,6 @@ class mbsObject:
                         parameter[key]["value"] = self.str2int(splitted[1])
                     elif(parameter[key]["type"] == "geom_path"):                        # Behandlung, wenn key ein geom_path ist
                         parameter[key]["value"] = self.str2str(line[10:])
-
-    def add_vtk_actor(self, actor):
-        """Fügt einen VTK-Actor zur Liste hinzu."""
-        self.vtkActors.append(actor)
 
     def writeInputFile(self,file):
         text = []
@@ -91,10 +83,6 @@ class mbsObject:
         return str(inInt)
 
 
-#in den Unterklassen wird dann nach den Eigenschaften gesucht
-# -----------------------------------------------------------------------
-
-
 class rigidBody(mbsObject):
     def __init__(self,text):                            #type brauchen wir nicht, weil ich bin ein Rigid Body
         parameter = {                                   #dictionary (key & value) mit den parametern
@@ -102,7 +90,7 @@ class rigidBody(mbsObject):
             "mass": {"type": "float", "value": 1.},     #sollte die Masse nicht gefunden werden, wird der default Wert 1 gesetzt bleiben
             "COG": {"type": "vector", "value": [1.,1.,1.]},
             "position": {"type": "vector", "value": [0.,0.,0.]},
-            "geometry": {"type": "geom_path", "value": "C:\test"},  # Standardmäßige Geometrie
+            "geometry": {"type": "geom_path", "value": "C:\test"},  
             "x_axis": {"type": "vector", "value": [1.,1.,1.]},
             "y_axis": {"type": "vector", "value": [1.,1.,1.]},
             "z_axis": {"type": "vector", "value": [1.,1.,1.]},
@@ -151,7 +139,6 @@ class rigidBody(mbsObject):
         # Füge Actor zum Renderer hinzu
         renderer.AddActor(actor)
 
-# -----------------------------------------------------------------------
 
 class constraint(mbsObject):
     def __init__(self, text):
@@ -201,7 +188,6 @@ class constraint(mbsObject):
         # Füge Actor zum Renderer hinzu
         renderer.AddActor(sphere_actor)
 
-# -----------------------------------------------------------------------
 
 class settings(mbsObject):
     def __init__(self,text):
