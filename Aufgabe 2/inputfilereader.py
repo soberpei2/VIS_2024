@@ -1,30 +1,33 @@
 import mbsObject
 import json
 
-#-----------------------------------------------------------------------------------------------
 
 def read_fdd_file(file_path):
     """
-    Liest eine .fdd-Datei ein und erstellt eine Liste von MbsObjects.
+    Einlesen einer FDD Datei und erkennen der MKS Objekte und deren Attribute
 
-    :param file_path: Pfad zur .fdd-Datei.
-    :return: Liste der MbsObjects.
+    Eingabe:
+        file_path = Pfad zum FDD File
+
+    Rückgabe: 
+        Liste der MBS Objekte 
     """
-    search4Objects = ["RIGID_BODY", "CONSTRAINT","SETTINGS"]  # Fix definierte Schlagwörter
+    search4Objects = ["RIGID_BODY", "CONSTRAINT","SETTINGS"]  #definierte Schlagwörter, nach denen gesucht wird
 
     with open(file_path, "r") as f:
         fileContent = f.read().splitlines()
         fileContent.append("$")                     #damit der letzte Block auch noch erkannt wird
-        f.close                                     # sauber arbeiten
+        f.close                                     #sauber arbeiten --> file schließen
 
     currentBlockType = ""
     currentTextBlock = []
     listOfMbsObjects = []
 
     for line in fileContent:
+        #Check, ob ein neuer Block beginnt --> beginnt immer mit $
         if "$" in line:
             if currentBlockType:
-                # Weitere Typen können hier hinzugefügt werden
+                #Einteilung in die verschiedenen Typen
                 if currentBlockType == "RIGID_BODY":
                     listOfMbsObjects.append(mbsObject.rigidBody(currentTextBlock))
                 elif currentBlockType == "CONSTRAINT":
@@ -32,6 +35,7 @@ def read_fdd_file(file_path):
                 elif currentBlockType == "SETTINGS":
                     listOfMbsObjects.append(mbsObject.settings(currentTextBlock))
                 
+                #zurücksetzen, damit nächster Block gefunden werden kann
                 currentBlockType = ""
 
         for type_i in search4Objects:
@@ -44,14 +48,14 @@ def read_fdd_file(file_path):
 
     return listOfMbsObjects
 
-#----------------------------------------------------------------------------------------------
 
-def save_to_json(listOfMbsObjects, json_file_path):
+def write_json_file(listOfMbsObjects, json_file_path):
     """
-    Speichert die Parameter der MbsObjects in einer JSON-Datei.
+    Die gelesenen Attribute der MKS Objekte in ein JSON File schreiben
 
-    :param listOfMbsObjects: Liste der MbsObjects.
-    :param json_file_path: Pfad zur JSON-Datei.
+    Eingabe:
+        listOfMbsObjects = Liste der MKS Objekte und deren Attribute
+        json_file_path = Pfad, wo die JSON Datei gespeichert werden soll
     """
     modelObjects = [obj.parameter for obj in listOfMbsObjects]
     jDataBase = json.dumps({"modelObjects": modelObjects}, indent=4)
@@ -59,46 +63,29 @@ def save_to_json(listOfMbsObjects, json_file_path):
         outfile.write(jDataBase)
 
 
-# # Standard Möglichkeit, wie man ? daten/dictionarys speichern bzw lesen kann ?
-# modelObjects= [] #leeres array
-# for object in listOfMbsObjects:
-#     modelObjects.append(object.parameter) # man holt sich alle Parameter
-# jDataBase = json.dumps({"modelObjects": modelObjects})
-# with open("Aufgabe 2/test.json","w") as outfile:
-#     outfile.write(jDataBase)
-
-#--------------------------------------------------------------------------------------------
-
-def load_from_json(json_file_path):
+def read_json_file(json_file_path):
     """
-    Lädt Daten aus einer JSON-Datei.
+    Lädt die Daten aus einer JSON Datei
 
-    :param json_file_path: Pfad zur JSON-Datei.
-    :return: Geladene Daten.
+    Eingabe:
+        param json_file_path = Pfad zur JSON Datei
+
+    Rückgabe: 
+        aus JSON geladene Daten
     """
     with open(json_file_path, "r") as f:
         return json.load(f)
 
 
-# f = open("Aufgabe 2/test.json","r")
-# data = json.load(f)
-# f.close()
-
-#---------------------------------------------------------------------------------------------
-
 def write_fds_file(listOfMbsObjects, fds_file_path):
     """
-    Schreibt die MbsObjects in eine .fds-Datei.
+    Die MKS Objekte und deren Attribute in ein fds File schreiben
 
-    :param listOfMbsObjects: Liste der MbsObjects.
-    :param fds_file_path: Pfad zur .fds-Datei.
+    Eingabe: 
+        listOfMbsObjects = Liste der MKS Objekte und deren Attribute
+        fds_file_path = Pfad, wo die fds Datei gespeichert werden soll
     """
     with open(fds_file_path, "w") as fds:
         for obj in listOfMbsObjects:
             obj.writeInputFile(fds)
-
-# fds = open("Aufgabe 2/test.fds","w")  # w = write
-# for mbsObject_i in listOfMbsObjects:
-#     mbsObject_i.writeInputFile(fds)
-# fds.close()
 

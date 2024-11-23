@@ -117,15 +117,15 @@ class rigidBody(mbsObject):
 
         mbsObject.__init__(self,"Body","Rigid_EulerParameter_PAI",text,parameter)       #wenn man es so aufruft, braucht man auch das init
     
-    def add_geometry_actor(self):
-        """Lädt eine OBJ-Datei und erstellt einen VTK-Actor."""
-        reader = vtk.vtkOBJReader()
-        reader.SetFileName(self.parameter["geometry"]["value"])
-        mapper = vtk.vtkPolyDataMapper()
-        mapper.SetInputConnection(reader.GetOutputPort())
-        actor = vtk.vtkActor()
-        actor.SetMapper(mapper)
-        self.add_vtk_actor(actor)
+    # def add_geometry_actor(self):
+    #     """Lädt eine OBJ-Datei und erstellt einen VTK-Actor."""
+    #     reader = vtk.vtkOBJReader()
+    #     reader.SetFileName(self.parameter["geometry"]["value"])
+    #     mapper = vtk.vtkPolyDataMapper()
+    #     mapper.SetInputConnection(reader.GetOutputPort())
+    #     actor = vtk.vtkActor()
+    #     actor.SetMapper(mapper)
+    #     self.add_vtk_actor(actor)
 
 # -----------------------------------------------------------------------
 
@@ -173,13 +173,13 @@ class settings(mbsObject):
 
 # -----------------------------------------------------------------------
 
-class gravityForce(mbsObject):
-    def __init__(self, text):
-        parameter = {
-            "magnitude": {"type": "float", "value": 9.81},
-            "direction": {"type": "vector", "value": [0.0, -1.0, 0.0]},
-        }
-        super().__init__("Force", "Gravity", text, parameter)
+# class gravityForce(mbsObject):
+#     def __init__(self, text):
+#         parameter = {
+#             "magnitude": {"type": "float", "value": 9.81},
+#             "direction": {"type": "vector", "value": [0.0, -1.0, 0.0]},
+#         }
+#         super().__init__("Force", "Gravity", text, parameter)
         
         #self.add_gravity_actor()
 
@@ -195,47 +195,47 @@ class gravityForce(mbsObject):
 
 # -----------------------------------------------------------------------
 
-class genericTorque(mbsObject):
-    def __init__(self, text):
-        parameter = {
-            "magnitude": {"type": "float", "value": 1.0},
-            "location": {"type": "vector", "value": [0.0, 0.0, 0.0]},
-        }
-        super().__init__("Force", "GenericTorque", text, parameter)
-        self.add_torque_actor()
+# class genericTorque(mbsObject):
+#     def __init__(self, text):
+#         parameter = {
+#             "magnitude": {"type": "float", "value": 1.0},
+#             "location": {"type": "vector", "value": [0.0, 0.0, 0.0]},
+#         }
+#         super().__init__("Force", "GenericTorque", text, parameter)
+#         self.add_torque_actor()
 
-    def add_torque_actor(self):
-        """Erstellt eine Darstellung für das Drehmoment."""
-        cone = vtk.vtkConeSource()
-        cone.SetCenter(self.parameter["location"]["value"])
-        cone.SetRadius(0.2)
-        cone.SetHeight(0.5)
-        mapper = vtk.vtkPolyDataMapper()
-        mapper.SetInputConnection(cone.GetOutputPort())
-        actor = vtk.vtkActor()
-        actor.SetMapper(mapper)
-        actor.GetProperty().SetColor(1.0, 1.0, 0.0)  # Gelb für Drehmoment
-        self.add_vtk_actor(actor)
+#     def add_torque_actor(self):
+#         """Erstellt eine Darstellung für das Drehmoment."""
+#         cone = vtk.vtkConeSource()
+#         cone.SetCenter(self.parameter["location"]["value"])
+#         cone.SetRadius(0.2)
+#         cone.SetHeight(0.5)
+#         mapper = vtk.vtkPolyDataMapper()
+#         mapper.SetInputConnection(cone.GetOutputPort())
+#         actor = vtk.vtkActor()
+#         actor.SetMapper(mapper)
+#         actor.GetProperty().SetColor(1.0, 1.0, 0.0)  # Gelb für Drehmoment
+#         self.add_vtk_actor(actor)
 
 # -----------------------------------------------------------------------
 
-class measure(mbsObject):
-    def __init__(self, text):
-        parameter = {
-            "type": {"type": "string", "value": "distance"},
-            "points": {"type": "vector", "value": [0.0, 0.0, 0.0, 1.0, 1.0, 1.0]},
-        }
-        super().__init__("Measure", "DistanceMeasure", text, parameter)
-        self.add_measure_actor()
+# class measure(mbsObject):
+#     def __init__(self, text):
+#         parameter = {
+#             "type": {"type": "string", "value": "distance"},
+#             "points": {"type": "vector", "value": [0.0, 0.0, 0.0, 1.0, 1.0, 1.0]},
+#         }
+#         super().__init__("Measure", "DistanceMeasure", text, parameter)
+#         self.add_measure_actor()
 
-    def add_measure_actor(self):
-        """Erstellt eine Darstellung für Messungen."""
-        line = vtk.vtkLineSource()
-        line.SetPoint1(self.parameter["points"]["value"][:3])
-        line.SetPoint2(self.parameter["points"]["value"][3:])
-        mapper = vtk.vtkPolyDataMapper()
-        mapper.SetInputConnection(line.GetOutputPort())
-        actor = vtk.vtkActor()
-        actor.SetMapper(mapper)
-        actor.GetProperty().SetColor(0.0, 1.0, 0.0)  # Grün für Measures
-        self.add_vtk_actor(actor)
+#     def add_measure_actor(self):
+#         """Erstellt eine Darstellung für Messungen."""
+#         line = vtk.vtkLineSource()
+#         line.SetPoint1(self.parameter["points"]["value"][:3])
+#         line.SetPoint2(self.parameter["points"]["value"][3:])
+#         mapper = vtk.vtkPolyDataMapper()
+#         mapper.SetInputConnection(line.GetOutputPort())
+#         actor = vtk.vtkActor()
+#         actor.SetMapper(mapper)
+#         actor.GetProperty().SetColor(0.0, 1.0, 0.0)  # Grün für Measures
+#         self.add_vtk_actor(actor)

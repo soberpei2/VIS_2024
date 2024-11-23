@@ -6,10 +6,10 @@ listOfMbsObjects = ifr.read_fdd_file(fdd_file_path)
 
 # Daten in JSON speichern
 json_file_path = "Aufgabe 2/test.json"
-ifr.save_to_json(listOfMbsObjects, json_file_path)
+ifr.write_json_file(listOfMbsObjects, json_file_path)
 
 # JSON lesen
-data = ifr.load_from_json(json_file_path)
+data = ifr.read_json_file(json_file_path)
 
 # Daten in .fds-Datei schreiben
 fds_file_path = "Aufgabe 2/test.fds"
