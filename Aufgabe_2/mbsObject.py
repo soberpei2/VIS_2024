@@ -1,6 +1,5 @@
 # Importieren benötigter Biblotheken
 import vtk
-import numpy as np
 
 class mbsObject:
     # Constructor
@@ -382,10 +381,6 @@ class mbsObject:
         
         # Leerzeile nach dem letzten Eintrag
         print("\n")
-
-
-
-
 #=======================================================================================================
 
 class rigidBody(mbsObject):
