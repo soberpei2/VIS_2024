@@ -9,5 +9,5 @@ class mbsModel:
     ermöglichen.
     """
     def __init__(self, listOfMbsObjects):
-        self.__listOfMbsObjects = listOfMbsObjects
+        self.listOfMbsObjects = listOfMbsObjects
     #============================================================================

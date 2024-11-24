@@ -7,11 +7,8 @@ import mbsModel
 # Definieren des einzulesenden Files
 file = "C:/Users/Startklar/OneDrive/Desktop/10_Studium/02_Master/03_Semester/Visualisierung_Datenaufbereitung/02_Aufgabe/test.fdd"
 
-# Aufrufen des Inputfilereaders
-listOfMbsObjects = ifr.inputFileReader(file)
-
 # Anlegen eines Objekts vom Typ mbsModel
-model = mbsModel.mbsModel(listOfMbsObjects)
+model = mbsModel.mbsModel(ifr.inputFileReader(file))
 
 #=======================================================================
 # Visualisieren eines OBJ-Files
@@ -21,7 +18,7 @@ model = mbsModel.mbsModel(listOfMbsObjects)
 listOfActors = []
 
 # Schleife über die Liste der Mbs-Objekte
-for mbsObject in listOfMbsObjects:
+for mbsObject in model.listOfMbsObjects:
     # Fertigen Aktor der Aktorliste hinzufügen
     listOfActors.append(mbsObject.getActor(mbsObject))
 
@@ -54,5 +51,5 @@ iren.Start()
 #=======================================================================
 
 # Schleife über die Liste der Mbs-Objekte
-for mbsObject in listOfMbsObjects:
+for mbsObject in model.listOfMbsObjects:
     mbsObject.showProps()
