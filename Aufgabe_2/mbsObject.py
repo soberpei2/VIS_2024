@@ -121,8 +121,36 @@ class mbsObject:
         return str(inInt)
     #===================================================================================================
 
-    # Memberfunktion - Visualisierung von MBS-Objekten
-    #=================================================
+    # Memberfunktion - Erstellen eines Aktors lt. .fdd-File
+    #======================================================
+    def getActor(self, mbsObject):
+        # Abfrage, ob mbsObject von der Unterklasse rigidBody ist
+        #--------------------------------------------------------
+        if isinstance(mbsObject, rigidBody):
+            # Erzeugen eines obj-Readers
+            bodyReader = vtk.vtkOBJReader()
+
+            # Erzeugen einer Quelle
+            bodyReader.SetFileName(mbsObject.parameter["geometry"]["value"])
+            bodyReader.Update()
+            body = bodyReader.GetOutputPort()
+
+            # Erzeugen eines Filters mit dem Eingang body
+            bodyMapper = vtk.vtkPolyDataMapper()
+            bodyMapper.SetInputConnection(body)
+
+            # Erzeugen eines Aktors (Filter als Eingang)
+            bodyActor = vtk.vtkActor()
+            bodyActor.SetMapper(bodyMapper)
+
+            # Position des Aktors lt. fdd-File vorgeben
+            bodyActor.SetPosition(mbsObject.parameter["position"]["value"])
+
+            # Farbe des Aktors ändern
+            bodyActor.GetProperty().SetColor(mbsObject.parameter["color"]["value"])
+
+            # Rückgabe des Aktors
+            return bodyActor
     
 
                

@@ -13,35 +13,13 @@ listOfMbsObjects = ifr.inputFileReader(file)
 # Visualisieren eines OBJ-Files
 #=======================================================================
 
+# Liste der Aktoren initialisieren
 listOfActors = []
 
 # Schleife über die Liste der Mbs-Objekte
 for mbsObject in listOfMbsObjects:
-    # Abfrage, ob mbsObject von der Unterklasse rigidBody ist
-    if isinstance(mbsObject, MBS.rigidBody):
-        # Erzeugen eines obj-Readers
-        bodyReader = vtk.vtkOBJReader()
-
-        # Erzeugen einer Quelle
-        bodyReader.SetFileName(mbsObject.parameter["geometry"]["value"])
-        bodyReader.Update()
-        body = bodyReader.GetOutputPort()
-
-        # Erzeugen eines Filters mit dem Eingang body
-        bodyMapper = vtk.vtkPolyDataMapper()
-        bodyMapper.SetInputConnection(body)
-
-        # Erzeugen eines Aktors (Filter als Eingang)
-        bodyActor = vtk.vtkActor()
-        bodyActor.SetMapper(bodyMapper)
-
-        # Position des Aktors lt. fdd-File vorgeben
-        bodyActor.SetPosition(mbsObject.parameter["position"]["value"])
-
-        # Farbe des Aktors ändern
-        bodyActor.GetProperty().SetColor(mbsObject.parameter["color"]["value"])
-
-        listOfActors.append(bodyActor)
+    # Fertigen Aktor der Aktorliste hinzufügen
+    listOfActors.append(mbsObject.getActor(mbsObject))
 
 # Koordinatensystem erstellen
 axes = vtk.vtkAxesActor()
