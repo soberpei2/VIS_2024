@@ -202,6 +202,11 @@ class rigidBody(mbsObject):
                                         "value": [0, 0, 0] 
                                     },
 
+                        "transparency": { 
+                                            "type": "int",
+                                            "value": 0
+                                        },
+
                         "mass":     {
                                         "type": "float",
                                         "value": 1.
