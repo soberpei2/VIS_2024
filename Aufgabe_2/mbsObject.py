@@ -148,6 +148,32 @@ class mbsObject:
         return sphereActor
     #===================================================================================================
 
+    # Memberfunktion - Erstellen eines Kugel-Aktors
+    #==============================================
+    def getCube(self, mbsObject):
+        # Erzeugen einer Kugelquelle
+        cube = vtk.vtkCubeSource()
+        cube.SetXLength(3.0)
+        cube.SetYLength(3.0)
+        cube.SetZLength(3.0)
+
+        # Erzeugen eines Filters mit dem Eingang body
+        cubeMapper = vtk.vtkPolyDataMapper()
+        cubeMapper.SetInputConnection(cube.GetOutputPort())
+
+        # Erzeugen eines Aktors (Filter als Eingang)
+        cubeActor = vtk.vtkActor()
+        cubeActor.SetMapper(cubeMapper)
+
+        # Position des Aktors lt. fdd-File vorgeben
+        cubeActor.SetPosition(mbsObject.parameter["position"]["value"])
+
+        # Farbe des Aktors ändern
+        cubeActor.GetProperty().SetColor(1, 0, 0)
+
+        # Rückgabe des Aktors
+        return cubeActor
+    #===================================================================================================
 
     # Memberfunktion - Erstellen eines Aktors lt. .fdd-File
     #======================================================
@@ -185,7 +211,22 @@ class mbsObject:
         # Abfrage, ob mbsObject von der Unterklasse constraint ist
         #---------------------------------------------------------
         elif isinstance(mbsObject, constraint):
-            return self.getSphere(mbsObject)
+            # Erstellen von 2 Vektoren mit den Freiheitsgraden (trans. und rot.)
+            transBlockVec = [mbsObject.parameter["dx"]["value"],
+                             mbsObject.parameter["dy"]["value"],
+                             mbsObject.parameter["dz"]["value"]]
+                             
+            rotBlockVec = [mbsObject.parameter["ax"]["value"],
+                           mbsObject.parameter["ay"]["value"],
+                           mbsObject.parameter["az"]["value"]]
+
+            # Fixe Einspannung (keine Freiheitsgrade)
+            if sum(transBlockVec) == 3 & sum(rotBlockVec) == 3:
+                return self.getCube(mbsObject)
+
+            # Kugelgelenk (nur rotatorische Freiheitsgrade)
+            elif sum(transBlockVec) == 3 & sum(rotBlockVec) == 0:
+                return self.getSphere(mbsObject)
                
 #=======================================================================================================
 
