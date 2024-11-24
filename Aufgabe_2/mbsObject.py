@@ -121,6 +121,34 @@ class mbsObject:
         return str(inInt)
     #===================================================================================================
 
+    # Memberfunktion - Erstellen eines Kugel-Aktors
+    #==============================================
+    def getSphere(self, mbsObject):
+        # Erzeugen einer Kugelquelle
+        sphere = vtk.vtkSphereSource()
+        sphere.SetRadius(3.0)
+        sphere.SetPhiResolution(10)
+        sphere.SetThetaResolution(10)
+
+        # Erzeugen eines Filters mit dem Eingang body
+        sphereMapper = vtk.vtkPolyDataMapper()
+        sphereMapper.SetInputConnection(sphere.GetOutputPort())
+
+        # Erzeugen eines Aktors (Filter als Eingang)
+        sphereActor = vtk.vtkActor()
+        sphereActor.SetMapper(sphereMapper)
+
+        # Position des Aktors lt. fdd-File vorgeben
+        sphereActor.SetPosition(mbsObject.parameter["position"]["value"])
+
+        # Farbe des Aktors ändern
+        sphereActor.GetProperty().SetColor(1, 0, 0)
+
+        # Rückgabe des Aktors
+        return sphereActor
+    #===================================================================================================
+
+
     # Memberfunktion - Erstellen eines Aktors lt. .fdd-File
     #======================================================
     def getActor(self, mbsObject):
@@ -157,28 +185,7 @@ class mbsObject:
         # Abfrage, ob mbsObject von der Unterklasse constraint ist
         #---------------------------------------------------------
         elif isinstance(mbsObject, constraint):
-            # Erzeugen einer Kugelquelle
-            sphere = vtk.vtkSphereSource()
-            sphere.SetRadius(10.0)
-            sphere.SetPhiResolution(10)
-            sphere.SetThetaResolution(10)
-    
-            # Erzeugen eines Filters mit dem Eingang body
-            sphereMapper = vtk.vtkPolyDataMapper()
-            sphereMapper.SetInputConnection(sphere.GetOutputPort())
-
-            # Erzeugen eines Aktors (Filter als Eingang)
-            sphereActor = vtk.vtkActor()
-            sphereActor.SetMapper(sphereMapper)
-
-            # Position des Aktors lt. fdd-File vorgeben
-            sphereActor.SetPosition(mbsObject.parameter["position"]["value"])
-
-            # Farbe des Aktors ändern
-            sphereActor.GetProperty().SetColor(1, 0, 0)
-
-            # Rückgabe des Aktors
-            return sphereActor
+            return self.getSphere(mbsObject)
                
 #=======================================================================================================
 
