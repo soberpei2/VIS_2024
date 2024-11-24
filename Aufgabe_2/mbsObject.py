@@ -202,6 +202,33 @@ class mbsObject:
         return coneActor
     #===================================================================================================
 
+    # Memberfunktion - Erstellen eines Zylinder-Aktors
+    #=================================================
+    def getCylinder(self, mbsObject):
+        # Erzeugen einer Kugelquelle
+        cylinder = vtk.vtkCylinderSource()
+        cylinder.SetHeight(4.0)
+        cylinder.SetRadius(3.0)
+        cylinder.SetResolution(50)
+
+        # Erzeugen eines Filters mit dem Eingang body
+        cylinderMapper = vtk.vtkPolyDataMapper()
+        cylinderMapper.SetInputConnection(cylinder.GetOutputPort())
+
+        # Erzeugen eines Aktors (Filter als Eingang)
+        cylinderActor = vtk.vtkActor()
+        cylinderActor.SetMapper(cylinderMapper)
+
+        # Position des Aktors lt. fdd-File vorgeben
+        cylinderActor.SetPosition(mbsObject.parameter["position"]["value"])
+
+        # Farbe des Aktors ändern
+        cylinderActor.GetProperty().SetColor(1, 0, 0)
+
+        # Rückgabe des Aktors
+        return cylinderActor
+    #===================================================================================================
+
     # Memberfunktion - Erstellen eines Aktors lt. .fdd-File
     #======================================================
     def getActor(self, mbsObject):
@@ -254,6 +281,10 @@ class mbsObject:
             # Festlager (1 rot. Freiheitsgrad)
             if sum(transBlockVec) == 3 and sum(rotBlockVec) == 2:
                 return self.getCone(mbsObject)
+            
+            # Loslager (1 trans. + 1 rot. Freiheitsgrad)
+            if sum(transBlockVec) == 2 and sum(rotBlockVec) == 2:
+                return self.getCylinder(mbsObject)
 
             # Kugelgelenk (nur rotatorische Freiheitsgrade)
             elif sum(transBlockVec) == 3 and sum(rotBlockVec) == 0:
