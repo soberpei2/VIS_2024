@@ -7,6 +7,9 @@ class mbsObject:
                                     # es ist also egal, ob man self.parameter oder parameter schreibt
         self.__subtype = subtype
 
+        #Defaultparameter
+        self.default_vec = [1.,1.,1.]
+
         #Aktor erstellen
         self.actor = vtk.vtkActor()
         self.textactor = vtk.vtkTextActor()
@@ -201,14 +204,14 @@ class constraint(mbsObject):
 
 class settings(mbsObject):
     def __init__(self,text):
-        parameter = {                                   
-            "gravity_vector": {"type": "vector", "value": [1.,1.,1.]},
+        super().__init__("Settings", "Settings", text, {})  # Mutterklasse initialisieren
+        self.parameter = {                                   
+            "gravity_vector": {"type": "vector", "value": self.default_vec},
         } 
-
-        mbsObject.__init__(self,"Settings","Settings",text,parameter)
+        #mbsObject.__init__(self,"Settings","Settings",text,parameter)
 
     def show(self, renderer):
-        if self.parameter["gravity_vector"]["value"] != [[1.,1.,1.]]:
+        if self.parameter["gravity_vector"]["value"] != self.default_vec:
             self.textactor.SetInput("GRAVITY (x y z) = " + self.vector2str(self.parameter["gravity_vector"]["value"]))
         else:
             self.textactor.SetInput("GRAVITY (x y z) = error")
