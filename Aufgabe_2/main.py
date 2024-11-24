@@ -1,4 +1,4 @@
 import inputfilereader
 
-inputfilereader.readInputFile("inputfilereader/test.fdd")
+inputfilereader.readInputFile("Aufgabe_2/test.fdd")
 

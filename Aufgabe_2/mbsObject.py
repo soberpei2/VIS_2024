@@ -19,10 +19,14 @@ class mbsObject:
                         parameter[key]["value"] = self.str2int(splitted[1])
                     elif(parameter[key]["type"] == "string"):
                         parameter[key]["value"] = splitted[1].strip()
+                    #Einlesen der Freiheitsgrade
                     elif(parameter[key]["type"] == "bool"):
                         parameter[key]["value"] = self.str2bool(splitted[1])
+                    #Einlesen des Dateipfades
+                    elif(parameter[key]["type"] == "path"):
+                        parameter[key]["value"] = self.str2path(splitted[1].strip(), splitted[2])
 
-    
+    #Funktion zur Ausgabe der Objekte
     def writeInputfile(self,file):
         text = []
         text.append(self.__type + " " + self.__subtype + "\n")
@@ -43,9 +47,13 @@ class mbsObject:
             if(self.parameter[key]["type"] == "string"):
                 text.append("\t"+key+" = "+self.parameter[key]["value"]+"\n")
 
+            #Freiheitsgrade
             if(self.parameter[key]["type"] == "bool"):
                 text.append("\t"+key+" = "+self.bool2str(self.parameter[key]["value"])+"\n")
-
+            
+            #Dateipfad
+            if(self.parameter[key]["type"] == "path"):
+                text.append("\t"+key+" = "+self.parameter[key]["value"]+"\n")
                 
 
             
@@ -84,16 +92,22 @@ class mbsObject:
     def vectorInt2str(self,inVector):
         return str(inVector[0]) + " " + str(inVector[1]) + " " + str(inVector[2])
     
+    def str2path(self, inStorage, inPath):
+        return str(inStorage) + ":" + str(inPath)
+    
 class rigidBody(mbsObject):
     def __init__(self,text):
         parameter = {
             "name": {"type": "string", "value": "empty"},
-            "mass": {"type": "float", "value": 1.},
-            "COG": {"type": "vector", "value": [0.,0.,0.]},
-
+            "geometry": {"type": "path", "value": "empty"},
             "position": {"type": "vector", "value": [0.,0.,0.]},
+            "x_axis": {"type": "vector", "value": [0.,0.,0.]},
+            "y_axis": {"type": "vector", "value": [0.,0.,0.]},
+            "z_axis": {"type": "vector", "value": [0.,0.,0.]},
             "color": {"type": "vectorInt", "value": [0,0,0] },
-            "transparency": {"type": "int", "value": 1}
+            "transparency": {"type": "int", "value": 1},
+            "mass": {"type": "float", "value": 1.},
+            "COG": {"type": "vector", "value": [0.,0.,0.]},            
         }
 
         mbsObject.__init__(self,"Body","Rigid_EulerParameter_PAI",text,parameter)
@@ -104,14 +118,18 @@ class constraint(mbsObject):
             "name": {"type": "string", "value": "empty"},
             "body1": {"type": "string", "value": "empty"},
             "body2": {"type": "string", "value": "empty"},
-            "position": {"type": "vector", "value": [0.,0.,0.]},
-
             "dx": {"type": "bool", "value": 0},
             "dy": {"type": "bool", "value": 0},
             "dz": {"type": "bool", "value": 0},
             "ax": {"type": "bool", "value": 0},
             "ay": {"type": "bool", "value": 0},
-            "az": {"type": "bool", "value": 0}
+            "az": {"type": "bool", "value": 0},
+            "position": {"type": "vector", "value": [0.,0.,0.]},
+            "x_axis": {"type": "vector", "value": [0.,0.,0.]},
+            "y_axis": {"type": "vector", "value": [0.,0.,0.]},
+            "z_axis": {"type": "vector", "value": [0.,0.,0.]}
+
+            
 
         }
 

@@ -1,44 +1,58 @@
 Body Rigid_EulerParameter_PAI
 	name = new_body_0
-	mass = 0.001
-	COG = 0.0,0.0,0.0
+	geometry = C:\github\VIS_2024\Aufgabe_2\quader.obj
 	position = 0.0,0.0,0.0
+	x_axis = 1.0,0.0,0.0
+	y_axis = 0.0,1.0,0.0
+	z_axis = 0.0,0.0,1.0
 	color = 200 200 200
 	transparency = 50
+	mass = 0.001
+	COG = 0.0,0.0,0.0
 EndBody
 %
 Body Rigid_EulerParameter_PAI
 	name = new_body_1
-	mass = 0.001
-	COG = 0.0,0.0,0.0
+	geometry = C:\github\VIS_2024\Aufgabe_2\quader.obj
 	position = 25.0,0.0,10.0
+	x_axis = 1.0,0.0,0.0
+	y_axis = 0.0,1.0,0.0
+	z_axis = 0.0,0.0,1.0
 	color = 200 200 200
 	transparency = 50
+	mass = 0.001
+	COG = 0.0,0.0,0.0
 EndBody
 %
 Constraint Rigid_EulerParameter_PAI
 	name = new_constraint_0
 	body1 = new_body_0
 	body2 = GROUND
-	position = 0.0,0.0,0.0
 	dx = True
 	dy = True
 	dz = True
 	ax = True
 	ay = True
 	az = True
+	position = 0.0,0.0,0.0
+	x_axis = 1.0,0.0,0.0
+	y_axis = 0.0,1.0,0.0
+	z_axis = 0.0,0.0,1.0
 EndConstraint
 %
 Constraint Rigid_EulerParameter_PAI
 	name = new_constraint_1
 	body1 = new_body_0
 	body2 = new_body_1
-	position = 25.0,0.0,0.0
 	dx = True
 	dy = True
 	dz = True
 	ax = True
 	ay = True
 	az = True
+	position = 25.0,0.0,0.0
+	x_axis = 1.0,0.0,0.0
+	y_axis = 0.0,1.0,0.0
+	z_axis = 0.0,0.0,1.0
 EndConstraint
 %
