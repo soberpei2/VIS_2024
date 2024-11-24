@@ -14,6 +14,18 @@ sphereMapper.SetInputConnection(sphere.GetOutputPort())
 sphereActor = vtk.vtkActor()
 sphereActor.SetMapper(sphereMapper)
 
+# Farbe der Kugel auf Orange setzen
+sphereActor.GetProperty().SetColor(1.0, 0.647, 0.0)  # RGB für Orange
+
+# Transparenz der Kugel setzen (halbtransparent)
+sphereActor.GetProperty().SetOpacity(0.5)  # Transparenz von 0 (unsichtbar) bis 1 (vollständig sichtbar)
+
+# Setze Drahtgitter-Darstellung
+sphereActor.GetProperty().SetRepresentationToWireframe()  # Drahtgitterdarstellung
+
+# Setze die Linienstärke des Drahtgitters (dicker machen)
+sphereActor.GetProperty().SetLineWidth(3.0)  # Erhöhe die Linienstärke auf 3.0 (standardmäßig 1.0)
+
 # Erstelle einen Renderer, füge den Actor hinzu und setze die Hintergrundfarbe
 ren1 = vtk.vtkRenderer()
 ren1.AddActor(sphereActor)

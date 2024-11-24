@@ -121,7 +121,7 @@ class rigidbody(mbsObject):
         mbsObject.__init__(self,"Body","Rigid_EulerParamter_PAI",text,parameter)
         self.bodyActor = None
 
-    def vtk_body(self, renderer):
+    def vtk_body(self, bodyrenderer):
         # Erstelle den Reader und mapper wie zuvor
         body_data = self.parameter
         bodyReader = vtk.vtkOBJReader()
@@ -148,39 +148,11 @@ class rigidbody(mbsObject):
         self.bodyActor.SetPosition(position[0], position[1], position[2])
 
         # Füge den Actor dem übergebenen Renderer hinzu
-        renderer.AddActor(self.bodyActor)
+        bodyrenderer.AddActor(self.bodyActor)
         
-        # Setze den Hintergrund auf die im FDS gespeicherte Hintergrundfarbe
-        #bg_color = self.parameter.get("background color", {"value": [0.1, 0.2, 0.4]})["value"]
-        #bodyrenderer.SetBackground(bg_color[0], bg_color[1], bg_color[2])
-        
-        # #Erzeugen eines Renderers, Hinzugfügen eines Atkors und Hintergrund
-        # bodyrenderer = vtk.vtkRenderer()
-        # bodyrenderer.AddActor(bodyActor)
-        # bodyrenderer.SetBackground(0.1, 0.2, 0.4)
-
-        #Erzeugen eines Render Fensters und hinzufügen des Renders
-        # renWin = vtk.vtkRenderWindow()
-        # renWin.AddRenderer(bodyrenderer)
-        # renWin.SetSize(600, 600)
-        # renWin.Render()
-
-        # # Interactor für die Interaktivität
-        # iren = vtk.vtkRenderWindowInteractor()
-        # iren.SetRenderWindow(renWin)
-        # iren.Start()
-
-    # def vtk_body(self):
-    #     reader = vtk.vtkOBJReader()
-    #     reader.SetFileName("path/to/your/model.obj")
-    #     reader.Update()
-    #     mapper = vtk.vtkPolyDataMapper()
-    #     mapper.SetInputConnection(reader.GetOutputPort())
-    #     self.vtk_actor = vtk.vtkActor()
-    #     self.vtk_actor.SetMapper(mapper)
-    #     self.vtk_actor.GetProperty().SetColor(0.5, 0.5, 1.0)
 
 class constraint(mbsObject):
+
     def __init__(self, text):
         parameter = {
             "dx": {"type": "int", "value": 1},
@@ -192,6 +164,32 @@ class constraint(mbsObject):
             "position":{"type":"vector","value": [0.,0.,0.]}
         }
         mbsObject.__init__(self,"Constraint", "Fixed", text, parameter)
+
+    def vtk_constrain(self, constraintrenderer):
+        # Erstelle den Reader und mapper wie zuvor
+        constraintActor_data = self.parameter
+
+        constraintmapper = vtk.vtkPolyDataMapper()
+        bodymapper.SetInputConnection(bodyReader.GetOutputPort())
+
+        # Erstelle den Actor
+        self.constraintActor = vtk.vtkActor()
+        self.constraintActor.SetMapper(bodymapper)
+
+        # Setze Farbe und Transparenz des Actors
+        color = body_data["color"]["value"]
+        r, g, b = color[0] / 255.0, color[1] / 255.0, color[2] / 255.0  # Umwandlung auf 0-1 Skala
+        self.constraintActor.GetProperty().SetColor(r, g, b)
+
+        transparency = body_data["transparency"]["value"]
+        self.bconstraintActor.GetProperty().SetOpacity(transparency)
+
+        # Setze Position des Actors
+        position = body_data["position"]["value"]
+        self.constraintActor.SetPosition(position[0], position[1], position[2])
+
+        # Füge den Actor dem übergebenen Renderer hinzu
+        constraintrenderer.AddActor(self.constraintActor)
 
     #Visualisieren eines OBJ-Files
     #-----------------------
