@@ -28,8 +28,11 @@ bodyMapper.SetInputConnection(body)
 bodyActor = vtk.vtkActor()
 bodyActor.SetMapper(bodyMapper)
 
-#Position des Aktors lt. fdd-File vorgeben
+# Position des Aktors lt. fdd-File vorgeben
 bodyActor.SetPosition(listOfMbsObjects[0].parameter["position"]["value"])
+
+# Farbe des Aktors ändern
+bodyActor.GetProperty().SetColor(listOfMbsObjects[0].parameter["color"]["value"])
 
 # Koordinatensystem erstellen
 axes = vtk.vtkAxesActor()
