@@ -41,7 +41,7 @@ def main(input_file_path):
 
     #Ursprung-Koordinatensystem anzeigen
     axes = vtk.vtkAxesActor()
-    axes.SetTotalLength(20, 20, 20)
+    axes.SetTotalLength(10, 10, 10)
     renderer.AddActor(axes)
 
     #Renderfenster anlegen

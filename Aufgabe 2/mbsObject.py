@@ -108,35 +108,46 @@ class rigidBody(mbsObject):
 
     def show(self, renderer):
         """
-        Erstellt die VTK-Darstellung des RigidBody-Objekts basierend auf seinen Eigenschaften.
+        Visualisierung des rigidBodies 
         """
-        # Lese Geometrie
+        #Geometriepfad des OBJ einlesen
         geometry_path = self.parameter["geometry"]["value"]
         reader = vtk.vtkOBJReader()
         reader.SetFileName(geometry_path)
         reader.Update()
 
-        # Erstelle Mapper
+        #Mapper anlegen
         mapper = vtk.vtkPolyDataMapper()
         mapper.SetInputConnection(reader.GetOutputPort())
 
-        # Erstelle Actor
+        #Aktor anlegen
         actor = vtk.vtkActor()
         actor.SetMapper(mapper)
 
-        # Setze Position
+        #Position aus Parametern setzen
         position = self.parameter["position"]["value"]
         actor.SetPosition(position)
 
-        # Setze Farbe
+        #Rotation mittels Achsen des rigidBody (sind aus Freedyn bereits Einheitsvektoren :))
+        transform = vtk.vtkTransform()
+        xdir = self.parameter["x_axis"]["value"]
+        ydir = self.parameter["y_axis"]["value"]
+        zdir = self.parameter["z_axis"]["value"]
+        transform.Concatenate([xdir[0],ydir[0],zdir[0],0,
+                               xdir[1],ydir[1],zdir[1],0,
+                               xdir[2],ydir[2],zdir[2],0,
+                               0,0,0,1])
+        actor.SetUserTransform(transform)
+
+        #Farbe aus Parametern setzen
         color = self.parameter["color"]["value"]
         actor.GetProperty().SetColor(color[0] / 255, color[1] / 255, color[2] / 255)
 
-        # Setze Transparenz
+        #Transparenz aus Parametern setzen
         transparency = self.parameter["transparency"]["value"]
         actor.GetProperty().SetOpacity(1 - transparency / 100)
 
-        # Füge Actor zum Renderer hinzu
+        #Actor zum Renderer hinzufügen
         renderer.AddActor(actor)
 
 
@@ -162,30 +173,30 @@ class constraint(mbsObject):
 
     def show(self, renderer):
         """
-        Erstellt die VTK-Darstellung des Constraint-Objekts als Kugel an der Position.
+        Visualisierung der Constraint
         """
         # Erstelle eine Kugel
         sphere = vtk.vtkSphereSource()
-        sphere.SetRadius(5)  # Radius der Kugel
+        sphere.SetRadius(2)  # Radius der Kugel
         sphere.SetPhiResolution(10)
         sphere.SetThetaResolution(10)
         
-        # Erstelle Mapper
+        #Mapper anlegen
         sphere_mapper = vtk.vtkPolyDataMapper()
         sphere_mapper.SetInputConnection(sphere.GetOutputPort())
 
-        # Erstelle Actor
+        #Aktor anlegen
         sphere_actor = vtk.vtkActor()
         sphere_actor.SetMapper(sphere_mapper)
 
-        # Setze Position der Kugel
+        #Position aus Parametern setzen
         position = self.parameter["position"]["value"]
         sphere_actor.SetPosition(position)  # Position des Constraints
 
-        # Setze Farbe (hier = Blau)
+        #Farbe 
         sphere_actor.GetProperty().SetColor(0, 0, 1)  # RGB-Werte
 
-        # Füge Actor zum Renderer hinzu
+        #Actor zum Renderer hinzufügen
         renderer.AddActor(sphere_actor)
 
 
