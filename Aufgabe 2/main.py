@@ -47,7 +47,15 @@ def main(input_file_path):
     #Renderfenster anlegen
     render_window = vtk.vtkRenderWindow()
     render_window.AddRenderer(renderer)
+
     def windowtype(type):
+        hint = vtk.vtkTextActor()
+        hint.SetInput("MKS Reader by fpointin: Press 'q' to exit.")
+        hint.GetTextProperty().SetFontSize(24)
+        hint.GetTextProperty().SetColor(0, 0, 0)  #Schwarzer Text
+        hint.SetPosition(10, 10)  #Position unten links
+        renderer.AddActor2D(hint)
+        
         #kleines Fenster
         if type == 1:
             render_window.SetSize(800, 600)
@@ -55,12 +63,7 @@ def main(input_file_path):
         #Fullscreen
         if type == 2:
             render_window.SetFullScreen(True)
-            text_actor = vtk.vtkTextActor()
-            text_actor.SetInput("MKS Reader by fpointin: Press 'q' to exit.")
-            text_actor.GetTextProperty().SetFontSize(24)
-            text_actor.GetTextProperty().SetColor(0, 0, 0)  #Schwarzer Text
-            text_actor.SetPosition(10, 10)  #Position unten links
-            renderer.AddActor2D(text_actor)
+
     windowtype(2)
 
     #Interaktor anlegen

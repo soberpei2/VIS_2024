@@ -9,6 +9,8 @@ class mbsObject:
 
         #Aktor erstellen
         self.actor = vtk.vtkActor()
+        self.textactor = vtk.vtkTextActor()
+
         #Mapper anlegen
         self.mapper = vtk.vtkPolyDataMapper()
 
@@ -204,3 +206,13 @@ class settings(mbsObject):
         } 
 
         mbsObject.__init__(self,"Settings","Settings",text,parameter)
+
+    def show(self, renderer):
+        if self.parameter["gravity_vector"]["value"] != [[1.,1.,1.]]:
+            self.textactor.SetInput("GRAVITY (x y z) = " + self.vector2str(self.parameter["gravity_vector"]["value"]))
+        else:
+            self.textactor.SetInput("GRAVITY (x y z) = error")
+        self.textactor.GetTextProperty().SetFontSize(24)
+        self.textactor.GetTextProperty().SetColor(0, 0, 0)  #Schwarzer Text
+        self.textactor.SetPosition(10, 40)
+        renderer.AddActor2D(self.textactor)
