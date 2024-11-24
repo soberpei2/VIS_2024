@@ -37,7 +37,7 @@ ren1.SetBackground(0.1, 0.2, 0.4)
 # Definieren einer Leinwand
 renWin = vtk.vtkRenderWindow()
 renWin.AddRenderer(ren1)
-renWin.SetSize(300, 300)
+renWin.SetSize(1000, 1000)
 renWin.Render()
 
 # Interaktionseinstellungen

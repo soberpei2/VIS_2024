@@ -1,5 +1,6 @@
 # Importieren benötigter Biblotheken
 import vtk
+import numpy as np
 
 class mbsObject:
     # Constructor
@@ -229,8 +230,8 @@ class mbsObject:
         return cylinderActor
     #===================================================================================================
 
-    # Memberfunktion - Erstellen eines Zylinder-Aktors
-    #=================================================
+    # Memberfunktion - Erstellen eines Ebenen-Aktors
+    #===============================================
     def getPlane(self, mbsObject):
         # Erzeugen einer Kugelquelle
         plane = vtk.vtkRegularPolygonSource()
@@ -253,6 +254,38 @@ class mbsObject:
 
         # Rückgabe des Aktors
         return planeActor
+    #===================================================================================================
+
+    # Memberfunktion - Erstellen eines Vektor-Aktors
+    #===============================================
+    def getArrow(self, mbsObject):
+        # Erzeugen einer Pfeilquelle
+        arrow = vtk.vtkArrowSource()
+        arrow.SetTipLength(0.35)       # Spitze größer machen
+        arrow.SetTipRadius(0.1)       # Spitze breiter machen
+        arrow.SetShaftRadius(0.05)    # Schaft breiter machen
+        arrow.SetTipResolution(50)
+        arrow.SetShaftResolution(50)
+
+        # Erzeugen eines Filters mit dem Eingang body
+        arrowMapper = vtk.vtkPolyDataMapper()
+        arrowMapper.SetInputConnection(arrow.GetOutputPort())
+
+        # Erzeugen eines Aktors (Filter als Eingang)
+        arrowActor = vtk.vtkActor()
+        arrowActor.SetMapper(arrowMapper)
+
+        # Farbe des Aktors ändern
+        arrowActor.GetProperty().SetColor(1, 0, 0)
+
+        # Transformation erstellen
+        transform = vtk.vtkTransform()
+        transform.RotateZ(-90)  # Drehung um Z-Achse um 90°
+        arrowActor.SetUserTransform(transform)
+        arrowActor.SetScale(10,10,10)
+
+        # Rückgabe des Aktors
+        return arrowActor
     #===================================================================================================
 
     # Memberfunktion - Erstellen eines Aktors lt. .fdd-File
@@ -305,20 +338,29 @@ class mbsObject:
                 return self.getCube(mbsObject)
             
             # Festlager (1 rot. Freiheitsgrad)
-            if sum(transBlockVec) == 3 and sum(rotBlockVec) == 2:
+            elif sum(transBlockVec) == 3 and sum(rotBlockVec) == 2:
                 return self.getCone(mbsObject)
             
             # Loslager (1 trans. + 1 rot. Freiheitsgrad)
-            if sum(transBlockVec) == 2 and sum(rotBlockVec) == 2:
+            elif sum(transBlockVec) == 2 and sum(rotBlockVec) == 2:
                 return self.getCylinder(mbsObject)
             
             # Planare Auflage (2 trans. + 1 rot. Freiheitsgrad)
-            if sum(transBlockVec) == 1 and sum(rotBlockVec) == 2:
+            elif sum(transBlockVec) == 1 and sum(rotBlockVec) == 2:
                 return self.getPlane(mbsObject)
 
             # Kugelgelenk (nur rotatorische Freiheitsgrade)
             elif sum(transBlockVec) == 3 and sum(rotBlockVec) == 0:
                 return self.getSphere(mbsObject)
+        #------------------------------------------------------------------------------------
+
+        # Abfrage, ob mbsObject von der Unterklasse setting ist
+        #------------------------------------------------------
+        elif isinstance(mbsObject, setting):
+            # Darstellen des Schwerkraftvektors
+            return self.getArrow(mbsObject)
+            
+
                
 #=======================================================================================================
 
