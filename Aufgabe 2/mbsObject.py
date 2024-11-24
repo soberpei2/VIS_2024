@@ -40,13 +40,19 @@ class mbsObject:
 class rigidBody(mbsObject):
     def __init__(self,text):
         parameter = {
-            "mass": {"type": "float", "value": 1.},
-            "COG": {"type": "vector", "value": [0.,0.,0.]}
+            "position":          {"type": "float", "value": 1.},
+            "color":             {"type": "vector", "value": [0.,0.,0.]},
+            "transpareny":       {"type": "float", "value": 1},
+            "initial velocity":  {"type": "vector", "value": [0.,0.,0.]},
+            "initial omega":     {"type": "vector", "value": [0.,0.,0.]},
+            "mass":              {"type": "float", "value": 1.},
+            "COG":               {"type": "vector", "value": [0.,0.,0.]},
+            "inertia":           {"type": "vector", "value": [0.,0.,0.,]}
         }
 
         mbsObject.__init__(self,"Body","Rigid_EulerParameter_PAI",text,parameter)
 
 
-class constaint(bmsObject):
+class constaint(mbsObject):
     def __init__(self, text):
         parameter = 
