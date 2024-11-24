@@ -146,8 +146,9 @@ class mbsObject:
             # Position des Aktors lt. fdd-File vorgeben
             bodyActor.SetPosition(mbsObject.parameter["position"]["value"])
 
-            # Farbe des Aktors ändern
+            # Farbe und Transparenz des Aktors ändern
             bodyActor.GetProperty().SetColor(mbsObject.parameter["color"]["value"])
+            bodyActor.GetProperty().SetOpacity(mbsObject.parameter["transparency"]["value"] / 100)
 
             # Rückgabe des Aktors
             return bodyActor
