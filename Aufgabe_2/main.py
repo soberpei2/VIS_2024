@@ -44,3 +44,6 @@ renWin.Render()
 iren = vtk.vtkRenderWindowInteractor()
 iren.SetRenderWindow(renWin)
 iren.Start()
+
+# Anzeigen der Properties eines mbs-Objekts
+listOfMbsObjects[0].showProps()

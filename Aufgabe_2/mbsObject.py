@@ -367,7 +367,20 @@ class mbsObject:
         #------------------------------------------------------
         elif isinstance(mbsObject, setting):
             # Darstellen des Schwerkraftvektors
-            return self.getArrow(mbsObject)          
+            return self.getArrow(mbsObject)
+    #===================================================================================================
+
+    # Memberfunktion - Zeigen der mbsObject-Properties
+    #=================================================
+    def showProps(self):
+        print("Properties of ", type(self))
+        # Schleife über alle Parameter im dictionary
+        for key in self.parameter.keys():
+            print("\t", key, " = ", self.parameter[key]["value"])
+
+
+
+
 #=======================================================================================================
 
 class rigidBody(mbsObject):
