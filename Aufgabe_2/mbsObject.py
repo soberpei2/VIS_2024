@@ -175,6 +175,33 @@ class mbsObject:
         return cubeActor
     #===================================================================================================
 
+    # Memberfunktion - Erstellen eines Pyramiden-Aktors
+    #==================================================
+    def getCone(self, mbsObject):
+        # Erzeugen einer Kugelquelle
+        cone = vtk.vtkConeSource()
+        cone.SetHeight(4.0)
+        cone.SetRadius(3.0)
+        cone.SetResolution(50)
+
+        # Erzeugen eines Filters mit dem Eingang body
+        coneMapper = vtk.vtkPolyDataMapper()
+        coneMapper.SetInputConnection(cone.GetOutputPort())
+
+        # Erzeugen eines Aktors (Filter als Eingang)
+        coneActor = vtk.vtkActor()
+        coneActor.SetMapper(coneMapper)
+
+        # Position des Aktors lt. fdd-File vorgeben
+        coneActor.SetPosition(mbsObject.parameter["position"]["value"])
+
+        # Farbe des Aktors ändern
+        coneActor.GetProperty().SetColor(1, 0, 0)
+
+        # Rückgabe des Aktors
+        return coneActor
+    #===================================================================================================
+
     # Memberfunktion - Erstellen eines Aktors lt. .fdd-File
     #======================================================
     def getActor(self, mbsObject):
@@ -221,11 +248,15 @@ class mbsObject:
                            mbsObject.parameter["az"]["value"]]
 
             # Fixe Einspannung (keine Freiheitsgrade)
-            if sum(transBlockVec) == 3 & sum(rotBlockVec) == 3:
+            if sum(transBlockVec) == 3 and sum(rotBlockVec) == 3:
                 return self.getCube(mbsObject)
+            
+            # Festlager (1 rot. Freiheitsgrad)
+            if sum(transBlockVec) == 3 and sum(rotBlockVec) == 2:
+                return self.getCone(mbsObject)
 
             # Kugelgelenk (nur rotatorische Freiheitsgrade)
-            elif sum(transBlockVec) == 3 & sum(rotBlockVec) == 0:
+            elif sum(transBlockVec) == 3 and sum(rotBlockVec) == 0:
                 return self.getSphere(mbsObject)
                
 #=======================================================================================================
