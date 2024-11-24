@@ -373,10 +373,15 @@ class mbsObject:
     # Memberfunktion - Zeigen der mbsObject-Properties
     #=================================================
     def showProps(self):
+        # Überschrift
         print("Properties of ", type(self))
+
         # Schleife über alle Parameter im dictionary
         for key in self.parameter.keys():
             print("\t", key, " = ", self.parameter[key]["value"])
+        
+        # Leerzeile nach dem letzten Eintrag
+        print("\n")
 
 
 
