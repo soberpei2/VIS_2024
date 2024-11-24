@@ -27,7 +27,7 @@ def inputFileReader(file):
     currentTextBlock = []
 
     # Define list of objects, which should be searched
-    search4Objects = ["RIGID_BODY", "CONSTRAINT", "SETTINGS"]
+    search4Objects = ["RIGID_BODY", "CONSTRAINT", "SETTINGS", "SOLVER"]
 
     #############################
     # Read lines of fileContent #
@@ -50,6 +50,10 @@ def inputFileReader(file):
                 # Wenn Setting -> Objekt vom Typ setting anlegen
                 elif(currentBlockType == "SETTINGS"):
                     listOfMbsObjects.append(mbsObject.setting(currentTextBlock))
+
+                # Wenn Solver -> Objekt vom Typ solver anlegen
+                elif(currentBlockType == "SOLVER"):
+                    listOfMbsObjects.append(mbsObject.solver(currentTextBlock))
 
                 # Set current block Type to empty
                 currentBlockType = ""

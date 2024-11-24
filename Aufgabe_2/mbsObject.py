@@ -541,3 +541,7 @@ class solver(mbsObject):
                                                         "value": 0.
                                                     },
                     }
+        
+        # Aufrufen des Mutterklassenkonstruktors (Ginge auch mit super, dann müsste man self nicht
+        # übergeben)
+        mbsObject.__init__(self, "Solver", "Rigid_EulerParameter_PAI", text, parameter)
