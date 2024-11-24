@@ -26,12 +26,12 @@ axes = vtk.vtkAxesActor()
 axes.SetTotalLength(10, 10, 10)  # Länge der Achsen (X, Y, Z)
 axes.SetShaftTypeToCylinder()    # Achsentyp (Linien, Zylinder, usw.)
 axes.SetAxisLabels(True)         # Achsenbeschriftungen einblenden
+listOfActors.append(axes)        # Hinzufügen zur Aktorliste
 
 # Zeichnen des Bildes
 ren1 = vtk.vtkRenderer()
-ren1.AddActor(listOfActors[0])
-ren1.AddActor(listOfActors[1])
-ren1.AddActor(axes)
+for Actor in listOfActors:
+    ren1.AddActor(Actor)
 ren1.SetBackground(0.1, 0.2, 0.4)
 
 # Definieren einer Leinwand
