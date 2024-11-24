@@ -3,8 +3,8 @@ Body Rigid_EulerParamter_PAI
 	mass=0.001
 	COG=0.0,0.0,0.0
 	position=0.0,0.0,0.0
-	color=200 200 200
-	transparency=50.0
+	color=254 146 146
+	transparency=0.5
 EndBody
 %
 Body Rigid_EulerParamter_PAI
@@ -12,8 +12,8 @@ Body Rigid_EulerParamter_PAI
 	mass=0.001
 	COG=0.0,0.0,0.0
 	position=25.0,0.0,10.0
-	color=200 200 200
-	transparency=50.0
+	color=170 230 228
+	transparency=0.5
 EndBody
 %
 Constraint Fixed
@@ -35,6 +35,28 @@ Constraint Fixed
 	az=0
 	position=25.0,0.0,0.0
 EndConstraint
+%
+Force Generic Force
+	PointOfApplication_Body1=10.0,20.0,30.0
+	PointOfApplication_Body2=0.0,0.0,0.0
+	mode=Space fixed
+	ForceDirection=0.0,0.0,0.0
+	ForceExpression=sin(2*pi/PARVAL[periodDuration]*SIMTIME[])
+EndForce
+%
+Force Generic Torque
+	mode=Body fixed
+	Axis=0.0,0.0,0.0
+	TorqueExpression=STEP[SIMTIME[],0,0,1,1,cosine]
+EndForce
+%
+dataObjectParamter Settings
+	name=periodDuration
+EnddataObjectParamter
+%
+Solver Settings
+	SimulationTimeBegin=0.0
+EndSolver
 %
 Settings Gravity
 	COG marker scale=0.01

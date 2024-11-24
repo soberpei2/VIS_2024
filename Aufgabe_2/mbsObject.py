@@ -1,4 +1,5 @@
 import vtk
+import matplotlib
 
 class mbsObject:
     def __init__(self,type,subtype,text,parameter):
@@ -11,8 +12,8 @@ class mbsObject:
             for key in parameter.keys():        #er geht jetzt jedes dieser Objekte durch
                 if(splitted[0].strip() ==key):
                     if(parameter[key]["type"] =="float"):
-                        parameter[key]["value"] = self.str2float(splitted[1])
-                    elif(parameter[key]["type"] == "vector"):
+                         parameter[key]["value"] = self.str2float(splitted[1])
+                    if(parameter[key]["type"] == "vector"):
                         parameter[key]["value"] = self.str2vector(splitted[1])
                     elif parameter[key]["type"] == "string":
                         # Den gesamten Pfad nach 'geometry' extrahieren
@@ -47,8 +48,7 @@ class mbsObject:
             elif(self.parameter[key]["type"] == "int"):
                 text.append("\t"+ key +"="+self.int2str(self.parameter[key]["value"])+"\n")
             elif(self.parameter[key]["type"] == "string"):
-                path = self.parameter[key]["value"].strip()
-                # Einfach den Doppelpunkt an den richtigen Stellen setzen
+                path = str(self.parameter[key]["value"])  # Explizit in String umwandeln
                 if len(path) > 1 and path[1] == " " and path[0].isalpha():
                     path = path[0] + ":" + path[2:]  # Doppelpunkt anfügen
                 path = path.replace("\\", "/")  # Backslashes durch Slashes ersetzen
@@ -64,7 +64,7 @@ class mbsObject:
         return
     
     #Umwandlung string in float
-    def str2float(self,inString):
+    def str2float(self, inString):
         return float(inString)
     
     def float2str(self,inFloat):
@@ -149,83 +149,31 @@ class rigidbody(mbsObject):
 
         # Füge den Actor dem übergebenen Renderer hinzu
         bodyrenderer.AddActor(self.bodyActor)
+        bodyrenderer.SetBackground(1.0, 1.0, 1.0)
         
 
-class constraint(mbsObject):
+class dataObjectParamter(mbsObject):
 
     def __init__(self, text):
         parameter = {
-            "dx": {"type": "int", "value": 1},
-            "dy": {"type": "int", "value": 1},
-            "dz": {"type": "int", "value": 1},
-            "ax": {"type": "int", "value": 1},
-            "ay": {"type": "int", "value": 1},
-            "az": {"type": "int", "value": 1},
-            "position":{"type":"vector","value": [0.,0.,0.]}
+            "name": {"type": "string", "value": text},
         }
-        mbsObject.__init__(self,"Constraint", "Fixed", text, parameter)
-
-    def vtk_constrain(self, constraintrenderer):
-        # Erstelle den Reader und mapper wie zuvor
-        constraintActor_data = self.parameter
-
-        constraintmapper = vtk.vtkPolyDataMapper()
-        bodymapper.SetInputConnection(bodyReader.GetOutputPort())
-
-        # Erstelle den Actor
-        self.constraintActor = vtk.vtkActor()
-        self.constraintActor.SetMapper(bodymapper)
-
-        # Setze Farbe und Transparenz des Actors
-        color = body_data["color"]["value"]
-        r, g, b = color[0] / 255.0, color[1] / 255.0, color[2] / 255.0  # Umwandlung auf 0-1 Skala
-        self.constraintActor.GetProperty().SetColor(r, g, b)
-
-        transparency = body_data["transparency"]["value"]
-        self.bconstraintActor.GetProperty().SetOpacity(transparency)
-
-        # Setze Position des Actors
-        position = body_data["position"]["value"]
-        self.constraintActor.SetPosition(position[0], position[1], position[2])
-
-        # Füge den Actor dem übergebenen Renderer hinzu
-        constraintrenderer.AddActor(self.constraintActor)
-
-    #Visualisieren eines OBJ-Files
-    #-----------------------
-    def vtk_body(self):
-        body_data=self.parameter
-        
-        #Erzeugen eines Readers
-        bodyReader = vtk.vtkOBJReader()
-
-        #Erzeugen einer Quelle
-        body = bodyReader.SetFileName("C:/vis2024/VIS_2024/Aufgabe_2/quader.obj")
-        bodyReader.Update()
-
-        #Erzeugen eines Filters mit dem Eingang body
-        bodymapper = vtk.vtkPolyDataMapper()
-        bodymapper.SetInputConnection(bodyReader.GetOutputPort())
-
-        #Erzeugen eines Aktors (Filter als Eingang) 
-        bodyActor = vtk.vtkActor()
-        bodyActor.SetMapper(bodymapper)
-
-        #Erzeugen eines Renderers, Hinzugfügen eines Atkors und Hintergrund
-        bodyrenderer = vtk.vtkRenderer()
-        bodyrenderer.AddActor(bodyActor)
-        bodyrenderer.SetBackground(0.1, 0.2, 0.4)
-
-        #Erzeugen eines Render Fensters und hinzufügen des Renders
-        renWin = vtk.vtkRenderWindow()
-        renWin.AddRenderer(bodyrenderer)
-        renWin.SetSize(600, 600)
-        renWin.Render()
+        mbsObject.__init__(self,"dataObjectParamter", "Settings", text, parameter)
 
 
-    def writeInputfile(self, file):
-        super().writeInputfile(file)
-        
+
+
+class solver(mbsObject):
+
+    def __init__(self, text):
+        parameter = {
+            "SimulationTimeBegin": {"type": "float", "value": 1.},
+            "SimulationTimeBegin": {"type": "float", "value": 1.},
+        }
+        mbsObject.__init__(self,"Solver", "Settings", text, parameter)
+
+
+    
 class settings(mbsObject):
     def __init__(self, text):
         parameter = {
@@ -235,5 +183,32 @@ class settings(mbsObject):
             "gravity_vector":{"type":"vector","value": [0.,0.,0.]},
             "background color": {"type": "vectorint","value":[0,0,0]},
 
+            
+
         }
         mbsObject.__init__(self,"Settings", "Gravity", text, parameter)
+
+
+
+class genericForce(mbsObject):
+    def __init__(self, text):
+        parameter = {
+            "PointOfApplication_Body1":{"type":"vector","value": [0.,0.,0.]},
+            "PointOfApplication_Body2":{"type":"vector","value": [0.,0.,0.]},
+            "mode": {"type": "string","value": text},
+            "ForceDirection":{"type":"vector","value": [0.,0.,0.]},
+            "ForceExpression": {"type": "string","value": text},
+        }
+        mbsObject.__init__(self,"Force", "Generic Force", text, parameter)
+
+class genericTorque(mbsObject):
+    def __init__(self, text):
+        parameter = {
+
+            "mode": {"type": "string","value": text},
+            "Axis":{"type":"vector","value": [0.,0.,0.]},
+            "TorqueExpression": {"type": "string","value": text},
+        }
+        mbsObject.__init__(self,"Force","Generic Torque", text, parameter)
+
+             

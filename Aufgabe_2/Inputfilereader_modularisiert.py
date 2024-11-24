@@ -1,5 +1,7 @@
 import json
 import mbsObject
+from constraint import constraint
+
 
 # Funktion zum Einlesen
 def inputFileReader(file):
@@ -19,7 +21,7 @@ def inputFileReader(file):
 # Modul-Funktion: Datei analysieren
 def analyse_file(file_content):
     """Analysiert die Datei und extrahiert MBS-Objekte."""
-    search4Objects = ["RIGID_BODY", "CONSTRAINT","SETTINGS"]  # mögliche Schlagwörter
+    search4Objects = ["RIGID_BODY", "CONSTRAINT","FORCE_GenericForce","FORCE_GenericTorque","DATAOBJECT_PARAMETER","SOLVER","SETTINGS"]  # mögliche Schlagwörter
     currentBlockType = ""
     currentTextBlock = []
     listOfMbsObjects = []
@@ -30,7 +32,15 @@ def analyse_file(file_content):
                 if currentBlockType == "RIGID_BODY":
                     listOfMbsObjects.append(mbsObject.rigidbody(currentTextBlock))  # Hier wird ein 'rigidbody' erzeugt
                 elif currentBlockType == "CONSTRAINT":
-                    listOfMbsObjects.append(mbsObject.constraint(currentTextBlock))
+                    listOfMbsObjects.append(constraint(currentTextBlock))
+                elif currentBlockType == "FORCE_GenericForce":
+                    listOfMbsObjects.append(mbsObject.genericForce(currentTextBlock))
+                elif currentBlockType == "FORCE_GenericTorque":
+                    listOfMbsObjects.append(mbsObject.genericTorque(currentTextBlock))
+                elif currentBlockType == "DATAOBJECT_PARAMETER":
+                    listOfMbsObjects.append(mbsObject.dataObjectParamter(currentTextBlock))      
+                elif currentBlockType == "SOLVER":
+                    listOfMbsObjects.append(mbsObject.solver(currentTextBlock))  
                 elif currentBlockType == "SETTINGS":
                     listOfMbsObjects.append(mbsObject.settings(currentTextBlock))
                 currentBlockType = ""

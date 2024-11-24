@@ -1,6 +1,7 @@
 import Inputfilereader_modularisiert
 import vtk
-from mbsObject import rigidbody  # Hier wird die Klasse rigidbody importiert
+from mbsObject import rigidbody
+from constraint import constraint  # Hier wird die Klasse rigidbody importiert
 
 # Datei einlesen
 file = "Aufgabe_2/test.fdd"
@@ -12,6 +13,7 @@ listOfMbsObjects = Inputfilereader_modularisiert.analyse_file(fileContent)
 
 # JSON erstellen
 Inputfilereader_modularisiert.write_json(listOfMbsObjects, "Aufgabe_2/test.json")
+
 
 # JSON lesen
 data = Inputfilereader_modularisiert.read_json("Aufgabe_2/test.json")
@@ -34,6 +36,8 @@ iren.SetRenderWindow(renderWindow)
 for obj in listOfMbsObjects:
     if isinstance(obj, rigidbody):  # Sicherstellen, dass es ein Rigid Body ist
         obj.vtk_body(renderer)  # Füge das Objekt dem gemeinsamen Renderer hinzu
+    elif isinstance(obj,constraint):
+        obj.vtk_constraint(renderer)
 
 # Koordinatensystem hinzufügen
 axes = vtk.vtkAxesActor()
