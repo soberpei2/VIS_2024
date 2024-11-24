@@ -280,7 +280,16 @@ class mbsObject:
 
         # Transformation erstellen
         transform = vtk.vtkTransform()
-        transform.RotateZ(-90)  # Drehung um Z-Achse um 90°
+
+        # Schwerkraft in y-Richtung -> Drehung um z-Achse um 90°
+        if mbsObject.parameter["gravity_vector"]["value"][1] != 0:
+            transform.RotateZ(-90)
+
+        # Schwerkraft in z-Richtung -> Drehung um y-Achse um 90°
+        if mbsObject.parameter["gravity_vector"]["value"][2] != 0:
+            transform.RotateY(90)   
+
+        # Anwenden der Transformation
         arrowActor.SetUserTransform(transform)
         arrowActor.SetScale(10,10,10)
 
