@@ -1,6 +1,7 @@
 # Importieren benötigter Klassen
 import inputFileReader as ifr
 import vtk
+import mbsObject as MBS
 
 # Definieren des einzulesenden Files
 file = "C:/Users/Startklar/OneDrive/Desktop/10_Studium/02_Master/03_Semester/Visualisierung_Datenaufbereitung/02_Aufgabe/test.fdd"
@@ -12,27 +13,35 @@ listOfMbsObjects = ifr.inputFileReader(file)
 # Visualisieren eines OBJ-Files
 #=======================================================================
 
-# Erzeugen eines obj-Readers
-bodyReader = vtk.vtkOBJReader()
+listOfActors = []
 
-# Erzeugen einer Quelle
-bodyReader.SetFileName(listOfMbsObjects[0].parameter["geometry"]["value"])
-bodyReader.Update()
-body = bodyReader.GetOutputPort()
+# Schleife über die Liste der Mbs-Objekte
+for mbsObject in listOfMbsObjects:
+    # Abfrage, ob mbsObject von der Unterklasse rigidBody ist
+    if isinstance(mbsObject, MBS.rigidBody):
+        # Erzeugen eines obj-Readers
+        bodyReader = vtk.vtkOBJReader()
 
-# Erzeugen eines Filters mit dem Eingang body
-bodyMapper = vtk.vtkPolyDataMapper()
-bodyMapper.SetInputConnection(body)
+        # Erzeugen einer Quelle
+        bodyReader.SetFileName(mbsObject.parameter["geometry"]["value"])
+        bodyReader.Update()
+        body = bodyReader.GetOutputPort()
 
-# Erzeugen eines Aktors (Filter als Eingang)
-bodyActor = vtk.vtkActor()
-bodyActor.SetMapper(bodyMapper)
+        # Erzeugen eines Filters mit dem Eingang body
+        bodyMapper = vtk.vtkPolyDataMapper()
+        bodyMapper.SetInputConnection(body)
 
-# Position des Aktors lt. fdd-File vorgeben
-bodyActor.SetPosition(listOfMbsObjects[0].parameter["position"]["value"])
+        # Erzeugen eines Aktors (Filter als Eingang)
+        bodyActor = vtk.vtkActor()
+        bodyActor.SetMapper(bodyMapper)
 
-# Farbe des Aktors ändern
-bodyActor.GetProperty().SetColor(listOfMbsObjects[0].parameter["color"]["value"])
+        # Position des Aktors lt. fdd-File vorgeben
+        bodyActor.SetPosition(mbsObject.parameter["position"]["value"])
+
+        # Farbe des Aktors ändern
+        bodyActor.GetProperty().SetColor(mbsObject.parameter["color"]["value"])
+
+        listOfActors.append(bodyActor)
 
 # Koordinatensystem erstellen
 axes = vtk.vtkAxesActor()
@@ -42,7 +51,8 @@ axes.SetAxisLabels(True)         # Achsenbeschriftungen einblenden
 
 # Zeichnen des Bildes
 ren1 = vtk.vtkRenderer()
-ren1.AddActor(bodyActor)
+ren1.AddActor(listOfActors[0])
+ren1.AddActor(listOfActors[1])
 ren1.AddActor(axes)
 ren1.SetBackground(0.1, 0.2, 0.4)
 
