@@ -7,6 +7,11 @@ class mbsObject:
                                     # es ist also egal, ob man self.parameter oder parameter schreibt
         self.__subtype = subtype
 
+        #Aktor erstellen
+        self.actor = vtk.vtkActor()
+        #Mapper anlegen
+        self.mapper = vtk.vtkPolyDataMapper()
+
         for line in text:
             splitted = line.split(":")
             for key in parameter.keys():                    #über dictionary drüber suchen... parameter.keys() = mass, COG...
@@ -116,17 +121,13 @@ class rigidBody(mbsObject):
         reader.SetFileName(geometry_path)
         reader.Update()
 
-        #Mapper anlegen
-        mapper = vtk.vtkPolyDataMapper()
-        mapper.SetInputConnection(reader.GetOutputPort())
-
-        #Aktor anlegen
-        actor = vtk.vtkActor()
-        actor.SetMapper(mapper)
+      
+        self.mapper.SetInputConnection(reader.GetOutputPort())
+        self.actor.SetMapper(self.mapper)
 
         #Position aus Parametern setzen
         position = self.parameter["position"]["value"]
-        actor.SetPosition(position)
+        self.actor.SetPosition(position)
 
         #Rotation mittels Achsen des rigidBody (sind aus Freedyn bereits Einheitsvektoren :))
         transform = vtk.vtkTransform()
@@ -137,18 +138,18 @@ class rigidBody(mbsObject):
                                xdir[1],ydir[1],zdir[1],0,
                                xdir[2],ydir[2],zdir[2],0,
                                0,0,0,1])
-        actor.SetUserTransform(transform)
+        self.actor.SetUserTransform(transform)
 
         #Farbe aus Parametern setzen
         color = self.parameter["color"]["value"]
-        actor.GetProperty().SetColor(color[0] / 255, color[1] / 255, color[2] / 255)
+        self.actor.GetProperty().SetColor(color[0] / 255, color[1] / 255, color[2] / 255)
 
         #Transparenz aus Parametern setzen
         transparency = self.parameter["transparency"]["value"]
-        actor.GetProperty().SetOpacity(1 - transparency / 100)
+        self.actor.GetProperty().SetOpacity(1 - transparency / 100)
 
         #Actor zum Renderer hinzufügen
-        renderer.AddActor(actor)
+        renderer.AddActor(self.actor)
 
 
 class constraint(mbsObject):
@@ -181,23 +182,19 @@ class constraint(mbsObject):
         sphere.SetPhiResolution(10)
         sphere.SetThetaResolution(10)
         
-        #Mapper anlegen
-        sphere_mapper = vtk.vtkPolyDataMapper()
-        sphere_mapper.SetInputConnection(sphere.GetOutputPort())
 
-        #Aktor anlegen
-        sphere_actor = vtk.vtkActor()
-        sphere_actor.SetMapper(sphere_mapper)
+        self.mapper.SetInputConnection(sphere.GetOutputPort())
+        self.actor.SetMapper(self.mapper)
 
         #Position aus Parametern setzen
         position = self.parameter["position"]["value"]
-        sphere_actor.SetPosition(position)  # Position des Constraints
+        self.actor.SetPosition(position)  # Position des Constraints
 
         #Farbe 
-        sphere_actor.GetProperty().SetColor(0, 0, 1)  # RGB-Werte
+        self.actor.GetProperty().SetColor(0, 0, 1)  # RGB-Werte
 
         #Actor zum Renderer hinzufügen
-        renderer.AddActor(sphere_actor)
+        renderer.AddActor(self.actor)
 
 
 class settings(mbsObject):

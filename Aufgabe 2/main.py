@@ -34,7 +34,7 @@ def main(input_file_path):
 
     #Anlegen des Renderers
     renderer = vtk.vtkRenderer()
-    renderer.SetBackground(1,1,1)
+    renderer.SetBackground(1,1,1) #weißer Hintergrund
 
     #Anzeige der Objekte lt. mbsModel
     model.show(renderer)
