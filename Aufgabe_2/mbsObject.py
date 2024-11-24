@@ -276,7 +276,7 @@ class mbsObject:
         arrowActor.SetMapper(arrowMapper)
 
         # Farbe des Aktors ändern
-        arrowActor.GetProperty().SetColor(1, 0, 0)
+        arrowActor.GetProperty().SetColor(0, 0, 0)
 
         # Transformation erstellen
         transform = vtk.vtkTransform()
