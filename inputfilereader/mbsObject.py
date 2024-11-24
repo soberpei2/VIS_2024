@@ -6,7 +6,11 @@ class mbsObject:
         self.parameter = parameter
 
         for line in text:
-            splitted = line.split(":")
+            if ":" in line:
+            # Nur beim ersten ':' splitten
+                splitted = line.split(":", 1)
+                key = splitted[0].strip()
+                value = splitted[1].strip()
             for key in parameter.keys():
                 if(splitted[0].strip() == key):            # strip: Leerzeichen entfernen
                     if(parameter[key]["type"] == "float"):
@@ -21,6 +25,7 @@ class mbsObject:
                         parameter[key]["value"] = self.str2int(splitted[1])
                     elif (parameter[key]["type"] == "bool"):
                         parameter[key]["value"] = self.str2bool(splitted[1])
+                    
 
     def writeInputfile(self,file):
         text = []
@@ -74,11 +79,15 @@ class rigidBody(mbsObject):
     def __init__(self,text):
         parameter = {
             "name":         {"type": "string", "value": "NAME_UNKOWN"},
+            "geometry":     {"type": "string", "value": "UNKOWN"},
             "position":     {"type": "vector", "value": [1.,1.,1.]},
+            "x_axis":       {"type": "vector", "value": [1.,1.,1.]},
+            "y_axis":       {"type": "vector", "value": [1.,1.,1.]},
+            "z_axis":       {"type": "vector", "value": [1.,1.,1.]},
             "color":        {"type": "vectorInt", "value": [0, 0, 0]},
             "transparency": {"type": "int", "value": 0},
             "mass":         {"type": "float", "value": 1.},
-            "COG":          {"type": "vector", "value": [0.,0.,0.]},
+            "COG":          {"type": "vector", "value": [0.,0.,0.]},            
         }
 
         mbsObject.__init__(self,"rigidBody","Rigid_EulerParameter_PAI",text,parameter)
@@ -98,6 +107,9 @@ class constraint(mbsObject):
             "ay":           {"type": "bool", "value": 0},
             "az":           {"type": "bool", "value": 0},
             "position":     {"type": "vector", "value": [1.,1.,1.]},
+            "x_axis":       {"type": "vector", "value": [1.,1.,1.]},
+            "y_axis":       {"type": "vector", "value": [1.,1.,1.]},
+            "z_axis":       {"type": "vector", "value": [1.,1.,1.]},
         }
 
         mbsObject.__init__(self,"constraint","Rigid_EulerParameter_PAI",text,parameter)
