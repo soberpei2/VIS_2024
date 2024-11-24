@@ -229,6 +229,32 @@ class mbsObject:
         return cylinderActor
     #===================================================================================================
 
+    # Memberfunktion - Erstellen eines Zylinder-Aktors
+    #=================================================
+    def getPlane(self, mbsObject):
+        # Erzeugen einer Kugelquelle
+        plane = vtk.vtkRegularPolygonSource()
+        plane.SetNumberOfSides(4)
+        plane.SetRadius(3.0)
+
+        # Erzeugen eines Filters mit dem Eingang body
+        planeMapper = vtk.vtkPolyDataMapper()
+        planeMapper.SetInputConnection(plane.GetOutputPort())
+
+        # Erzeugen eines Aktors (Filter als Eingang)
+        planeActor = vtk.vtkActor()
+        planeActor.SetMapper(planeMapper)
+
+        # Position des Aktors lt. fdd-File vorgeben
+        planeActor.SetPosition(mbsObject.parameter["position"]["value"])
+
+        # Farbe des Aktors ändern
+        planeActor.GetProperty().SetColor(1, 0, 0)
+
+        # Rückgabe des Aktors
+        return planeActor
+    #===================================================================================================
+
     # Memberfunktion - Erstellen eines Aktors lt. .fdd-File
     #======================================================
     def getActor(self, mbsObject):
@@ -285,6 +311,10 @@ class mbsObject:
             # Loslager (1 trans. + 1 rot. Freiheitsgrad)
             if sum(transBlockVec) == 2 and sum(rotBlockVec) == 2:
                 return self.getCylinder(mbsObject)
+            
+            # Planare Auflage (2 trans. + 1 rot. Freiheitsgrad)
+            if sum(transBlockVec) == 1 and sum(rotBlockVec) == 2:
+                return self.getPlane(mbsObject)
 
             # Kugelgelenk (nur rotatorische Freiheitsgrade)
             elif sum(transBlockVec) == 3 and sum(rotBlockVec) == 0:
