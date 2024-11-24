@@ -1,5 +1,9 @@
-import mbsObject
 import json
+from rigidBody import rigidBody
+from constraint import constraint
+from force import force
+from force import torque
+from measure import measure
 
 
 def parseText2blocksOfMbsObjects(fileContent,keySign,search4Objects):
@@ -12,7 +16,7 @@ def parseText2blocksOfMbsObjects(fileContent,keySign,search4Objects):
             if(currentBlockType != ""):   
                 for obj in search4Objects:             
                     if(currentBlockType == obj):
-                        listOfMbsObjects.append(mbsObject.mbsObjectFactory(obj,currentTextBlock))
+                        listOfMbsObjects.append(mbsObjectFactory(obj,currentTextBlock))
                 currentBlockType = ""
         
         for type_i in search4Objects:
@@ -51,4 +55,13 @@ def writeFdsFile(listOfMbsObjects,filePath,nameWithExtension):
         mbsObject_i.writeInputFile(fds)
     fds.close()
 
-#print(len(listOfMbsObjects))
+def mbsObjectFactory(object,textblock):
+    mbsObjectList = {
+        "RIGID_BODY": rigidBody,
+        "CONSTRAINT": constraint,
+        "FORCE_GenericForce": force,
+        "FORCE_GenericTorque": torque,
+        "MEASURE": measure,
+    }
+
+    return mbsObjectList[object](textblock)

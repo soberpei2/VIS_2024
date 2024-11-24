@@ -1,11 +1,17 @@
 import vtk
+#import rigidBody
+#import constraint
+#import force
+#import measure
 
 class mbsObject:
     def __init__(self,type,subtype,text,parameter):
         self.__type = type
         self.__subtype = subtype
         self.parameter = parameter
+        self.actor = vtk.vtkActor()
 
+        
         for line in text:
             splitted = line.split(":",1)
             for key in parameter.keys():
@@ -14,12 +20,14 @@ class mbsObject:
                         parameter[key]["value"] = self.str2float(splitted[1])
                     elif (parameter[key]["type"] == "vector"):
                         parameter[key]["value"] = self.str2vector(splitted[1])
-                    elif (parameter[key]["type"] == "integer"):
+                    elif (parameter[key]["type"] == "int"):
                         parameter[key]["value"] = self.str2int(splitted[1])
-                    elif (parameter[key]["type"] == "vectorInteger"):
+                    elif (parameter[key]["type"] == "vectorInt"):
                         parameter[key]["value"] = self.str2vectorInt(splitted[1])
                     elif (parameter[key]["type"] == "str"):
                         parameter[key]["value"] = self.str2str(splitted[1].strip())
+                    elif (parameter[key]["type"] == "path"):
+                        parameter[key]["value"] = self.str2path(splitted[1].strip())    
                     elif (parameter[key]["type"] == "bool"):
                         parameter[key]["value"] = self.str2bool(splitted[1])
 
@@ -37,6 +45,8 @@ class mbsObject:
                 text.append("\t" + key + " = " + self.vectorInt2str(self.parameter[key]["value"]) + "\n")
             elif(self.parameter[key]["type"] == "str"):
                 text.append("\t" + key + " = " + self.str2str(self.parameter[key]["value"]) + "\n")
+            elif(self.parameter[key]["type"] == "path"):
+                text.append("\t" + key + " = " + self.path2str(self.parameter[key]["value"]) + "\n")
             elif(self.parameter[key]["type"] == "bool"):
                 text.append("\t" + key + " = " + self.bool2str(self.parameter[key]["value"]) + "\n")
         text.append("End" + self.__type + "\n%\n")
@@ -65,78 +75,22 @@ class mbsObject:
     def str2str(self,inString):
         return str(inString)
     
+    def str2path(self,inString):
+        #path = inString.rsplit("\\",1)
+        #realPath = path[0]
+        #fileName = path[1].rsplit(".",1)[0]
+        #fileType = "." + path[1].rsplit(".",1)[1]
+        return str(inString)
+    
+    def path2str(self,inString):
+        return str(inString)
+    
     def str2bool(self,inString):
         return bool(inString)
     def bool2str(self,inBool):
         return str(inBool)
-
-class rigidBody(mbsObject):
-    def __init__(self, text):
-        parameter = {
-            "name": {"type": "str", "value": "testName"},
-            "geometry": {"type": "str", "value": "testPathGeometry"},
-            "position": {"type": "vector", "value": [0.,0.,0.]},
-            "x_axis": {"type": "vector", "value": [0.,0.,0.]},
-            "y_axis": {"type": "vector", "value": [0.,0.,0.]},
-            "z_axis": {"type": "vector", "value": [0.,0.,0.]},
-            "color": {"type": "vectorInt", "value": [0,0,0]},
-            "transparency": {"type": "int", "value": 0},
-            "initial velocity": {"type": "vector", "value": [0.,0.,0.]},
-            "initial omega": {"type": "vector", "value": [0.,0.,0.]},
-            "consider vel inertia forces": {"type": "bool", "value": 0},
-            "mass": {"type": "float", "value": 0.},
-            "COG": {"type": "vector", "value": [0.,0.,0.]},
-            "inertia": {"type": "vector", "value": [0.,0.,0.]},
-            "i1_axis": {"type": "vector", "value": [0.,0.,0.]},
-            "i2_axis": {"type": "vector", "value": [0.,0.,0.]},
-            "i3_axis": {"type": "vector", "value": [0.,0.,0.]}
-        }
-
-        mbsObject.__init__(self,"Body","Rigid_EulerParamter_PAI",text,parameter)
+    
+    def getActor(self):
+        return self.actor
     
 
-class constraint(mbsObject):
-    def __init__(self, text):
-        parameter = {
-            "name": {"type": "str", "value": "testName"},
-            "body1": {"type": "str", "value": "testBody1"},
-            "body2": {"type": "str", "value": "testBody2"},
-            "dx": {"type": "int", "value": 0},
-            "dy": {"type": "int", "value": 0},
-            "dz": {"type": "int", "value": 0},
-            "ax": {"type": "int", "value": 0},
-            "ay": {"type": "int", "value": 0},
-            "az": {"type": "int", "value": 0},
-            "position": {"type": "vector", "value": [0.,0.,0.]},
-            "x_axis": {"type": "vector", "value": [0.,0.,0.]},
-            "y_axis": {"type": "vector", "value": [0.,0.,0.]},
-            "z_axis": {"type": "vector", "value": [0.,0.,0.]}
-        }
-
-        mbsObject.__init__(self,"Constraint","Generic",text,parameter)
-
-class force(mbsObject):
-    def __init__(self, text):
-        parameter = {
-            "name": {"type": "str", "value": "testName"},
-            "body1": {"type": "str", "value": "testBody1"},
-            "body2": {"type": "str", "value": "testBody2"},
-            "PointOfApplication_Body1": {"type": "vector", "value": [0.,0.,0.]},
-            "PointOfApplication_Body2": {"type": "vector", "value": [0.,0.,0.]},
-            "mode": {"type": "str", "value": "testMode"},
-            "direction": {"type": "vector", "value": [0.,0.,0.]},
-            "ForceExpression": {"type": "str", "value": "testForceExpression"}
-
-        }
-
-        mbsObject.__init__(self,"Force","Generic",text,parameter)
-
-
-def mbsObjectFactory(object,textblock):
-    mbsObjectList = {
-        "RIGID_BODY": rigidBody,
-        "CONSTRAINT": constraint,
-        "FORCE_GenericForce": force,
-    }
-
-    return mbsObjectList[object](textblock)
