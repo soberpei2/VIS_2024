@@ -367,10 +367,7 @@ class mbsObject:
         #------------------------------------------------------
         elif isinstance(mbsObject, setting):
             # Darstellen des Schwerkraftvektors
-            return self.getArrow(mbsObject)
-            
-
-               
+            return self.getArrow(mbsObject)          
 #=======================================================================================================
 
 class rigidBody(mbsObject):
@@ -505,3 +502,42 @@ class setting(mbsObject):
         # Aufrufen des Mutterklassenkonstruktors (Ginge auch mit super, dann müsste man self nicht
         # übergeben)
         mbsObject.__init__(self, "Settings", "Rigid_EulerParameter_PAI", text, parameter)
+#=======================================================================================================
+
+class solver(mbsObject):
+    # Constructor
+    #============
+    def __init__(self, text):
+        # Initialisieren eines Dictionaries mit den Parametern
+        #-----------------------------------------------------
+        parameter = {
+                        "SimulationTimeBegin":  {
+                                                    "type": "float",
+                                                    "value": 0.
+                                                },
+
+                        "SimulationTimeEnd":    {
+                                                    "type": "float",
+                                                    "value": 0.
+                                                },
+
+                        "OutputTimeBegin":  {
+                                                "type": "float",
+                                                "value": 0.
+                                            },
+
+                        "OutputTimeStepSize":   {
+                                                    "type": "float",
+                                                    "value": 0.
+                                                },
+
+                        "SimulationMinTimeStep":    {
+                                                        "type": "float",
+                                                        "value": 0.
+                                                    },
+
+                        "SimulationMaxTimeStep":    {
+                                                        "type": "float",
+                                                        "value": 0.
+                                                    },
+                    }
