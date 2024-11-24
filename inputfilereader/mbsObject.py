@@ -6,6 +6,8 @@ class mbsObject:
         self.__subtype = subtype
         self.parameter = parameter
         self.actor = vtk.vtkActor()      # wird immer benötigt
+        self.arrow_actor = vtk.vtkActor()   
+        self.arrow_source = vtk.vtkArrowSource() # erstellen eines Pfeiles (standart position)
 
         for line in text:
             splitted = line.split(":")
@@ -23,7 +25,6 @@ class mbsObject:
                         parameter[key]["value"] = self.str2integer(splitted[1])        # für constraint 
                     elif(parameter[key]["type"] == "color"):
                         parameter[key]["value"] = self.color2vec(splitted[1])        
-
 
     def writeInputfile(self, file):
         text = []
@@ -62,7 +63,7 @@ class mbsObject:
         return str(inInteger)
     def color2vec(self,inString):
         stringcolor = inString[:12].split()
-        return [float(v) for v in stringcolor]
+        return [float(v)/255 for v in stringcolor]  # color wird hier normiert --> einzelner float kein vektor
         
 
 class rigidBody(mbsObject):
@@ -92,11 +93,12 @@ class rigidBody(mbsObject):
 
         # Actor erstellen
         self.actor.SetMapper(mapper)
-        self.actor.GetProperty().SetColor(1.0, 0.5, 0.3)
+        self.actor.GetProperty().SetColor(self.parameter["color"]["value"])
+        self.actor.GetProperty().SetOpacity(self.parameter["transparency"]["value"]/100) # Transparentz übernehmen/ einstellen
 
         # Transformation basierend auf der Position und Orientierung
         self.apply_transformations()
-        self.actor.GetProperty().SetOpacity(self.parameter["transparency"]["value"]/100) # Transparentz übernehmen/ einstellen
+
         
     def apply_transformations(self):
         """Wendet die Position und Orientierung an den Actor an."""
@@ -135,8 +137,8 @@ class constraint(mbsObject):
             "ay": {"type": "integer", "value": [0]},
             "az": {"type": "integer", "value": [0]}
             
-
         }
+
         mbsObject.__init__(self,"Constraint","Constraint_EulerParameter_PAI", text,parameter)
         # Position und Achsen laden
         pos = self.parameter["position"]["value"]
@@ -144,68 +146,99 @@ class constraint(mbsObject):
         y_axis = self.parameter["y_axis"]["value"]
         z_axis = self.parameter["z_axis"]["value"]
 
-        # Constraint als Linie darstellen (optional: Achsen-Pfeile hinzufügen)
-        self.visualize_constraint(pos, x_axis, y_axis, z_axis)
+        self.visualize_constraint(pos, parameter)
 
-    def visualize_constraint(self, position, x_axis, y_axis, z_axis):
-        """Visualisiert den Constraint an der gegebenen Position."""
-        # Nutze einen Punkt und Linien für die Darstellung
-        sphere_source = vtk.vtkSphereSource()
-        sphere_source.SetCenter(position)
-        sphere_source.SetRadius(1)
+    def visualize_constraint(self, position, parameter):
 
-        # Mapping und Actor
-        sphere_mapper = vtk.vtkPolyDataMapper()
-        sphere_mapper.SetInputConnection(sphere_source.GetOutputPort())
+        if parameter["dx"]["value"] == 1 and parameter["dy"]["value"] == 1 and parameter["dz"]["value"] == 1:
+            """Visualisiert den Constraint an der gegebenen Position."""
+            # Nutze einen Punkt und Linien für die Darstellung
+            sphere_source = vtk.vtkSphereSource()
+            sphere_source.SetCenter(position)
+            sphere_source.SetRadius(1)
 
-        self.actor.SetMapper(sphere_mapper)
-        self.actor.GetProperty().SetColor(1.0, 1.0, 0.0)  # Gelbe Farbe für Constraints
+            # Mapping und Actor
+            sphere_mapper = vtk.vtkPolyDataMapper()
+            sphere_mapper.SetInputConnection(sphere_source.GetOutputPort())
+            # Actor für die Kugel
+            self.actor.SetMapper(sphere_mapper)
+            self.actor.GetProperty().SetColor(1.0, 0.0, 0.0)  # Gelbe Farbe für Constraints
+        elif parameter["dx"]["value"] == 1 and parameter["dy"]["value"] == 0 and parameter["dz"]["value"] == 1: 
+            dfdf
+        elif parameter["dx"]["value"] == 1 and parameter["dy"]["value"] == 1 and parameter["dz"]["value"] == 0: 
+            dsfdf
+        elif parameter["dx"]["value"] == 1 and parameter["dy"]["value"] == 0 and parameter["dz"]["value"] == 1: 
+            dghth
 
-
+    
 
 class settings(mbsObject):
-    def __init__(self,  text):
+    def __init__(self, text):
         parameter = {
             #dict
     	    "gravity_vector": {"type": "vector", "value": [0.,0.,-9.81]},
+            "background_color": {"type": "color", "value": [0.,0.,0.]},
         }
         mbsObject.__init__(self,"Settings","Visualization", text,parameter)
         
-"""""
-def visualizeBody(FirstobjPath):
-        # input: filepath of the geometrie
-        import vtk    
-    
-        ColorBackground = [0.0, 0.0, 0.0]
-        reader = vtk.vtkOBJReader()
-        reader.SetFileName(FirstobjPath)
-        reader.Update()
+        # Visualisierung des Schwerkraftpfeils erstellen
+        self.create_gravity_arrow()
 
 
-        mapper = vtk.vtkPolyDataMapper()
-        if vtk.VTK_MAJOR_VERSION <= 5:
-            mapper.SetInput(reader.GetOutput())
-        else:
-            mapper.SetInputConnection(reader.GetOutputPort())
+    def create_gravity_arrow(self):
+            colors = vtk.vtkNamedColors()
 
-        actor = vtk.vtkActor()
-        actor.SetMapper(mapper)
+            # Definiere Start- und Endpunkte des Pfeils
+            start_point = [0, 0, 0]  # Startpunkt des Pfeils
+            end_point = [0, 0, -9.81]  # Endpunkt des Pfeils
 
-        # Create a rendering window and renderer
-        ren = vtk.vtkRenderer()
-        ren.SetBackground(ColorBackground)
-        renWin = vtk.vtkRenderWindow()
-        renWin.AddRenderer(ren)
+            # Normalisiere den Vektor zwischen Start- und Endpunkt
+            normalized_x = [0] * 3
+            vtk.vtkMath.Subtract(end_point, start_point, normalized_x)
+            length = vtk.vtkMath.Norm(normalized_x)  # Länge des Pfeils
+            vtk.vtkMath.Normalize(normalized_x)  # Vektor normalisieren
 
-        # Create a renderwindowinteractor
-        iren = vtk.vtkRenderWindowInteractor()
-        iren.SetRenderWindow(renWin)
+            # Erstelle einen beliebigen Vektor für das Kreuzprodukt
+            arbitrary = [1, 0, 0]  # Beliebiger Vektor (nicht parallel zu normalized_x)
+            normalized_z = [0] * 3
+            vtk.vtkMath.Cross(normalized_x, arbitrary, normalized_z)
+            vtk.vtkMath.Normalize(normalized_z)
 
-        # Assign actor to the renderer
-        ren.AddActor(actor)
+            # Berechne die Y-Achse
+            normalized_y = [0] * 3
+            vtk.vtkMath.Cross(normalized_z, normalized_x, normalized_y)
 
-        # Enable user interface interactor
-        iren.Initialize()
-        renWin.Render()
-        iren.Start()
-"""
+            # Erstelle eine 3D-Rotationsmatrix
+            matrix = vtk.vtkMatrix4x4()
+            matrix.Identity()
+            for i in range(3):
+                matrix.SetElement(i, 0, normalized_x[i])  # X-Achse
+                matrix.SetElement(i, 1, normalized_y[i])  # Y-Achse
+                matrix.SetElement(i, 2, normalized_z[i])  # Z-Achse
+
+            # Transformationen anwenden
+            transform = vtk.vtkTransform()
+            transform.Translate(start_point)  # Verschieben zum Startpunkt
+            transform.Concatenate(matrix)  # Rotationsmatrix anwenden
+            transform.Scale(2, 2, 2)  # Skaliere den Pfeil
+
+            # Transformiere die PolyData (Pfeil-Daten) direkt
+            transform_pd = vtk.vtkTransformPolyDataFilter()
+            transform_pd.SetTransform(transform)
+            transform_pd.SetInputConnection(self.arrow_source.GetOutputPort())  # Wende Transformation auf den Pfeil an
+
+            # Mapper und Actor für den Pfeil erstellen
+            arrow_mapper = vtk.vtkPolyDataMapper()
+            arrow_mapper.SetInputConnection(transform_pd.GetOutputPort())  # Die transformierten Pfeil-Daten verwenden
+            self.actor.SetMapper(arrow_mapper)
+            self.actor.GetProperty().SetColor(colors.GetColor3d('White'))  # Pfeilfarbe
+            """
+            # Text-Actor 3D erstellen (Text im 3D-Raum)
+            self.text_actor = vtk.vtkTextActor3D()
+            self.text_actor.SetInput("Schwerkraftrichtung")  # Textinhalt
+            self.text_actor.GetTextProperty().SetFontSize(20)
+            self.text_actor.GetTextProperty().SetColor(colors.GetColor3d('White'))
+
+            # Text im 3D-Raum positionieren (z. B. in der Nähe des Endpunkts des Pfeils)
+            self.text_actor.SetPosition(start_point[0] + 0.1, start_point[1] + 0.1, start_point[2])
+            """

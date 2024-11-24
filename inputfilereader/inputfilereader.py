@@ -22,7 +22,6 @@ def readInput4Output(inputfilepath, jsonfilepath, fdsfilepath):
                     listOfMbsObjects.append(mbsObject.rigidBody(currentTextBlock))
                 elif(currentBlockType == "CONSTRAINT"):
                     listOfMbsObjects.append(mbsObject.constraint(currentTextBlock))
-                # muss dazu gefügt werden
                 elif(currentBlockType == "SETTINGS"):
                     listOfMbsObjects.append(mbsObject.settings(currentTextBlock))
                 currentBlockType = ""

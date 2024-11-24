@@ -7,7 +7,7 @@ Body Rigid_EulerParameter_PAI
 	x_axis = 1.0,0.0,0.0
 	y_axis = 0.0,1.0,0.0
 	z_axis = 0.0,0.0,1.0
-	color = 200.0,200.0,200.0
+	color = 0.7843137254901961,0.0,0.7843137254901961
 EndBody
 %
 Body Rigid_EulerParameter_PAI
@@ -19,7 +19,7 @@ Body Rigid_EulerParameter_PAI
 	x_axis = 1.0,0.0,0.0
 	y_axis = 0.0,1.0,0.0
 	z_axis = 0.0,0.0,1.0
-	color = 200.0,200.0,200.0
+	color = 0.7843137254901961,0.7843137254901961,0.0392156862745098
 EndBody
 %
 Constraint Constraint_EulerParameter_PAI
@@ -54,5 +54,6 @@ EndConstraint
 %
 Settings Visualization
 	gravity_vector = 0.0,0.0,-9810.0
+	background_color = 0.0,0.0,0.0
 EndSettings
 %
