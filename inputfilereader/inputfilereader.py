@@ -40,10 +40,15 @@ def inputfilereader(file):  #als Funktion definiert
         for object in listOfMbsObjects:
             modelObjects.append(object.parameter)
         jDataBase = json.dumps({"modelObjects":modelObjects})
-        with open("inputfilereader/test.vis3","w")as outfile:
+        with open("inputfilereader/test.json","w")as outfile:
             outfile.write(jDataBase)
 
         fds = open("inputfilereader/test.fds","w")
+        for mbsObjects_i in listOfMbsObjects:
+            mbsObjects_i.writeInputfile(fds)
+        fds.close
+
+        fds = open("inputfilereader/test.txt","w")
         for mbsObjects_i in listOfMbsObjects:
             mbsObjects_i.writeInputfile(fds)
         fds.close
