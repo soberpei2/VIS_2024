@@ -1,6 +1,7 @@
 import vtk
 import os
 
+
 # Funktion zur Erstellung eines VTK-Actors aus einer OBJ-Datei
 def create_actor_from_obj(file_path, position, color, transparency):
     """Erstellt einen VTK-Actor für eine OBJ-Geometrie."""
@@ -17,6 +18,7 @@ def create_actor_from_obj(file_path, position, color, transparency):
     actor.GetProperty().SetOpacity(1 - transparency / 100.0)  # Transparenz
     return actor
 
+
 # Funktion zur Erstellung eines Constraints als Linie
 def create_constraint_actor(position1, position2):
     """Erstellt eine Linie, die zwei Punkte verbindet (Constraint)."""
@@ -32,6 +34,47 @@ def create_constraint_actor(position1, position2):
     actor.GetProperty().SetColor(1.0, 0.0, 0.0)  # Rot für Constraints
     actor.GetProperty().SetLineWidth(2.0)
     return actor
+
+
+# Funktion zur Darstellung der Schwerkraft als Pfeil
+def create_gravity_actor(position, direction, magnitude):
+    """Erstellt einen Pfeil für die Schwerkraft."""
+    arrow_source = vtk.vtkArrowSource()
+
+    # Transformiere den Pfeil basierend auf Richtung und Größe
+    transform = vtk.vtkTransform()
+    transform.Translate(*position)
+    scale_factor = magnitude / 10.0  # Skaliere den Pfeil relativ zur Stärke
+    transform.Scale(scale_factor, scale_factor, scale_factor)
+
+    # Normalisiere die Richtung
+    norm = (sum(d ** 2 for d in direction) ** 0.5)
+    direction = [d / norm for d in direction]
+    transform.RotateWXYZ(0, *direction)  # Rotation optional anpassen
+
+    transform_filter = vtk.vtkTransformPolyDataFilter()
+    transform_filter.SetTransform(transform)
+    transform_filter.SetInputConnection(arrow_source.GetOutputPort())
+
+    mapper = vtk.vtkPolyDataMapper()
+    mapper.SetInputConnection(transform_filter.GetOutputPort())
+
+    actor = vtk.vtkActor()
+    actor.SetMapper(mapper)
+    actor.GetProperty().SetColor(0.0, 1.0, 0.0)  # Grün für Schwerkraft
+    return actor
+
+
+# Funktion zur Erstellung eines Koordinatensystems
+def create_axes_actor():
+    """Erstellt ein Koordinatensystem mit X-, Y- und Z-Achsen."""
+    axes = vtk.vtkAxesActor()
+    axes.SetTotalLength(10, 10, 10)  # Länge der Achsen
+    axes.GetXAxisCaptionActor2D().GetTextActor().GetTextProperty().SetColor(1, 0, 0)  # Rot
+    axes.GetYAxisCaptionActor2D().GetTextActor().GetTextProperty().SetColor(0, 1, 0)  # Grün
+    axes.GetZAxisCaptionActor2D().GetTextActor().GetTextProperty().SetColor(0, 0, 1)  # Blau
+    return axes
+
 
 # Funktion zum Parsen der Eingabedatei
 def parse_input_file(file_path):
@@ -51,65 +94,45 @@ def parse_input_file(file_path):
 
     return objects
 
+
 # Funktion zur Verarbeitung der Objekte
 def process_objects(objects):
-    """Verarbeitet die Objekte und trennt Rigid Bodies und Constraints."""
+    """Verarbeitet die Objekte und trennt Rigid Bodies, Constraints und Forces."""
     rigid_bodies = []
     constraints = []
+    forces = []
 
     for obj in objects:
         obj_type = obj[0].split()[0]  # Bestimme den Typ des Objekts (z. B. "rigidBody")
+        parameters = {}
+        for line in obj[1:]:
+            if "=" not in line:
+                continue
+            key, value = map(str.strip, line.split("=", 1))
+            if key in ["position", "x_axis", "y_axis", "z_axis", "COG", "direction"]:
+                parameters[key] = [float(x) for x in value.split(",")]
+            elif key == "magnitude":
+                parameters[key] = float(value)
+            elif key == "color":
+                parameters[key] = [int(x) / 255.0 for x in value.split()]
+            elif key == "transparency":
+                parameters[key] = int(value)
+            else:
+                parameters[key] = value
+
         if obj_type == "rigidBody":
-            parameters = {}
-            for line in obj[1:]:
-                # Überspringe leere oder nicht relevante Zeilen
-                if "=" not in line:
-                    print(f"Überspringe ungültige Zeile: {line}")
-                    continue
-                try:
-                    key, value = map(str.strip, line.split("=", 1))
-                except ValueError:
-                    print(f"Fehlerhafte Zeile: {line}")
-                    continue
-
-                # Verarbeite spezielle Schlüssel
-                if key in ["position", "x_axis", "y_axis", "z_axis", "COG"]:
-                    parameters[key] = [float(x) for x in value.split(",")]
-                elif key == "color":
-                    parameters[key] = [int(x) / 255.0 for x in value.split()]
-                elif key == "transparency":
-                    parameters[key] = int(value)
-                else:
-                    parameters[key] = value
             rigid_bodies.append(parameters)
-
         elif obj_type == "constraint":
-            parameters = {}
-            for line in obj[1:]:
-                # Überspringe ungültige Zeilen
-                if "=" not in line:
-                    print(f"Überspringe ungültige Zeile: {line}")
-                    continue
-                try:
-                    key, value = map(str.strip, line.split("=", 1))
-                except ValueError:
-                    print(f"Fehlerhafte Zeile: {line}")
-                    continue
-
-                if key in ["position", "x_axis", "y_axis", "z_axis"]:
-                    parameters[key] = [float(x) for x in value.split(",")]
-                elif key in ["dx", "dy", "dz", "ax", "ay", "az"]:
-                    parameters[key] = value.lower() == "true"
-                else:
-                    parameters[key] = value
             constraints.append(parameters)
+        elif obj_type == "gravity":
+            forces.append(parameters)
 
-    return rigid_bodies, constraints
+    return rigid_bodies, constraints, forces
 
 
 # Hauptfunktion zur Visualisierung
 def visualize():
-    """Visualisiert die Rigid Bodies und Constraints mit VTK."""
+    """Visualisiert die Rigid Bodies, Constraints, Kräfte und ein Koordinatensystem mit VTK."""
     # Eingabedatei und Geometrie definieren
     input_file = "test.fds"  # Beispiel-Eingabedatei
     obj_file = "quader.obj"  # Geometrie-Datei
@@ -124,7 +147,7 @@ def visualize():
 
     # Eingabedatei parsen und Objekte verarbeiten
     objects = parse_input_file(input_file)
-    rigid_bodies, constraints = process_objects(objects)
+    rigid_bodies, constraints, forces = process_objects(objects)
 
     # VTK-Komponenten erstellen
     renderer = vtk.vtkRenderer()
@@ -132,6 +155,10 @@ def visualize():
     render_window.AddRenderer(renderer)
     render_window_interactor = vtk.vtkRenderWindowInteractor()
     render_window_interactor.SetRenderWindow(render_window)
+
+    # Koordinatensystem hinzufügen
+    axes_actor = create_axes_actor()
+    renderer.AddActor(axes_actor)
 
     # Rigid Bodies hinzufügen
     for body in rigid_bodies:
@@ -150,6 +177,15 @@ def visualize():
         actor = create_constraint_actor(position1, position2)
         renderer.AddActor(actor)
 
+    # Forces (Schwerkraft) hinzufügen
+    for force in forces:
+        position = force["position"]
+        direction1 = force["PointOfApplication_Body1"]
+        direction2 = force["PointOfApplication_Body2"]
+        magnitude = force["magnitude"]
+        actor = create_gravity_actor(position, direction1, magnitude)
+        renderer.AddActor(actor)
+
     # Hintergrundfarbe und Fenstergröße
     renderer.SetBackground(0.1, 0.2, 0.4)  # Dunkelblau
     render_window.SetSize(800, 600)
@@ -158,6 +194,6 @@ def visualize():
     render_window.Render()
     render_window_interactor.Start()
 
-# Diese Funktion wird direkt in Python ausgeführt
+
 if __name__ == "__main__":
     visualize()

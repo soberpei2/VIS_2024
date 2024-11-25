@@ -3,6 +3,7 @@ import mbsObject
 import json
 
 
+
 def inputfilereader(file):  #als Funktion definiert
 
     f = open(file,"r")
@@ -15,7 +16,7 @@ def inputfilereader(file):  #als Funktion definiert
     currentBlockType = ""
     currentTextBlock = []
     listOfMbsObjects =[]
-    search4Objects = ["RIGID_BODY" , "CONSTRAINT"]
+    search4Objects = ["RIGID_BODY" , "CONSTRAINT" , "FORCE_GenericForce" , "FORCE_GenericTorque" , "MEASURE1" , "MEASURE2"]
 
     for line in fileContent:
         if(line.find("$") >= 0):                                      #new block found
@@ -24,6 +25,14 @@ def inputfilereader(file):  #als Funktion definiert
                     listOfMbsObjects.append(mbsObject.rigidBody(currentTextBlock))
                 elif(currentBlockType == "CONSTRAINT"):
                     listOfMbsObjects.append(mbsObject.constraint(currentTextBlock))
+                elif(currentBlockType == "FORCE_GenericForce"):
+                    listOfMbsObjects.append(mbsObject.force_GenericForce(currentTextBlock))
+                elif(currentBlockType == "FORCE_GenericTorque"):
+                    listOfMbsObjects.append(mbsObject.force_GenericTorque(currentTextBlock))
+                elif(currentBlockType == "MEASURE1"):
+                    listOfMbsObjects.append(mbsObject.measure1(currentTextBlock))
+                elif(currentBlockType == "MEASURE2"):
+                    listOfMbsObjects.append(mbsObject.measure2(currentTextBlock))
                     #numOfConstraints+=1
                 currentBlockType = ""
 
@@ -48,9 +57,9 @@ def inputfilereader(file):  #als Funktion definiert
             mbsObjects_i.writeInputfile(fds)
         fds.close
 
-        fds = open("inputfilereader/test.txt","w")
+        txt = open("inputfilereader/test.txt","w")
         for mbsObjects_i in listOfMbsObjects:
-            mbsObjects_i.writeInputfile(fds)
-        fds.close
+            mbsObjects_i.writeInputfile(txt)
+        txt.close
 
     print(len(listOfMbsObjects))

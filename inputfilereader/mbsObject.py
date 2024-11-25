@@ -113,3 +113,68 @@ class constraint(mbsObject):
         }
 
         mbsObject.__init__(self,"constraint","Rigid_EulerParameter_PAI",text,parameter)
+
+#============================================================================================================
+
+class force_GenericForce(mbsObject):
+    def __init__(self,text):
+        parameter = {
+            "name":                         {"type": "string", "value": "NAME_UNKOWN"},
+            "body1":                        {"type": "string", "value": "NAME_UNKOWN"},
+            "body2":                        {"type": "string", "value": "NAME_UNKOWN"},
+            "PointOfApplication_Body1":     {"type": "vector", "value": [1.,1.,1.]},
+            "PointOfApplication_Body2":     {"type": "vector", "value": [1.,1.,1.]},
+            "mode":                         {"type": "string", "value": "UNKOWN"},
+            "direction":                    {"type": "vector", "value": [1.,1.,1.]},
+            "ForceExpression":              {"type": "string", "value": "UNKOWN"},
+        }
+
+        mbsObject.__init__(self,"force_GenericForce","Rigid_EulerParameter_PAI",text,parameter)
+
+#================================================================================================================
+
+class force_GenericTorque(mbsObject):
+    def __init__(self,text):
+        parameter = {
+            "name":                         {"type": "string", "value": "NAME_UNKOWN"},
+            "body1":                        {"type": "string", "value": "NAME_UNKOWN"},
+            "body2":                        {"type": "string", "value": "NAME_UNKOWN"},
+            "mode":                         {"type": "string", "value": "UNKOWN"},
+            "direction":                    {"type": "vector", "value": [1.,1.,1.]},
+            "TorqueExpression":              {"type": "string", "value": "UNKOWN"},
+        }
+
+        mbsObject.__init__(self,"force_GenericTorque","Rigid_EulerParameter_PAI",text,parameter)
+
+#===================================================================================================================
+
+class measure1(mbsObject):
+    def __init__(self,text):
+        parameter = {
+            "name":                         {"type": "string", "value": "NAME_UNKOWN"},
+            "body1":                        {"type": "string", "value": "NAME_UNKOWN"},
+            "body2":                        {"type": "string", "value": "NAME_UNKOWN"},
+            "type":                         {"type": "string", "value": "UNKOWN"},
+            "location_body1":               {"type": "vector", "value": [1.,1.,1.]},
+            "location_body2":               {"type": "vector", "value": [1.,1.,1.]},
+            "use_initial_value":            {"type": "int", "value": 0},
+        }
+
+        mbsObject.__init__(self,"measure","Rigid_EulerParameter_PAI",text,parameter)
+
+#====================================================================================================================
+
+class measure2(mbsObject):
+    def __init__(self,text):
+        parameter = {
+            "name":                         {"type": "string", "value": "NAME_UNKOWN"},
+            "body1":                        {"type": "string", "value": "NAME_UNKOWN"},
+            "body2":                        {"type": "string", "value": "NAME_UNKOWN"},
+            "type":                         {"type": "string", "value": "UNKOWN"},
+            "vector_body1":                {"type": "vector", "value": [1.,1.,1.]},
+            "vector1_body2":                {"type": "vector", "value": [1.,1.,1.]},
+            "vector2_body2":                {"type": "vector", "value": [1.,1.,1.]},
+            "use_initial_value":            {"type": "int", "value": 0},
+        }
+
+        mbsObject.__init__(self,"measure","Rigid_EulerParameter_PAI",text,parameter)
