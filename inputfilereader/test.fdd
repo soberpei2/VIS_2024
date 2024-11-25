@@ -1,12 +1,12 @@
 $RIGID_BODY:
 name: new_body_0
-geometry: C:\VIS_2024\inputfilereader\quader.obj
+geometry: E:\9.Semester\Digitalisierung-Visualisierung-Uebung\VIS_2024\inputfilereader\quader.obj
 position: 0.000000, 0.000000, 0.000000
 x_axis: 1.00000000, 0.00000000, 0.00000000
 y_axis: 0.00000000, 1.00000000, 0.00000000
 z_axis:0.00000000, 0.00000000, 1.00000000
 color: 254 146 146   255
-transparency: 0
+transparency: 50
 initial velocity: 0.000000, 0.000000, 0.000000
 initial omega: 0.000000, 0.000000, 0.000000
 consider vel inertia forces: 0
@@ -19,13 +19,13 @@ i3_axis: 0.00000000, 0.00000000, 1.00000000
 
 $RIGID_BODY:
 name: new_body_1
-geometry: C:\VIS_2024\inputfilereader\quader.obj
+geometry: E:\9.Semester\Digitalisierung-Visualisierung-Uebung\VIS_2024\inputfilereader\quader.obj
 position: 25.000000, 0.000000, 10.000000
 x_axis: 1.00000000, 0.00000000, 0.00000000
 y_axis: 0.00000000, 1.00000000, 0.00000000
 z_axis:0.00000000, 0.00000000, 1.00000000
 color: 170 230 228   255
-transparency: 0
+transparency: 50
 initial velocity: 0.000000, 0.000000, 0.000000
 initial omega: 0.000000, 0.000000, 0.000000
 consider vel inertia forces: 0
