@@ -41,7 +41,7 @@ for obj in listOfMbsObjects:
 
 # Koordinatensystem hinzufügen
 axes = vtk.vtkAxesActor()
-axes.SetTotalLength(30, 30, 30)  # Länge der Achsen (X, Y, Z)
+axes.SetTotalLength(10, 10, 10)  # Länge der Achsen (X, Y, Z)
 axes.SetShaftTypeToCylinder()    # Darstellung der Achsen als Zylinder
 axes.SetAxisLabels(1)            # Achsenbeschriftungen anzeigen (X, Y, Z)
 renderer.AddActor(axes)
