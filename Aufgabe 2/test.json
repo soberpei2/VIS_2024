@@ -1,3 +1,196 @@
 {
-    "modelObjects": []
+    "modelObjects": [
+        {
+            "position": {
+                "type": "vector",
+                "value": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "color": {
+                "type": "vector",
+                "value": [
+                    254.0,
+                    146.0,
+                    146.0
+                ]
+            },
+            "transparency": {
+                "type": "float",
+                "value": 0.0
+            },
+            "initial velocity": {
+                "type": "vector",
+                "value": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "initial omega": {
+                "type": "vector",
+                "value": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "mass": {
+                "type": "float",
+                "value": 0.001
+            },
+            "COG": {
+                "type": "vector",
+                "value": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "inertia": {
+                "type": "vector",
+                "value": [
+                    0.001,
+                    0.001,
+                    0.001
+                ]
+            }
+        },
+        {
+            "position": {
+                "type": "vector",
+                "value": [
+                    25.0,
+                    0.0,
+                    10.0
+                ]
+            },
+            "color": {
+                "type": "vector",
+                "value": [
+                    170.0,
+                    230.0,
+                    228.0
+                ]
+            },
+            "transparency": {
+                "type": "float",
+                "value": 0.0
+            },
+            "initial velocity": {
+                "type": "vector",
+                "value": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "initial omega": {
+                "type": "vector",
+                "value": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "mass": {
+                "type": "float",
+                "value": 0.001
+            },
+            "COG": {
+                "type": "vector",
+                "value": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "inertia": {
+                "type": "vector",
+                "value": [
+                    0.001,
+                    0.001,
+                    0.001
+                ]
+            }
+        },
+        {
+            "dx": {
+                "type": "float",
+                "value": 1.0
+            },
+            "dy": {
+                "type": "float",
+                "value": 1.0
+            },
+            "dz": {
+                "type": "float",
+                "value": 1.0
+            },
+            "ax": {
+                "type": "float",
+                "value": 1.0
+            },
+            "ay": {
+                "type": "float",
+                "value": 1.0
+            },
+            "az": {
+                "type": "float",
+                "value": 1.0
+            },
+            "bodies": {
+                "type": "list",
+                "value": []
+            },
+            "position": {
+                "type": "vector",
+                "value": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            }
+        },
+        {
+            "dx": {
+                "type": "float",
+                "value": 1.0
+            },
+            "dy": {
+                "type": "float",
+                "value": 1.0
+            },
+            "dz": {
+                "type": "float",
+                "value": 1.0
+            },
+            "ax": {
+                "type": "float",
+                "value": 1.0
+            },
+            "ay": {
+                "type": "float",
+                "value": 1.0
+            },
+            "az": {
+                "type": "float",
+                "value": 0.0
+            },
+            "bodies": {
+                "type": "list",
+                "value": []
+            },
+            "position": {
+                "type": "vector",
+                "value": [
+                    25.0,
+                    0.0,
+                    0.0
+                ]
+            }
+        }
+    ]
 }

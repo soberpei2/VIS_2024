@@ -3,7 +3,7 @@ import vtk
 #from inputfilereader import inputfilereader
 
 # definieren vom einzulesendem Pfad der Datei
-Pfad = "Aufgabe 2/test.json"
+Pfad = "Aufgabe 2/test.fdd"
 file_path = Pfad
 inputfilereader.inputfilereader(Pfad)
 

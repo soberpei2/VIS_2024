@@ -1,72 +1,76 @@
-
-
+import os
 import mbsObject
 import json
 
-#Funktion für Inputfilereader
+# Funktion für Inputfilereader
 def inputfilereader(FilePath):
-    f = open(FilePath,"r")
+    # Sicherstellen, dass die Eingabedatei existiert
+    if not os.path.exists(FilePath):
+        raise FileNotFoundError(f"Die Datei {FilePath} wurde nicht gefunden.")
 
-    fileContent = f.read().splitlines() # einlesen der Zeilen in eine Liste
-    f.close()
+    # Dateiinhalt lesen
+    with open(FilePath, "r") as f:
+        fileContent = f.read().splitlines()  # Einlesen der Zeilen in eine Liste
 
-    #initialisieren der Variablen
+    # Initialisieren der Variablen
     currentBlockType = ""
     currentTextBlock = []
     listOfMbsObjects = []
-    search4Objects  = ["RIGID_BODY", "CONSTRAINT", "FORCE_GenericForce", "FORCE_GenericTorque"]
-    
+    search4Objects = ["RIGID_BODY", "CONSTRAINT", "FORCE_GenericForce", "FORCE_GenericTorque"]
+
+    # Zeilenverarbeitung
     for line in fileContent:
-        if(line.find("$") >= 0):#new block found bei $
-            if(currentBlockType != ""): # # Verarbeiten des Blocks, wenn Typ existiert
-
-                if(currentBlockType == "RIGID_BODY"):
+        if line.find("$") >= 0:  # Neuer Block gefunden bei $
+            if currentBlockType != "":  # Verarbeiten des Blocks, wenn Typ existiert
+                if currentBlockType == "RIGID_BODY":
                     listOfMbsObjects.append(mbsObject.rigidBody(currentTextBlock))
-                
-                if(currentBlockType == "CONSTRAINT"):
+                elif currentBlockType == "CONSTRAINT":
                     listOfMbsObjects.append(mbsObject.constraint(currentTextBlock))
-                
-                elif currentBlockType == "FORCE_GenericForce":
+                """elif currentBlockType == "FORCE_GenericForce":
                     listOfMbsObjects.append(mbsObject.genericForce(currentTextBlock))
-
                 elif currentBlockType == "FORCE_GenericTorque":
-                    listOfMbsObjects.append(mbsObject.genericTorque(currentTextBlock))
+                    listOfMbsObjects.append(mbsObject.genericTorque(currentTextBlock))"""
 
-                currentBlockType = "" #reset des Blocktyps
-          
-                
-#Blocktyp erkennen
+                currentBlockType = ""  # Zurücksetzen des Blocktyps
+
+        # Blocktyp erkennen
         for type_i in search4Objects:
-            if(line.find(type_i,1,len(type_i)+1) >= 0): # nach Schlagwort suchen
+            if line.find(type_i, 1, len(type_i) + 1) >= 0:  # Nach Schlagwort suchen
                 currentBlockType = type_i
-                currentTextBlock.clear() # bereinigen
+                currentTextBlock.clear()  # Bereinigen
                 break
-        
-        currentTextBlock.append(line) # neue Zeile hinzufügen
+
+        currentTextBlock.append(line)  # Neue Zeile hinzufügen
 
     print(len(listOfMbsObjects))
 
-
-    #import/export functionality (for later use in model.py)
+    # Import-/Export-Funktionalität
     modelObjects = []
-    for object in listOfMbsObjects:
-        modelObjects.append(object.parameter)
-    
+    for obj in listOfMbsObjects:
+        modelObjects.append(obj.parameter)
 
-    jDataBase = json.dumps({"modelObjects": modelObjects})
+    # JSON-Daten erstellen und schreiben
+    output_folder = "Aufgabe 2"
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
 
-    with open("Aufgabe 2/test.json", "w") as outfile:
+    json_path = os.path.join(output_folder, "test.json")
+    jDataBase = json.dumps({"modelObjects": modelObjects}, indent=4) #indent 4 für bessere Lesbarkeit
+
+    with open(json_path, "w") as outfile:
         outfile.write(jDataBase)
+    print(f"JSON-Datei erfolgreich erstellt: {json_path}")
 
-    f = open("Aufgabe 2/test.json","r")
-    data = json.load(f)
-    f.close()
+    # Eingabedatei im gewünschten Format ausgeben
+    fds_path = os.path.join(output_folder, "test.fds")
+    with open(fds_path, "w") as fds:
+        for mbsObject_i in listOfMbsObjects:
+            mbsObject_i.writeInputfile(fds)
+    print(f"FDS-Datei erfolgreich erstellt: {fds_path}")
 
-    fds = open("Aufgabe 2/test.fds","w")
-    for mbsObject_i in listOfMbsObjects:
-        mbsObject_i.writeInputfile(fds)
-    fds.close()
-
-    
     return listOfMbsObjects
-#-------------------------------------------------------
+
+# Beispielaufruf
+if __name__ == "__main__":
+    fdd_path = "Aufgabe 2/test.fdd"
+    inputfilereader(fdd_path)

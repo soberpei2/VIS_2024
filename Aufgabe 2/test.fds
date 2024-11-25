@@ -1,0 +1,42 @@
+Body Rigid_EulerParameter_PAI
+	position = 0.0,0.0,0.0
+	color = 254.0,146.0,146.0
+	transparency = 0.0
+	initial velocity = 0.0,0.0,0.0
+	initial omega = 0.0,0.0,0.0
+	mass = 0.001
+	COG = 0.0,0.0,0.0
+	inertia = 0.001,0.001,0.001
+EndBody
+
+Body Rigid_EulerParameter_PAI
+	position = 25.0,0.0,10.0
+	color = 170.0,230.0,228.0
+	transparency = 0.0
+	initial velocity = 0.0,0.0,0.0
+	initial omega = 0.0,0.0,0.0
+	mass = 0.001
+	COG = 0.0,0.0,0.0
+	inertia = 0.001,0.001,0.001
+EndBody
+
+Constraint Generic
+	dx = 1.0
+	dy = 1.0
+	dz = 1.0
+	ax = 1.0
+	ay = 1.0
+	az = 1.0
+	position = 0.0,0.0,0.0
+EndConstraint
+
+Constraint Generic
+	dx = 1.0
+	dy = 1.0
+	dz = 1.0
+	ax = 1.0
+	ay = 1.0
+	az = 0.0
+	position = 25.0,0.0,0.0
+EndConstraint
+
