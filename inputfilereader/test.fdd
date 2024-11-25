@@ -55,7 +55,7 @@ $CONSTRAINT:
 name: new_constraint_1
 body1: new_body_0
 body2: new_body_1
-dx: 0
+dx: 1
 dy: 1
 dz: 1
 ax: 1

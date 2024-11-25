@@ -13,9 +13,10 @@ for obj in listOfMyObjects:
         renderer.AddActor(obj.actor)
     elif isinstance(obj, inputfilereader.mbsObject.constraint):  # Constraint-Objekte
         renderer.AddActor(obj.actor)
+        renderer.AddActor(obj.text_actor)
     elif isinstance(obj, inputfilereader.mbsObject.settings):  # Settings-Objekt (einschließlich Gravitationsvektor)
         renderer.AddActor(obj.actor)
-        # renderer.AddActor(obj.text_actor)
+        renderer.AddActor(obj.text_actor)
         
 
 # Koordinatensystem hinzufügen

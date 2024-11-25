@@ -1,4 +1,5 @@
 import vtk
+import math
 
 class mbsObject: 
     def __init__(self,type,subtype,text,parameter): 
@@ -141,20 +142,17 @@ class constraint(mbsObject):
 
         mbsObject.__init__(self,"Constraint","Constraint_EulerParameter_PAI", text,parameter)
         # Position und Achsen laden
-        pos = self.parameter["position"]["value"]
-        x_axis = self.parameter["x_axis"]["value"]
-        y_axis = self.parameter["y_axis"]["value"]
-        z_axis = self.parameter["z_axis"]["value"]
+ 
 
-        self.visualize_constraint(pos, parameter)
+        self.visualize_constraint( parameter)
 
-    def visualize_constraint(self, position, parameter):
-
-        if parameter["dx"]["value"] == 1 and parameter["dy"]["value"] == 1 and parameter["dz"]["value"] == 1:
-            """Visualisiert den Constraint an der gegebenen Position."""
+    def visualize_constraint(self, parameter):
+        colors =  vtk.vtkNamedColors()
+        # Kugellager
+        if parameter["dx"]["value"] == 1 and parameter["dy"]["value"] == 1 and parameter["dz"]["value"] == 1 and parameter["ax"]["value"] == 0 and parameter["ay"]["value"] == 0 and parameter["az"]["value"] == 0 :
             # Nutze einen Punkt und Linien für die Darstellung
             sphere_source = vtk.vtkSphereSource()
-            sphere_source.SetCenter(position)
+            sphere_source.SetCenter(parameter["position"]["value"])
             sphere_source.SetRadius(1)
 
             # Mapping und Actor
@@ -162,14 +160,99 @@ class constraint(mbsObject):
             sphere_mapper.SetInputConnection(sphere_source.GetOutputPort())
             # Actor für die Kugel
             self.actor.SetMapper(sphere_mapper)
-            self.actor.GetProperty().SetColor(1.0, 0.0, 0.0)  # Gelbe Farbe für Constraints
-        elif parameter["dx"]["value"] == 1 and parameter["dy"]["value"] == 0 and parameter["dz"]["value"] == 1: 
-            dfdf
-        elif parameter["dx"]["value"] == 1 and parameter["dy"]["value"] == 1 and parameter["dz"]["value"] == 0: 
-            dsfdf
-        elif parameter["dx"]["value"] == 1 and parameter["dy"]["value"] == 0 and parameter["dz"]["value"] == 1: 
-            dghth
+            self.actor.GetProperty().SetColor(1.0, 1.0, 0.0)  # Gelbe Farbe für Constraints
+            # Text erstellen und anzeigen 
+            
+            pos_vec = parameter["position"]["value"]
+            atext = vtk.vtkVectorText()
+            atext.SetText('Kugellager')
+            text_mapper = vtk.vtkPolyDataMapper()
+            text_mapper.SetInputConnection(atext.GetOutputPort())
+            self.text_actor = vtk.vtkFollower()
+            self.text_actor.SetMapper(text_mapper)
+            self.text_actor.SetScale(0.2, 0.2, 0.2)  # Textgröße skalieren
+            self.text_actor.AddPosition(pos_vec[0] + 0.1, pos_vec[1] + 0.1, pos_vec[2] + 0.3)  # Textposition
+            self.text_actor.GetProperty().SetColor(colors.GetColor3d('White')) # Textfarbe
+        #Festlager
+        elif parameter["dx"]["value"] == 1 and parameter["dy"]["value"] == 1 and parameter["dz"]["value"] == 1 and parameter["ax"]["value"] == 1 and parameter["ay"]["value"] == 1 and parameter["az"]["value"] == 1 :
+            # Parameter
+            h = 1.0  # Höhe des Tetraeders
+            a = 1.0  # Seitenlänge der Basis
+            # 1. Punkte definieren
+            points = vtk.vtkPoints()
+            points.InsertNextPoint(0, 0, 0)  # Spitze im Ursprung
+            points.InsertNextPoint(0, a/2, h)  # Erster Basispunkt auf der z-Achse
+            points.InsertNextPoint(-a / 2,  -math.sqrt(3) / 6 * a, h)  # Zweiter Basispunkt
+            points.InsertNextPoint(a / 2,  -math.sqrt(3) / 6 * a, h)  # Dritter Basispunkt
+            # Tetraeder definieren
+            tetra = vtk.vtkTetra()
+            tetra.GetPointIds().SetId(0, 0)
+            tetra.GetPointIds().SetId(1, 1)
+            tetra.GetPointIds().SetId(2, 2)
+            tetra.GetPointIds().SetId(3, 3)
+            # Unstructured Grid erstellen
+            ugrid = vtk.vtkUnstructuredGrid()
+            ugrid.SetPoints(points)
+            ugrid.InsertNextCell(tetra.GetCellType(), tetra.GetPointIds())
+            # Transformation definieren
+            transform = vtk.vtkTransform()
+            transform.Translate(parameter["position"]["value"])  # Verschieben zur Position
+            transformFilter = vtk.vtkTransformFilter() 
+            transformFilter.SetTransform(transform) 
+            transformFilter.SetInputData(ugrid) 
+            transformFilter.Update()
+            # Mapper und Actor
+            tet_mapper = vtk.vtkDataSetMapper() 
+            tet_mapper.SetInputConnection(transformFilter.GetOutputPort())
+            self.actor.SetMapper(tet_mapper)
+             # Text erstellen und anzeigen 
+            
+            pos_vec = parameter["position"]["value"]
+            atext = vtk.vtkVectorText()
+            atext.SetText('Festlager')
+            text_mapper = vtk.vtkPolyDataMapper()
+            text_mapper.SetInputConnection(atext.GetOutputPort())
+            self.text_actor = vtk.vtkFollower()
+            self.text_actor.SetMapper(text_mapper)
+            self.text_actor.SetScale(0.2, 0.2, 0.2)  # Textgröße skalieren
+            self.text_actor.AddPosition(pos_vec[0] + 0.1, pos_vec[1] + 0.1, pos_vec[2] + 0.3)  # Textposition
+            self.text_actor.GetProperty().SetColor(colors.GetColor3d('White')) # Textfarbe
+        else:
+            # 1. Quader erstellen
+            cube = vtk.vtkCubeSource()
+            cube.SetXLength(1.0)  # Länge entlang der x-Achse
+            cube.SetYLength(1.0)  # Breite entlang der y-Achse
+            cube.SetZLength(1.0)  # Höhe entlang der z-Achse
+            cube.Update()
 
+            # 2. Transformationsfilter für Positionierung
+            transform = vtk.vtkTransform()
+            transform.Translate(parameter["position"]["value"])  
+            transform.RotateWXYZ(0, 0, 0, 1)  # Optional: 45 Grad um die z-Achse drehen
+
+            transformFilter = vtk.vtkTransformFilter()
+            transformFilter.SetTransform(transform)
+            transformFilter.SetInputConnection(cube.GetOutputPort())
+            transformFilter.Update()
+
+            # 3. Mapper und Actor
+            mapper = vtk.vtkPolyDataMapper()
+            mapper.SetInputConnection(transformFilter.GetOutputPort())
+
+            self.actor = vtk.vtkActor()
+            self.actor.SetMapper(mapper)
+             # Text erstellen und anzeigen 
+            
+            pos_vec = parameter["position"]["value"]
+            atext = vtk.vtkVectorText()
+            atext.SetText('andere Constrains --> noch ned definiert')
+            text_mapper = vtk.vtkPolyDataMapper()
+            text_mapper.SetInputConnection(atext.GetOutputPort())
+            self.text_actor = vtk.vtkFollower()
+            self.text_actor.SetMapper(text_mapper)
+            self.text_actor.SetScale(0.2, 0.2, 0.2)  # Textgröße skalieren
+            self.text_actor.AddPosition(pos_vec[0] + 0.6, pos_vec[1] + 0.1, pos_vec[2] + 0.3)  # Textposition
+            self.text_actor.GetProperty().SetColor(colors.GetColor3d('White')) # Textfarbe
     
 
 class settings(mbsObject):
@@ -222,6 +305,8 @@ class settings(mbsObject):
             transform.Concatenate(matrix)  # Rotationsmatrix anwenden
             transform.Scale(2, 2, 2)  # Skaliere den Pfeil
 
+            # Berechne die Mitte des normierten Vektors
+            middle_of_vector = [start_point[i] + normalized_x[i] * (1 / 2) * 2 for i in range(3)]
             # Transformiere die PolyData (Pfeil-Daten) direkt
             transform_pd = vtk.vtkTransformPolyDataFilter()
             transform_pd.SetTransform(transform)
@@ -232,13 +317,13 @@ class settings(mbsObject):
             arrow_mapper.SetInputConnection(transform_pd.GetOutputPort())  # Die transformierten Pfeil-Daten verwenden
             self.actor.SetMapper(arrow_mapper)
             self.actor.GetProperty().SetColor(colors.GetColor3d('White'))  # Pfeilfarbe
-            """
-            # Text-Actor 3D erstellen (Text im 3D-Raum)
-            self.text_actor = vtk.vtkTextActor3D()
-            self.text_actor.SetInput("Schwerkraftrichtung")  # Textinhalt
-            self.text_actor.GetTextProperty().SetFontSize(20)
-            self.text_actor.GetTextProperty().SetColor(colors.GetColor3d('White'))
-
-            # Text im 3D-Raum positionieren (z. B. in der Nähe des Endpunkts des Pfeils)
-            self.text_actor.SetPosition(start_point[0] + 0.1, start_point[1] + 0.1, start_point[2])
-            """
+            # Text erstellen und anzeigen 
+            atext = vtk.vtkVectorText()
+            atext.SetText('Schwerkraftrichtung')
+            text_mapper = vtk.vtkPolyDataMapper()
+            text_mapper.SetInputConnection(atext.GetOutputPort())
+            self.text_actor = vtk.vtkFollower()
+            self.text_actor.SetMapper(text_mapper)
+            self.text_actor.SetScale(0.2, 0.2, 0.2)  # Textgröße skalieren
+            self.text_actor.AddPosition(middle_of_vector[0] + 0.1, middle_of_vector[1] + 0.1, middle_of_vector[2] + 0.3)  # Textposition
+            self.text_actor.GetProperty().SetColor(colors.GetColor3d('White')) # Textfarbe
