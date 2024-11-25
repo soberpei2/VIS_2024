@@ -3,6 +3,54 @@ import vtk
 import math
 import numpy as np
 
+def forceArrow(direction, position, text):
+    size = 10
+    arrow = vtk.vtkArrowSource()
+    mapper = vtk.vtkPolyDataMapper()
+    mapper.SetInputConnection(arrow.GetOutputPort())
+    
+    actor = vtk.vtkActor()
+    actor.SetMapper(mapper)
+
+    #Achtung direction muss Einheitsvektor sein
+    directionLength = np.linalg.norm(direction)
+    directionNorm = direction / directionLength
+
+    directionArrow = [1, 0, 0]      
+    axis = np.cross(directionArrow,directionNorm)
+    angle = math.degrees(math.acos(np.dot(directionArrow,directionNorm)))
+    
+    vectorText = vtk.vtkVectorText()
+    vectorText.SetText(text)
+    vectorText
+    textMapper = vtk.vtkPolyDataMapper()
+    textMapper.SetInputConnection(vectorText.GetOutputPort())
+    
+    transformText = vtk.vtkTransform()
+    transformText.Scale(0.1,0.1,0.1)
+
+    textActor = vtk.vtkFollower()
+    textActor.SetMapper(textMapper)
+    textActor.SetUserTransform(transformText)
+    textActor.SetPosition(0, 1, 0)
+
+    assembly = vtk.vtkAssembly()
+    assembly.AddPart(actor)
+    assembly.AddPart(textActor)
+
+    transform = vtk.vtkTransform()
+    transform.Translate(position[0], position[1], position[2])
+    transform.RotateWXYZ(angle, axis[0], axis[1], axis[2])
+
+    assembly.SetUserTransform(transform)
+    assembly.SetScale(size,size,size)
+
+    return assembly
+
+
+
+
+
 class force(mbsObject):
     def __init__(self, text):
         parameter = {
@@ -19,26 +67,7 @@ class force(mbsObject):
 
         mbsObject.__init__(self,"Force","GenericForce",text,parameter)
 
-
-        arrow = vtk.vtkArrowSource()
-
-        mapper = vtk.vtkPolyDataMapper()
-        mapper.SetInputConnection(arrow.GetOutputPort())
-        self.actor.SetMapper(mapper)
-
-        #Achtung direction muss Einheitsvektor sein
-        direction = parameter["direction"]["value"]
-        directionArrow = [1, 0, 0]      
-        axis = np.cross(directionArrow,direction)
-        angle = math.degrees(math.acos(np.dot(directionArrow,direction)))
-        
-        transform = vtk.vtkTransform()
-        position = parameter["PointOfApplication_Body1"]["value"]
-        transform.Translate(position[0], position[1], position[2])
-        transform.RotateWXYZ(angle, axis[0], axis[1], axis[2])
-
-        self.actor.SetUserTransform(transform)
-        self.actor.SetScale(100,100,100)
+        self.actor = forceArrow(parameter["direction"]["value"],parameter["PointOfApplication_Body1"]["value"],"")
     
     
 class torque(mbsObject):    
@@ -57,7 +86,7 @@ class torque(mbsObject):
 
 
         assembly = vtk.vtkAssembly()
-        size = 100
+        size = 5
         torusSource = vtk.vtkParametricTorus()
         torusSource.SetRingRadius(size)
         torusSource.SetCrossSectionRadius(size/10)
@@ -103,4 +132,15 @@ class torque(mbsObject):
         transform.RotateWXYZ(angle, axis[0], axis[1], axis[2])
 
         self.actor.SetUserTransform(transform)
+
+
+class gravity(mbsObject):
+    def __init__(self, text):
+        parameter = {
+            "gravity_vector": {"type": "vector", "value": [0.,0.,0.]},
+        }
+
+        mbsObject.__init__(self,"Force","Gravity",text,parameter)
+
+        self.actor = forceArrow(parameter["gravity_vector"]["value"],[0,0,0],"gravity")
 

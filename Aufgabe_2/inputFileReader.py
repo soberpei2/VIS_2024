@@ -3,6 +3,7 @@ from rigidBody import rigidBody
 from constraint import constraint
 from force import force
 from force import torque
+from force import gravity
 from measure import measure
 
 
@@ -52,7 +53,7 @@ def writeJsonFile (listOfMbsObjects,filePath,nameWithExtension):
 def writeFdsFile(listOfMbsObjects,filePath,nameWithExtension):
     fds = open(filePath + "/" + nameWithExtension,"w")
     for mbsObject_i in listOfMbsObjects:
-        mbsObject_i.writeInputFile(fds)
+        mbsObject_i.write2File(fds)
     fds.close()
 
 def mbsObjectFactory(object,textblock):
@@ -62,6 +63,7 @@ def mbsObjectFactory(object,textblock):
         "FORCE_GenericForce": force,
         "FORCE_GenericTorque": torque,
         "MEASURE": measure,
+        "SETTINGS": gravity,
     }
 
     return mbsObjectList[object](textblock)
