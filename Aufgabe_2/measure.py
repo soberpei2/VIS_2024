@@ -17,7 +17,7 @@ class measure(mbsObject):
         mbsObject.__init__(self,"Measure","Translational",text,parameter)
     
 
-        size = 10
+        size = 2
         sphere = vtk.vtkSphereSource()
         sphere.SetRadius(size)
         mapper = vtk.vtkPolyDataMapper()
