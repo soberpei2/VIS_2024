@@ -561,52 +561,18 @@ class solver(mbsObject):
         mbsObject.__init__(self, "Solver", "Rigid_EulerParameter_PAI", text, parameter)
 #=======================================================================================================
 
-class force(mbsObject):
+class GenericForce(mbsObject):
     # Konstruktor
     #============
     def __init__(self, text):
         # Initialisieren eines Dictionaries mit den Parametern
         #-----------------------------------------------------
         parameter = {
-                        "name": {
-                                    "type": "string",
-                                    "value": ""
-                                },
-
-                        "body1":    {
-                                        "type": "string",
-                                        "value": ""
-                                    },
-
-                        "body2":    {
-                                        "type": "string",
-                                        "value": ""
-                                    },
-
-                        "mode":    {
-                                        "type": "string",
-                                        "value": ""
-                                    },
-
                         "direction":    {
                                             "type": "vector",
                                             "value": [0., 0., 0.]
                                         },
-                    }
-        #-----------------------------------------------------------------------------------------------
-        
-        # Aufrufen des Mutterklassenkonstruktors (Ginge auch mit super, dann müsste man self nicht
-        # übergeben)
-        mbsObject.__init__(self, "Force", "Rigid_EulerParameter_PAI", text, parameter)
-#=======================================================================================================
 
-class GenericForce(force):
-    # Konstruktor
-    #============
-    def __init__(self, text):
-        # Initialisieren eines Dictionaries mit den Parametern
-        #-----------------------------------------------------
-        parameter = {
                         "PointOfApplication_Body1": {
                                                         "type": "vector",
                                                         "value": [0., 0., 0.]
@@ -616,33 +582,28 @@ class GenericForce(force):
                                                         "type": "vector",
                                                         "value": [0., 0., 0.]
                                                     },
-
-                        "ForceExpression":  {
-                                                "type": "string",
-                                                "value": ""
-                                            },
                     }
         #-----------------------------------------------------------------------------------------------
         
         # Aufrufen des Mutterklassenkonstruktors (Ginge auch mit super, dann müsste man self nicht
         # übergeben)
-        mbsObject.__init__(self, "GenericForce", "Rigid_EulerParameter_PAI", text, parameter)
+        mbsObject.__init__(self, "Force", "Rigid_EulerParameter_PAI", text, parameter)
 #=======================================================================================================
 
-class GenericTorque(force):
+class GenericTorque(mbsObject):
     # Konstruktor
     #============
     def __init__(self, text):
         # Initialisieren eines Dictionaries mit den Parametern
         #-----------------------------------------------------
         parameter = {
-                        "TorqueExpression": {
-                                                "type": "string",
-                                                "value": ""
-                                            },
+                        "direction":    {
+                                            "type": "vector",
+                                            "value": [0., 0., 0.]
+                                        },
                     }
         #-----------------------------------------------------------------------------------------------
         
         # Aufrufen des Mutterklassenkonstruktors (Ginge auch mit super, dann müsste man self nicht
         # übergeben)
-        mbsObject.__init__(self, "GenericTorque", "Rigid_EulerParameter_PAI", text, parameter)
+        mbsObject.__init__(self, "Torque", "Rigid_EulerParameter_PAI", text, parameter)

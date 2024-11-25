@@ -5,7 +5,7 @@ import mbsObject as MBS
 import mbsModel
 
 # Definieren des einzulesenden Files
-file = "C:/Users/Startklar/OneDrive/Desktop/10_Studium/02_Master/03_Semester/Visualisierung_Datenaufbereitung/02_Aufgabe/test.fdd"
+file = "C:/Users/Startklar/OneDrive/Desktop/10_Studium/02_Master/03_Semester/Visualisierung_Datenaufbereitung/02_Aufgabe/test_2.fdd"
 
 # Anlegen eines Objekts vom Typ mbsModel
 model = mbsModel.mbsModel(ifr.inputFileReader(file))

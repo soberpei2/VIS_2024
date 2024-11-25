@@ -27,7 +27,7 @@ def inputFileReader(file):
     currentTextBlock = []
 
     # Define list of objects, which should be searched
-    search4Objects = ["RIGID_BODY", "CONSTRAINT", "SETTINGS", "SOLVER"]
+    search4Objects = ["RIGID_BODY", "CONSTRAINT", "SETTINGS", "SOLVER", "FORCE_GenericForce", "FORCE_GenericTorque"]
 
     #############################
     # Read lines of fileContent #
@@ -54,6 +54,14 @@ def inputFileReader(file):
                 # Wenn Solver -> Objekt vom Typ solver anlegen
                 elif(currentBlockType == "SOLVER"):
                     listOfMbsObjects.append(mbsObject.solver(currentTextBlock))
+
+                # Wenn GenericForce -> Objekt vom Typ GenericForce anlegen
+                elif(currentBlockType == "FORCE_GenericForce"):
+                    listOfMbsObjects.append(mbsObject.GenericForce(currentTextBlock))
+
+                # Wenn GenericTorque -> Objekt vom Typ GenericTorque anlegen
+                elif(currentBlockType == "FORCE_GenericTorque"):
+                    listOfMbsObjects.append(mbsObject.GenericTorque(currentTextBlock))
 
                 # Set current block Type to empty
                 currentBlockType = ""
