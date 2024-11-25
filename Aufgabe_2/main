@@ -1,7 +1,8 @@
 import Inputfilereader_modularisiert
 import vtk
 from mbsObject import rigidbody
-from constraint import constraint  # Hier wird die Klasse rigidbody importiert
+from constraint import constraint
+from force import genericForce
 
 # Datei einlesen
 file = "Aufgabe_2/test.fdd"
@@ -10,6 +11,9 @@ fileContent = Inputfilereader_modularisiert.inputFileReader(file)
 
 # Datei analysieren
 listOfMbsObjects = Inputfilereader_modularisiert.analyse_file(fileContent)
+
+# Simulationszeit definieren (Beispiel)
+sim_time = 0.5
 
 # JSON erstellen
 Inputfilereader_modularisiert.write_json(listOfMbsObjects, "Aufgabe_2/test.json")
@@ -36,8 +40,10 @@ iren.SetRenderWindow(renderWindow)
 for obj in listOfMbsObjects:
     if isinstance(obj, rigidbody):  # Sicherstellen, dass es ein Rigid Body ist
         obj.vtk_body(renderer)  # Füge das Objekt dem gemeinsamen Renderer hinzu
-    elif isinstance(obj,constraint):
-        obj.vtk_constraint(renderer)
+    elif isinstance(obj, constraint):
+        obj.vtk_constraint(renderer)  # Falls es sich um ein Constraint handelt, visualisieren
+    elif isinstance(obj, genericForce):  # Wenn es sich um eine Kraft handelt
+        obj.vtk_force(renderer)  # Visualisiere die Kraft
 
 # Koordinatensystem hinzufügen
 axes = vtk.vtkAxesActor()
@@ -51,62 +57,9 @@ renderWindow.Render()
 iren.Start()
 
 # Anzahl der Objekte ausgeben
-print(len(listOfMbsObjects))
+print(f"Anzahl der MBS-Objekte: {len(listOfMbsObjects)}")
 
-# #Erzeugen eines Readers
-# bodyReader = vtk.vtkOBJReader()
-
-# #Erzeugen einer Quelle
-# body = bodyReader.SetFileName("C:/vis2024/VIS_2024/Aufgabe_2/quader.obj")
-# bodyReader.Update()
-
-# #Erzeugen eines Filters mit dem Eingang body
-# bodymapper = vtk.vtkPolyDataMapper()
-# bodymapper.SetInputConnection(bodyReader.GetOutputPort())
-
-# #Erzeugen eines Aktors (Filter als Eingang) 
-# bodyActor = vtk.vtkActor()
-# bodyActor.SetMapper(bodymapper)
-
-# #Erzeugen eines Renderers, Hinzugfügen eines Atkors und Hintergrund
-# bodyrenderer = vtk.vtkRenderer()
-# bodyrenderer.AddActor(bodyActor)
-# bodyrenderer.SetBackground(0.1, 0.2, 0.4)
-
-# #Erzeugen eines Render Fensters und hinzufügen des Renders
-# renWin = vtk.vtkRenderWindow()
-# renWin.AddRenderer(bodyrenderer)
-# renWin.SetSize(600, 600)
-# renWin.Render()
-# #Renders des Fensters und Kamera rotieren
-
-# #---------------
-# #Testen 
-# #---------------
-
-# # Koordinatensystem hinzufügen
-# axes = vtk.vtkAxesActor()
-# axes.SetTotalLength(30, 30, 30)  # Länge der Achsen (X, Y, Z)
-# axes.SetShaftTypeToCylinder()    # Darstellung der Achsen als Zylinder
-# axes.SetAxisLabels(1)            # Achsenbeschriftungen anzeigen (X, Y, Z)
-# bodyrenderer.AddActor(axes)
-
-# # Verschiebe das Objekt zu einer neuen Position
-# bodyActor.SetPosition(0, 0, 0)
-
-# # Rotiere das Objekt
-# bodyActor.SetOrientation(0, 90, 0)
-
-# # Skaliere das Objekt
-# bodyActor.SetScale(1.5, 2.0, 1.0)
-
-# # Position und Orientierung prüfen
-# print("Position:", bodyActor.GetPosition())
-# print("Orientation:", bodyActor.GetOrientation())
-
-
-# #Start der Interaktion
-# iren = vtk.vtkRenderWindowInteractor()
-# iren.SetRenderWindow(renWin)
-# iren.Start()
-
+# Ausgabe der Kraftparameter (Optional, falls mehr Informationen benötigt werden)
+for obj in listOfMbsObjects:
+    if isinstance(obj, genericForce):
+        print(f"Kraftname: {obj.name}, Punkt: {obj.pointOfApplication_body1}, Richtung: {obj.direction}, Magnitude: 10")

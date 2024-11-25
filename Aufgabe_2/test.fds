@@ -11,7 +11,7 @@ Body Rigid_EulerParamter_PAI
 	geometry=C:/vis2024/VIS_2024/Aufgabe_2/quader.obj
 	mass=0.001
 	COG=0.0,0.0,0.0
-	position=25.0,0.0,10.0
+	position=25.0,10.0,10.0
 	color=170 230 228
 	transparency=0.5
 EndBody
@@ -23,7 +23,7 @@ Constraint Fixed
 	ax=1
 	ay=1
 	az=1
-	position=0.0,0.0,0.0
+	position=5.0,4.0,10.0
 EndConstraint
 %
 Constraint Fixed
@@ -32,8 +32,8 @@ Constraint Fixed
 	dz=1
 	ax=1
 	ay=1
-	az=0
-	position=25.0,0.0,0.0
+	az=1
+	position=25.0,0.0,40.0
 EndConstraint
 %
 Force Generic Force
