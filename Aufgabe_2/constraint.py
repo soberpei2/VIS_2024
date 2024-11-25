@@ -4,7 +4,7 @@ import vtk
 
 
 def constraintCone(direction):
-    size = 5
+    size = 2
     cone = vtk.vtkConeSource()
     cone.SetCenter(-size/2,0,0)
     cone.SetHeight(size)
@@ -28,7 +28,7 @@ def constraintCone(direction):
     return actor
 
 def constraintTorus(direction):
-    size = 3
+    size = 1
     torusSource = vtk.vtkParametricTorus()
     torusSource.SetRingRadius(size)
     torusSource.SetCrossSectionRadius(size/3)

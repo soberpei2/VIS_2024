@@ -86,7 +86,7 @@ class torque(mbsObject):
 
 
         assembly = vtk.vtkAssembly()
-        size = 5
+        size = 3
         torusSource = vtk.vtkParametricTorus()
         torusSource.SetRingRadius(size)
         torusSource.SetCrossSectionRadius(size/10)
