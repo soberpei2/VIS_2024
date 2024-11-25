@@ -5,20 +5,20 @@ import sys
 
 # ALTER CODE
 
-# # Freedyn File lesen
-# fdd_file_path = "Aufgabe 2/test.fdd"
-# listOfMbsObjects = ifr.read_fdd_file(fdd_file_path)
+# Freedyn File lesen
+#fdd_file_path = "Aufgabe 2/test.fdd"
+#listOfMbsObjects = ifr.read_fdd_file(fdd_file_path)
 
 # # Daten in JSON speichern
-# json_file_path = "Aufgabe 2/tespythot.json"
+# json_file_path = "Aufgabe 2/test.json"
 # ifr.write_json_file(listOfMbsObjects, json_file_path)
 
 # # JSON lesen
 # data = ifr.read_json_file(json_file_path)
 
 # # Daten in .fds-Datei schreiben
-# fds_file_path = "Aufgabe 2/test.fds"
-# ifr.write_fds_file(listOfMbsObjects, fds_file_path)
+#fds_file_path = "Aufgabe 2/test.fds"
+#ifr.write_fds_file(listOfMbsObjects, fds_file_path)
 
 
 def main(input_file_path):
@@ -74,6 +74,11 @@ def main(input_file_path):
     render_window.Render()
     render_interactor.Start()
 
+    #fds file schreiben zum Test
+    ifr.write_fds_file(listOfMbsObjects,"test.fds")
+
+#zum Debuggen
+#main("test.fdd")
 
 #Aufruf geht nur direkt über main file
 if __name__ == "__main__":

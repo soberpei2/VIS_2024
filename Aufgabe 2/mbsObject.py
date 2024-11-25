@@ -9,6 +9,11 @@ class mbsObject:
 
         #Defaultparameter
         self.default_vec = [1.,1.,1.]
+        self.default_intvec = [1,1,1]
+        self.default_float = 1.
+        self.default_int = 1
+        self.default_bool = 0
+        self.default_string = "DEFAULT"
 
         #Aktor erstellen
         self.actor = vtk.vtkActor()
@@ -95,23 +100,24 @@ class mbsObject:
 
 class rigidBody(mbsObject):
     def __init__(self,text):                            #type brauchen wir nicht, weil ich bin ein Rigid Body
+        super().__init__("Body","Rigid_EulerParameter_PAI", text, {})  # Mutterklasse initialisieren
         parameter = {                                   #dictionary (key & value) mit den parametern
-            "name": {"type": "str", "value": "name"},
-            "mass": {"type": "float", "value": 1.},     #sollte die Masse nicht gefunden werden, wird der default Wert 1 gesetzt bleiben
-            "COG": {"type": "vector", "value": [1.,1.,1.]},
-            "position": {"type": "vector", "value": [0.,0.,0.]},
+            "name": {"type": "str", "value": self.default_string},
+            "mass": {"type": "float", "value": self.default_float},     #sollte die Masse nicht gefunden werden, wird der default Wert 1 gesetzt bleiben
+            "COG": {"type": "vector", "value": self.default_vec},
+            "position": {"type": "vector", "value": self.default_vec},
             "geometry": {"type": "geom_path", "value": "C:\test"},  
-            "x_axis": {"type": "vector", "value": [1.,1.,1.]},
-            "y_axis": {"type": "vector", "value": [1.,1.,1.]},
-            "z_axis": {"type": "vector", "value": [1.,1.,1.]},
-            "color": {"type": "intvec", "value": [0,0,0]},
-            "transparency": {"type": "int", "value": 0}, 
-            "inertia": {"type": "vector", "value": [1.,1.,1.]},
-            "initial_velocity": {"type": "vector", "value": [1.,1.,1.]},
-            "initial_omega": {"type": "vector", "value": [1.,1.,1.]},
-            "i1_axis": {"type": "vector", "value": [1.,1.,1.]},
-            "i2_axis": {"type": "vector", "value": [1.,1.,1.]},
-            "i3_axis": {"type": "vector", "value": [1.,1.,1.]}
+            "x_axis": {"type": "vector", "value": self.default_vec},
+            "y_axis": {"type": "vector", "value": self.default_vec},
+            "z_axis": {"type": "vector", "value": self.default_vec},
+            "color": {"type": "intvec", "value": self.default_intvec},
+            "transparency": {"type": "int", "value": self.default_int}, 
+            "inertia": {"type": "vector", "value": self.default_vec},
+            "initial_velocity": {"type": "vector", "value": self.default_vec},
+            "initial_omega": {"type": "vector", "value": self.default_vec},
+            "i1_axis": {"type": "vector", "value": self.default_vec},
+            "i2_axis": {"type": "vector", "value": self.default_vec},
+            "i3_axis": {"type": "vector", "value": self.default_vec}
         } 
 
         mbsObject.__init__(self,"Body","Rigid_EulerParameter_PAI",text,parameter)       #wenn man es so aufruft, braucht man auch das init
@@ -159,20 +165,21 @@ class rigidBody(mbsObject):
 
 class constraint(mbsObject):
     def __init__(self, text):
+        super().__init__("Constraint", "GenericConstraint", text, {})  # Mutterklasse initialisieren
         parameter = {
-            "name": {"type": "str", "value": "nameDEF"},
-            "body1": {"type": "str", "value": "body1DEF"},
-            "body2": {"type": "str", "value": "body2DEF"},
-            "dx": {"type": "bool", "value": "0"},
-            "dy": {"type": "bool", "value": "0"},
-            "dz": {"type": "bool", "value": "0"},
-            "ax": {"type": "bool", "value": "0"},
-            "ay": {"type": "bool", "value": "0"},
-            "az": {"type": "bool", "value": "0"},
-            "position": {"type": "vector", "value": [0.0, 0.0, 0.0]},
-            "x_axis": {"type": "vector", "value": [0.0, 0.0, 0.0]},
-            "y_axis": {"type": "vector", "value": [0.0, 0.0, 0.0]},
-            "z_axis": {"type": "vector", "value": [0.0, 0.0, 0.0]}
+            "name": {"type": "str", "value": self.default_string},
+            "body1": {"type": "str", "value": self.default_string},
+            "body2": {"type": "str", "value": self.default_string},
+            "dx": {"type": "bool", "value": self.default_bool},
+            "dy": {"type": "bool", "value": self.default_bool},
+            "dz": {"type": "bool", "value": self.default_bool},
+            "ax": {"type": "bool", "value": self.default_bool},
+            "ay": {"type": "bool", "value": self.default_bool},
+            "az": {"type": "bool", "value": self.default_bool},
+            "position": {"type": "vector", "value": self.default_vec},
+            "x_axis": {"type": "vector", "value": self.default_vec},
+            "y_axis": {"type": "vector", "value": self.default_vec},
+            "z_axis": {"type": "vector", "value": self.default_vec}
         }
         super().__init__("Constraint", "GenericConstraint", text, parameter)
         #self.add_constraint_actor()
