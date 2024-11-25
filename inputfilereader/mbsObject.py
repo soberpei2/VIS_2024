@@ -347,8 +347,29 @@ class settings(mbsObject):
         self.text_actor.AddPosition(middle_of_vector[0] + 0.1, middle_of_vector[1] + 0.1, middle_of_vector[2] + 0.3)  # Textposition
         self.text_actor.GetProperty().SetColor(colors.GetColor3d('White'))  # Textfarbe
 
+class force(mbsObject):
+    def __init__(self,text):
+        parameter = {
+            "name": {"type": "string", "value": "leer"}, # Default Leer
+            "body1": {"type": "string", "value": "leer"}, # name  body 1
+            "body2": {"type": "string", "value": "leer"}, # name body 2
+            "mode": {"type": "string", "value": "leer"}, # Art der Kraft
+            "direction": {"type": "vector", "value": [0, 0, 0]}, # Kraftrichtung
+        }
 
+        mbsObject.__init__(self,"FORCE","GenericForce",text,parameter)
 
+class torque(mbsObject):
+    def __init__(self,text):
+        parameter = {
+            "name": {"type": "string", "value": "leer"}, # Default Leer
+            "body1": {"type": "string", "value": "leer"}, # name  body 1
+            "body2": {"type": "string", "value": "leer"}, # name body 2
+            "mode": {"type": "string", "value": "leer"}, # Art der Kraft
+            "direction": {"type": "vector", "value": [0, 0, 0]}, # Kraftrichtung
+        }
+
+        mbsObject.__init__(self,"FORCE","GenericTorque",text,parameter)
 
 
 

@@ -52,6 +52,14 @@ Constraint Constraint_EulerParameter_PAI
 	az = 0
 EndConstraint
 %
+FORCE_GenericTorque 
+	name =  new_force_0
+	body1 =  new_body_0
+	body2 =  new_body_1
+	mode =  Space fixed
+	direction = -1.0,0.0,0.0
+EndFORCE_GenericTorque
+%
 Settings Visualization
 	gravity_vector = 0.0,0.0,-9810.0
 	background color = 1.0,1.0,1.0
