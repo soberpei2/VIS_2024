@@ -18,7 +18,6 @@ for obj in listOfMyObjects:
         renderer.AddActor(obj.actor)
         renderer.AddActor(obj.text_actor)
         
-
 # Koordinatensystem hinzufügen
 axes = vtk.vtkAxesActor()
 axes.SetTotalLength(2, 2, 2)    # Länge der Achsen (X, Y, Z)
@@ -41,5 +40,5 @@ renderWindowInteractor.SetInteractorStyle(interactorStyle)
 
 # Szene rendern und Interaktion starten
 renderWindow.Render()
-print("Starte interaktive Visualisierung.")
+print("Starte Visualisierung")
 renderWindowInteractor.Start()
