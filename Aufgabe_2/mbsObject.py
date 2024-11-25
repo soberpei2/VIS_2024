@@ -5,7 +5,6 @@ class mbsObject:
     def __init__(self, type, subtype, text, parameter):
         self.__type = type
         self.__subtype = subtype
-
         self.parameter = parameter
 
         for line in text:
@@ -17,16 +16,24 @@ class mbsObject:
                         parameter[key]["value"] = self.str2float(splitted[1])
                     elif(parameter[key]["type"] == "vector"):
                         parameter[key]["value"] = self.str2vector(splitted[1])
+                    elif(parameter[key]["type"] == "string"):
+                        parameter[key]["value"] = (splitted[1])
+                    elif(parameter[key]["type"] == "path"):
+                        parameter[key]["value"] = line[10:]
+                    
 
     def writeInputfile(self, file):
         text = []
-        text.append(self.__type + " " + self.__subtype + "\n")      #\n...Leerzeile
+        text.append(self.__type + " " + self.__subtype + "\n")
         for key in self.parameter.keys():
             if(self.parameter[key]["type"] == "float"):
-                text.append("\t" + key + " = " + self.float2str(self.parameter[key]["value"]) + "\n")    #\t...Einrückung
-
+                text.append("\t" + key + " = " + self.float2str(self.parameter[key]["value"]) + "\n")
             elif(self.parameter[key]["type"] == "vector"):
                 text.append("\t" + key + " = " + self.vector2str(self.parameter[key]["value"]) + "\n") 
+            elif(self.parameter[key]["type"] == "string"):
+                text.append("\t" + key + " = " + self.parameter[key]["value"] + "\n") 
+            elif(self.parameter[key]["type"] == "path"):
+                text.append("\t" + key + " = " + self.parameter[key]["value"] + "\n") 
 
         text.append("End" + self.__type + "\n%\n")
 
@@ -47,13 +54,99 @@ class mbsObject:
 class rigidBody(mbsObject):
     def __init__(self, text):
         parameter = {
-                       "name": {"type": "string"},
-                        "mass": {"type": "float", "value": 1.},
-                        "COG": {"type": "vector", "value": [0., 0., 0.]},
-                        "position": {"type": "vector", "value": [0., 0., 0.]},
-                        "geometry": {"type": "string", "value": "models/default_geometry.obj"}
-                    }
-
+            "name": {"type": "str", "value": "Name prüfen"},
+            "mass": {"type": "float", "value": 1.},
+            "COG": {"type": "vector", "value": [0., 0., 0.]},
+            "position": {"type": "vector", "value": [0., 0., 0.]},
+            "geometry": {"type": "path", "value": "Pfad prüfen"},
+            "transparency": {"type": "float", "value": 0.},
+            "x_axis": {"type": "vector", "value": [1., 1., 1.]},
+            "y_axis": {"type": "vector", "value": [1., 1., 1.]}, 
+            "z_axis": {"type": "vector", "value": [1., 1., 1.]},
+            "color" : {"type": "color", "value" : [0,0,0],} 
+            }
         mbsObject.__init__(self, "rigidBody", "Rigid_EulerParameter_PAI", text, parameter)
 
+    def show(self, renderer):
+        path = self.parameter["geometry"]["value"]
+        reader = vtk.vtkOBJReader()
+        reader.SetFileName(path)
+        reader.Update()
+
+        self.mapper.SetInputConnection(reader.GetOutputPort())
+        self.actor.SetMapper(self.mapper)
+
+        position = self.parameter["position"]["value"]
+        self.actor.SetPosition(position)
+
+        color = self.parameter["color"]["value"]
+        self.actor.GetProperty().SetColor(color[0] / 255, color[1] / 255, color[2] / 255)
+
+        transparency = self.parameter["transparency"]["value"]
+        self.actor.GetProperty().SetOpacity(1 - transparency / 100)
+
+        renderer.AddActor(self.actor)
+
+
 #######################################################################################
+class constraint(mbsObject):
+    def __init__(self, text):
+        parameter = {
+            "name": {"type": "str", "value": "Name prüfen"},
+            "body1": {"type": "str", "value": "Body1 Text prüfen"},
+            "body2": {"type": "str", "value": "Body2 Text prüfen"},
+            "position": {"type": "vector", "value": [0., 0., 0.]},
+            "x_axis": {"type": "vector", "value": [1., 1., 1.]},
+            "y_axis": {"type": "vector", "value": [1., 1., 1.]}, 
+            "z_axis": {"type": "vector", "value": [1., 1., 1.]},
+            }
+        mbsObject.__init__(self, "constraint", "Constraint", text, parameter)
+    
+    def show(self, renderer):
+        
+        sphere = vtk.vtkSphereSource()
+        sphere.SetRadius(1)
+        sphere.SetPhiResolution(5)
+        sphere.SetThetaResolution(5)
+
+        self.mapper.SetInputConnection(sphere.GetOutputPort())
+        self.actor.SetMapper(self.mapper)
+
+        position = self.parameter["position"]["value"]
+        self.actor.SetPosition(position)
+
+        self.actor.GetProperty().SetColor(0,0,0)
+
+        renderer.AddActor(self.actor)
+#######################################################################################
+class force(mbsObject):
+    def __init__(self, text):
+        parameter = {
+            "name": {"type": "str", "value": "Name prüfen"},
+            "body1": {"type": "str", "value": "Body1 Text prüfen"},
+            "body2": {"type": "str", "value": "Body2 Text prüfen"},
+            "PointOfApplication_Body1": {"type": "vector", "value": [0., 0., 0.]},
+            "PointOfApplication_Body2": {"type": "vector", "value": [0., 0., 0.]},
+            "direction": {"type": "vector", "value": [0., 0., 0.]},
+            }
+
+        mbsObject.__init__(self, "force", "Force", text, parameter)
+
+#######################################################################################
+class settings(mbsObject):
+    def __init__(self, text):
+        parameter = {
+                        "gravity_vector": {"type": "vector", "value": [0.,0.,0.]},
+                        "body2": {"type": "string"},
+                        "geometry": {"type": "string", "value": "C:\\Users\\lukas\\VIS_2024\\Aufgabe_2\\quader.obj"}
+                    }
+
+        mbsObject.__init__(self, "settings", "Settings", text, parameter)
+
+    def show(self, renderer):
+        if self.parameter["gravity_vector"]["value"] == [0.,0.,0.]:
+            self.textactor.SetInput("Keine Gravitation")
+        else:
+            self.textactor.SetInput("GRAVITY (x y z) = " + self.vector2str(self.parameter["gravity_vector"]["value"]))
+        
+        renderer.AddActor2D(self.textactor)

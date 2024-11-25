@@ -8,7 +8,7 @@ f.close()
 listOfMbsObjects = []
 currentBlockType = ""
 currentTextBlock = []
-search4Objects = ["RIGID_BODY", "CONSTRAINT"]
+search4Objects = ["RIGID_BODY", "CONSTRAINT", ]
 
 #############################
 # Read lines of fileContent #

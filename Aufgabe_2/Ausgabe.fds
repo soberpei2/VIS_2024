@@ -10,3 +10,9 @@ rigidBody Rigid_EulerParameter_PAI
 	position = 25.0,0.0,10.0
 EndrigidBody
 %
+constraint Constraint_EulerParameter_PAI
+Endconstraint
+%
+constraint Constraint_EulerParameter_PAI
+Endconstraint
+%
