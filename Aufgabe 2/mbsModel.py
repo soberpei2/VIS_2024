@@ -10,7 +10,7 @@ class mbsModel:
         self.objects.append(mbs_object)
 
     def show(self, renderer):
-        #Zeigt alle MKS Objekte im renderer an
+        #Zeigt alle gewünschten MKS Objekte im renderer an, dazu müssen sie eine funktion show() haben
         for obj in self.objects:
             if isinstance(obj, ifr.mbsObject.rigidBody):
                 obj.show(renderer)

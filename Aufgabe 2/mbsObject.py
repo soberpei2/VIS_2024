@@ -208,13 +208,13 @@ class settings(mbsObject):
         self.parameter = {                                   
             "gravity_vector": {"type": "vector", "value": self.default_vec},
         } 
-        #mbsObject.__init__(self,"Settings","Settings",text,parameter)
+        mbsObject.__init__(self,"Settings","Settings",text,self.parameter)
 
     def show(self, renderer):
-        if self.parameter["gravity_vector"]["value"] != self.default_vec:
-            self.textactor.SetInput("GRAVITY (x y z) = " + self.vector2str(self.parameter["gravity_vector"]["value"]))
-        else:
+        if self.parameter["gravity_vector"]["value"] == self.default_vec:
             self.textactor.SetInput("GRAVITY (x y z) = error")
+        else:
+            self.textactor.SetInput("GRAVITY (x y z) = " + self.vector2str(self.parameter["gravity_vector"]["value"]))
         self.textactor.GetTextProperty().SetFontSize(24)
         self.textactor.GetTextProperty().SetColor(0, 0, 0)  #Schwarzer Text
         self.textactor.SetPosition(10, 40)
