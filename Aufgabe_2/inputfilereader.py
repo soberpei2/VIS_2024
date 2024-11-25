@@ -1,4 +1,3 @@
-
 import mbsObject
 import json
 
@@ -12,7 +11,7 @@ def readInputFile(filePath):
     currentBlockType = ""
     currentTextBlock = []
     listOfMbsObjects = []
-    search4Objects  = ["RIGID_BODY", "CONSTRAINT"]
+    search4Objects  = ["RIGID_BODY", "CONSTRAINT", "FORCE_GenericForce", "FORCE_GenericTorque", "DATAOBJECT_PARAMETER", "MEASURE"]
 
     for line in fileContent:
         if(line.find("$") >= 0):#new block found
@@ -22,6 +21,19 @@ def readInputFile(filePath):
                 
                 elif(currentBlockType == "CONSTRAINT"):
                     listOfMbsObjects.append(mbsObject.constraint(currentTextBlock))
+
+                elif(currentBlockType == "FORCE_GenericForce"):
+                    listOfMbsObjects.append(mbsObject.genericforce(currentTextBlock))
+
+                elif(currentBlockType == "FORCE_GenericTorque"):
+                    listOfMbsObjects.append(mbsObject.generictorque(currentTextBlock))
+
+                elif(currentBlockType == "DATAOBJECT_PARAMETER"):
+                    listOfMbsObjects.append(mbsObject.dataobjectparameter(currentTextBlock))
+
+                elif(currentBlockType == "MEASURE"):
+                    listOfMbsObjects.append(mbsObject.measure(currentTextBlock))
+
                 currentBlockType = ""
 
         for type_i in search4Objects:

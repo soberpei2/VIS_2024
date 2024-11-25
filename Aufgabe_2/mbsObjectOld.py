@@ -1,8 +1,6 @@
 
-"""Aktuellster Stand des mbsObject Files"""
-
-import vtk
-
+"""mbsObject File vor ersten Implementierungen von VTK. Wird nur zum einlesen und Rausschreiben des .fdd Files verwendet"""
+"""Dient als Backup!"""
 
 class mbsObject:
     def __init__(self,type,subtype,text,parameter):
@@ -10,15 +8,13 @@ class mbsObject:
         self.__subtype = subtype
         self.parameter = parameter
 
-        self.actor = vtk.vtkActor()
-
         for line in text:
             splitted = line.split(":")
             for key in parameter.keys():
                 if(splitted[0].strip() == key):
                     if(parameter[key]["type"] == "float"):
                         parameter[key]["value"] = self.str2float(splitted[1])
-
+                        
                     elif(parameter[key]["type"] == "vector"):
                         parameter[key]["value"] = self.str2vector(splitted[1])
 
@@ -130,46 +126,6 @@ class rigidBody(mbsObject):
 
         mbsObject.__init__(self,"Body","Rigid_EulerParameter_PAI",text,parameter)
 
-#------------------------------------------------------------------------------
-# Code für VTK       
-        
-        # Einlesen der Geometrie
-        reader = vtk.vtkOBJReader()
-        reader.SetFileName(self.parameter["geometry"]["value"])
-        reader.Update()
-
-        mapper = vtk.vtkPolyDataMapper()
-        mapper.SetInputConnection(reader.GetOutputPort())
-
-        # Actor erstellen
-        self.actor.SetMapper(mapper)
-        self.actor.GetProperty().SetColor(self.parameter["color"]["value"])
-        self.actor.GetProperty().SetOpacity(self.parameter["transparency"]["value"]/100) # Transparentz übernehmen/ einstellen 
-
-        # Transformation basierend auf der Position und Orientierung
-        self.apply_transformations()
-
-
-    def apply_transformations(self):
-        """Wendet die Position und Orientierung an den Actor an."""
-        transform = vtk.vtkTransform()
-        
-        # Setze Translation
-        pos = self.parameter["position"]["value"]
-        transform.Translate(pos[0], pos[1], pos[2])
-
-        # Setze Orientierung (Rotationsmatrix aus x_axis, y_axis, z_axis)
-        x_axis = self.parameter["x_axis"]["value"]
-        y_axis = self.parameter["y_axis"]["value"]
-        z_axis = self.parameter["z_axis"]["value"]
-        transform.Concatenate([x_axis[0], y_axis[0], z_axis[0], 0,
-                               x_axis[1], y_axis[1], z_axis[1], 0,
-                               x_axis[2], y_axis[2], z_axis[2], 0,
-                               0, 0, 0, 1])
-
-        # Transformation dem Actor zuweisen
-        self.actor.SetUserTransform(transform)
-#------------------------------------------------------------------------------
 
 class constraint(mbsObject):
     def __init__(self,text):
