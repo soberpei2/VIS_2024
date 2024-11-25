@@ -323,7 +323,10 @@ class mbsObject:
 
             # Farbe und Transparenz des Aktors ändern
             bodyActor.GetProperty().SetColor(mbsObject.parameter["color"]["value"])
-            bodyActor.GetProperty().SetOpacity(mbsObject.parameter["transparency"]["value"] / 100)
+            if(mbsObject.parameter["transparency"]["value"] == 0):
+                bodyActor.GetProperty().SetOpacity(0.8)
+            else:
+                bodyActor.GetProperty().SetOpacity(mbsObject.parameter["transparency"]["value"] / 100)
 
             # Rückgabe des Aktors
             return bodyActor
