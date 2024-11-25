@@ -33,7 +33,7 @@ class rigidBody(mbsObject):
         #    reader = vtk.vtkSTLReader()
         #reader.SetFileName(os.getcwd() + "\\" + parameter["geometry"]["value"][1] + parameter["geometry"][value][2])
         
-        reader = vtk.vtkSTLReader()
+        reader = vtk.vtkOBJReader()
         reader.SetFileName(parameter["geometry"]["value"])
         
         mapper = vtk.vtkPolyDataMapper()
@@ -54,6 +54,7 @@ class rigidBody(mbsObject):
         transform = vtk.vtkTransform()
         transform.SetMatrix(transformationMatrix)
         self.actor.SetUserTransform(transform)
+        self.actor.GetProperty().SetOpacity(0.5)
 
 
     def getPosition(self):
