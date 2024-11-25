@@ -1,8 +1,5 @@
 import vtk
-#import rigidBody
-#import constraint
-#import force
-#import measure
+
 
 class mbsObject:
     def __init__(self,type,subtype,text,parameter):
@@ -10,6 +7,7 @@ class mbsObject:
         self.__subtype = subtype
         self.parameter = parameter
         self.actor = vtk.vtkActor()
+        self.renderer = vtk.vtkRenderer()
 
         
         for line in text:
@@ -31,7 +29,17 @@ class mbsObject:
                     elif (parameter[key]["type"] == "bool"):
                         parameter[key]["value"] = self.str2bool(splitted[1])
 
-    def writeInputFile(self,file):
+    
+    def getType(self):
+        return self.__type
+    
+
+    def show(self,renderer):
+        self.renderer = renderer
+        self.renderer.AddActor(self.actor)
+
+
+    def write2File(self,file):
         text = []
         text.append(self.__type + " " + self.__subtype + "\n")
         for key in self.parameter.keys():
@@ -51,6 +59,7 @@ class mbsObject:
                 text.append("\t" + key + " = " + self.bool2str(self.parameter[key]["value"]) + "\n")
         text.append("End" + self.__type + "\n%\n")
         file.writelines(text)
+
 
     def str2float(self,inString):
         return float(inString)
@@ -86,11 +95,12 @@ class mbsObject:
         return str(inString)
     
     def str2bool(self,inString):
-        return bool(inString)
+        if inString.strip() == "0":
+            return False
+        if inString.strip() == "1":
+            return True
     def bool2str(self,inBool):
         return str(inBool)
     
-    def getActor(self):
-        return self.actor
     
 

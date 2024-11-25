@@ -7,7 +7,7 @@ from force import gravity
 from measure import measure
 
 
-def parseText2blocksOfMbsObjects(fileContent,keySign,search4Objects):
+def parseText2blocksOfMbsObjects(fileContent,keySign,search4Typ):
     currentBlockType = ""
     currentTextBlock = []
     listOfMbsObjects = []
@@ -15,12 +15,12 @@ def parseText2blocksOfMbsObjects(fileContent,keySign,search4Objects):
     for line in fileContent:
         if(line.find(keySign) >= 0):
             if(currentBlockType != ""):   
-                for obj in search4Objects:             
+                for obj in search4Typ:             
                     if(currentBlockType == obj):
                         listOfMbsObjects.append(mbsObjectFactory(obj,currentTextBlock))
                 currentBlockType = ""
         
-        for type_i in search4Objects:
+        for type_i in search4Typ:
             if(line.find(type_i,1,len(type_i)+1) >= 0):
                 currentBlockType = type_i
                 currentTextBlock.clear()
@@ -29,8 +29,8 @@ def parseText2blocksOfMbsObjects(fileContent,keySign,search4Objects):
         currentTextBlock.append(line)
     return listOfMbsObjects
 
-def readFile(filePath,nameWithExtension):
-    file2read = open(filePath + "/" + nameWithExtension,"r")
+def readFile(filePath):
+    file2read = open(filePath,"r")
     file2readContent = file2read.read().splitlines()
     file2read.close()
     return file2readContent
