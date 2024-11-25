@@ -3,13 +3,13 @@ import mbsModel
 import sys
 import vtk
 
-def main(mbs_model):
+def main(input_file):
     """
     Visualisiert alle Objekte in einem MBS-Modell mithilfe von VTK.
     """
     model = mbsModel.mbsModel()
 
-    listOfMbsObjects = inputfilereader.readFile(mbs_model)
+    listOfMbsObjects = inputfilereader.readFile(input_file)
     for obj in listOfMbsObjects:
         model.addObject(obj)
     

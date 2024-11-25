@@ -5,8 +5,8 @@ class mbsModel:
     def __init__(self):
         self.objects = []  
 
-    def add_object(self, mbs_object):
-        self.objects.append(mbs_object)
+    def addObject(self, mbsObject):
+        self.objects.append(mbsObject)
 
     def show(self, renderer):
         for obj in self.objects:

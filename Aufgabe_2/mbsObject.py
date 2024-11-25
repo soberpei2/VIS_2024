@@ -7,6 +7,10 @@ class mbsObject:
         self.__subtype = subtype
         self.parameter = parameter
 
+        self.actor = vtk.vtkActor()
+        self.textactor = vtk.vtkTextActor()
+        self.mapper = vtk.vtkPolyDataMapper()
+
         for line in text:
             splitted = line.split(":")
 
