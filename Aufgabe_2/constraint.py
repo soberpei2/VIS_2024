@@ -19,7 +19,7 @@ class constraint(mbsObject):
     def vtk_constraint(self, constraintrenderer):
         position = self.parameter["position"]["value"]
 
-        # Prüfen und Kegel für jede Richtung erstellen
+        # Prüfen ob ein translatorischer Freiheitsgrad gesperrt ist (dx, dy, dz)
         if self.parameter["dx"]["value"] == 1:
             self.create_cone(constraintrenderer, [1, 0, 0], position)
         if self.parameter["dy"]["value"] == 1:
@@ -27,38 +27,80 @@ class constraint(mbsObject):
         if self.parameter["dz"]["value"] == 1:
             self.create_cone(constraintrenderer, [0, 0, 1], position)
 
+        # Prüfen ob ein rotatorischer Freiheitsgrad gesperrt ist (ax, ay, az)
+        if self.parameter["ax"]["value"] == 1:
+            self.create_torus(constraintrenderer, [1, 0, 0], position)
+        if self.parameter["ay"]["value"] == 1:
+            self.create_torus(constraintrenderer, [0, 1, 0], position)
+        if self.parameter["az"]["value"] == 1:
+            self.create_torus(constraintrenderer, [0, 0, 1], position)
+
     def create_cone(self, constraintrenderer, direction, position):
-        # Erstelle Kegel im Ursprung
+        # Kegel erstellen
         coneSource = vtk.vtkConeSource()
-        coneSource.SetHeight(4.0)
+        height = 4.0
+        coneSource.SetHeight(height)
         coneSource.SetRadius(1.2)
         coneSource.SetResolution(20)
 
-        # Transformation initialisieren
         transform = vtk.vtkTransform()
 
-        # 1. Translation anwenden (Position im Weltkoordinatensystem)
-        transform.Translate(position[0], position[1], position[2])
+        # Ausrichtung und Position des Kegels
+        # Achtung: Drehung des Koordinatensystems!
 
-        # 2. Drehung um die gewünschte Achse anwenden
-        if direction == [1, 0, 0]:  # Kegel zeigt in x-Achse
-            pass  
-        elif direction == [0, 1, 0]:  # Kegel zeigt in y-Achse
-            transform.RotateZ(90)  
-        elif direction == [0, 0, 1]:  # Kegel zeigt in z-Achse
-            transform.RotateY(90) 
+        if direction == [1, 0, 0]:  # x-Achse
+            transform.Translate(position[0], position[1], position[2])
+        elif direction == [0, 1, 0]:  # y-Achse
+            transform.RotateZ(90)
+            transform.Translate(position[1], -position[0], position[2])
+        elif direction == [0, 0, 1]:  # z-Achse
+            transform.RotateY(90)
+            transform.Translate(-position[2], position[1], position[0])
 
-        # Mapper und Actor erstellen
+        # Mapper und Actor für den Kegel
         coneMapper = vtk.vtkPolyDataMapper()
         coneMapper.SetInputConnection(coneSource.GetOutputPort())
         coneActor = vtk.vtkActor()
         coneActor.SetMapper(coneMapper)
         coneActor.SetUserTransform(transform)
+        coneActor.GetProperty().SetColor(1.0, 0.6, 0.0)  # Orange
 
-        # Färbe den Kegel orange
-        coneActor.GetProperty().SetColor(1.0, 0.5, 0.0)  # RGB für Orange
-        # Füge den Kegel zum Renderer hinzu
+        # Zum Renderer hinzufügen
         constraintrenderer.AddActor(coneActor)
+
+    def create_torus(self, constraintrenderer, direction, position):
+        # Torus-Objekt erstellen
+        torusSource = vtk.vtkParametricTorus()
+        torusSource.SetRingRadius(2.0)  # Radius des Torus-Rings
+        torusSource.SetCrossSectionRadius(0.5)  # Radius des Querschnitts
+
+        parametricFunctionSource = vtk.vtkParametricFunctionSource()
+        parametricFunctionSource.SetParametricFunction(torusSource)
+        parametricFunctionSource.Update()
+
+        transform = vtk.vtkTransform()
+
+        # Ausrichtung und Position des Torus 
+        #Achtung: Drehung des Koordinatensystems!
+        if direction == [1, 0, 0]:  # Torus um Z-Achse
+            transform.Translate(position[0], position[1], position[2])
+        elif direction == [0, 1, 0]:  # Torus um y-Achse
+            transform.RotateX(90)
+            transform.Translate(position[0], position[2], -position[1])
+        elif direction == [0, 0, 1]:  # Torus um z-Achse
+            transform.RotateY(90)
+            transform.Translate(-position[2], position[1], position[0])
+
+        # Mapper und Actor für den Torus
+        torusMapper = vtk.vtkPolyDataMapper()
+        torusMapper.SetInputConnection(parametricFunctionSource.GetOutputPort())
+        torusActor = vtk.vtkActor()
+        torusActor.SetMapper(torusMapper)
+        torusActor.SetUserTransform(transform)
+        torusActor.GetProperty().SetColor(0.0, 0.8, 0.8)  # Türkis
+
+        # Zum Renderer hinzufügen
+        constraintrenderer.AddActor(torusActor)
 
     def visualize_constraint(self):
         # Renderer erstellen
