@@ -226,3 +226,29 @@ class settings(mbsObject):
         self.textactor.GetTextProperty().SetColor(0, 0, 0)  #Schwarzer Text
         self.textactor.SetPosition(10, 40)
         renderer.AddActor2D(self.textactor)
+
+
+class genericForce(mbsObject):
+    def __init__(self,text):
+        super().__init__("Force", "Generic_Force", text, {})  # Mutterklasse initialisieren
+        self.parameter = {                                   
+            "name": {"type": "str", "value": self.default_string},
+            "body1": {"type": "str", "value": self.default_string},
+            "body2": {"type": "str", "value": self.default_string},
+            "PointOfApplication_Body1": {"type": "vector", "value": self.default_vec},
+            "PointOfApplication_Body2": {"type": "vector", "value": self.default_vec},
+            "direction": {"type": "vector", "value": self.default_vec},
+        } 
+        mbsObject.__init__(self,"Force","Generic_Force",text,self.parameter)
+
+
+class genericTorque(mbsObject):
+    def __init__(self,text):
+        super().__init__("Force", "Generic_Torque", text, {})  # Mutterklasse initialisieren
+        self.parameter = {                                   
+            "name": {"type": "str", "value": self.default_string},
+            "body1": {"type": "str", "value": self.default_string},
+            "body2": {"type": "str", "value": self.default_string},
+            "direction": {"type": "vector", "value": self.default_vec},
+        } 
+        mbsObject.__init__(self,"Force","Generic_Torque",text,self.parameter)

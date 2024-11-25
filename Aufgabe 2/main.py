@@ -74,7 +74,7 @@ def main(input_file_path):
     render_window.Render()
     render_interactor.Start()
 
-    #fds file schreiben zum Test
+    #fds file schreiben zum Test, ob sich was ändert vom einlesen her
     ifr.write_fds_file(listOfMbsObjects,"test.fds")
 
 #zum Debuggen

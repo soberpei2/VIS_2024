@@ -12,7 +12,7 @@ def read_fdd_file(file_path):
     Rückgabe: 
         Liste der MBS Objekte 
     """
-    search4Objects = ["RIGID_BODY", "CONSTRAINT","SETTINGS"]  #definierte Schlagwörter, nach denen gesucht wird
+    search4Objects = ["RIGID_BODY", "CONSTRAINT","SETTINGS","FORCE_GenericForce","FORCE_GenericTorque"]  #definierte Schlagwörter, nach denen gesucht wird
 
     with open(file_path, "r") as f:
         fileContent = f.read().splitlines()
@@ -34,6 +34,10 @@ def read_fdd_file(file_path):
                     listOfMbsObjects.append(mbsObject.constraint(currentTextBlock))
                 elif currentBlockType == "SETTINGS":
                     listOfMbsObjects.append(mbsObject.settings(currentTextBlock))
+                elif currentBlockType == "FORCE_GenericForce":
+                    listOfMbsObjects.append(mbsObject.genericForce(currentTextBlock))
+                elif currentBlockType == "FORCE_GenericTorque":
+                    listOfMbsObjects.append(mbsObject.genericTorque(currentTextBlock))
                 
                 #zurücksetzen, damit nächster Block gefunden werden kann
                 currentBlockType = ""
