@@ -2,6 +2,7 @@
 
 import mbsObject
 import json
+import json
 
 f = open("inputfilereader/test.fdd","r")    #Öffnen des .fdd formates (dort steht der shit auf Freedyn)
 
