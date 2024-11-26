@@ -1,7 +1,6 @@
 # Importieren benötigter Klassen
 import inputFileReader as ifr
 import vtk
-import mbsObject as MBS
 import mbsModel
 
 # Definieren des einzulesenden Files
@@ -53,3 +52,4 @@ iren.Start()
 # Schleife über die Liste der Mbs-Objekte
 for mbsObject in model.listOfMbsObjects:
     mbsObject.showProps()
+
