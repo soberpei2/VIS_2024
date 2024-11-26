@@ -4,10 +4,11 @@ import vtk
 import mbsModel
 
 def main():
-    if len(sys.argv) != 2:
-        print("Usage: python main.py /path/to/your/fdd-File")
-        sys.exit(1)
-    inputFile = sys.argv[1]
+    #if len(sys.argv) != 2:
+    #    print("Usage: python main.py /path/to/your/fdd-File")
+    #    sys.exit(1)
+    #inputFile = sys.argv[1]
+    inputFile = "Aufgabe_2/test.fdd"
     listOfMbsObjects = inputFileReader.parseText2blocksOfMbsObjects(inputFileReader.readFile(inputFile),"$",["RIGID_BODY","CONSTRAINT","FORCE_GenericForce","FORCE_GenericTorque","MEASURE","SETTINGS"])
     
     model = mbsModel.mbsModel()
@@ -29,5 +30,5 @@ def main():
     renderWindowInteractor.Start()
 
 
-if __name__ == "__main__":
-    main()
+#if __name__ == "__main__":
+main()

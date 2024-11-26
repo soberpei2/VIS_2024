@@ -16,9 +16,16 @@ def forceArrow(direction, position, text):
     directionLength = np.linalg.norm(direction)
     directionNorm = direction / directionLength
 
-    directionArrow = [1, 0, 0]      
-    axis = np.cross(directionArrow,directionNorm)
-    angle = math.degrees(math.acos(np.dot(directionArrow,directionNorm)))
+    directionArrow = [1, 0, 0]
+    if np.array_equal(directionArrow,directionNorm):
+        axis = [0,1,0]
+        angle = 0
+    elif np.array_equal(directionArrow,-directionNorm):
+        axis = [0,1,0]
+        angle = 180
+    else:
+        axis = np.cross(directionArrow,directionNorm)
+        angle = np.degrees(np.acos(np.dot(directionArrow,directionNorm)))
     
     vectorText = vtk.vtkVectorText()
     vectorText.SetText(text)
