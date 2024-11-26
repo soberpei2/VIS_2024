@@ -18,6 +18,8 @@ class mbsModel:
                 obj.show(renderer)
             elif isinstance(obj, ifr.mbsObject.settings):
                 obj.show(renderer)
+            elif isinstance(obj, ifr.mbsObject.genericForce):
+                obj.show(renderer)
             #evtl. weitere Typen hinzufügen
 
     def get_objects(self):

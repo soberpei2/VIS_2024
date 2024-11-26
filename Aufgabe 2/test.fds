@@ -74,7 +74,7 @@ Force Generic_Force
 	body2 = new_body_1
 	PointOfApplication_Body1 = 10.0,20.0,30.0
 	PointOfApplication_Body2 = 0.0,0.0,0.0
-	direction = -1.0,0.0,0.0
+	direction = 1.0,1.0,0.0
 EndForce
 %
 Force Generic_Torque
