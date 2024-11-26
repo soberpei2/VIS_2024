@@ -4,6 +4,7 @@ class mbsObject:
         self.__type = type
         self.__subtype = subtype
         self.parameter = parameter
+        
 
         for line in text:
             if ":" in line:
@@ -129,7 +130,7 @@ class force_GenericForce(mbsObject):
             "ForceExpression":              {"type": "string", "value": "UNKOWN"},
         }
 
-        mbsObject.__init__(self,"force_GenericForce","Rigid_EulerParameter_PAI",text,parameter)
+        mbsObject.__init__(self,"force_GenericForce","GenericForce",text,parameter)
 
 #================================================================================================================
 
@@ -144,7 +145,7 @@ class force_GenericTorque(mbsObject):
             "TorqueExpression":              {"type": "string", "value": "UNKOWN"},
         }
 
-        mbsObject.__init__(self,"force_GenericTorque","Rigid_EulerParameter_PAI",text,parameter)
+        mbsObject.__init__(self,"force_GenericTorque","GenericTorque",text,parameter)
 
 #===================================================================================================================
 
@@ -178,3 +179,11 @@ class measure2(mbsObject):
         }
 
         mbsObject.__init__(self,"measure","Rigid_EulerParameter_PAI",text,parameter)
+
+class gravity(mbsObject):
+    def __init__(self,text):
+        parameter = {
+            "gravity_vector":               {"type": "vector", "value": [1.,1.,1.]}
+        }
+
+        mbsObject.__init__(self,"force","gravity",text,parameter)

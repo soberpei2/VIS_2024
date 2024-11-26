@@ -16,7 +16,7 @@ def inputfilereader(file):  #als Funktion definiert
     currentBlockType = ""
     currentTextBlock = []
     listOfMbsObjects =[]
-    search4Objects = ["RIGID_BODY" , "CONSTRAINT" , "FORCE_GenericForce" , "FORCE_GenericTorque" , "MEASURE1" , "MEASURE2"]
+    search4Objects = ["RIGID_BODY" , "CONSTRAINT" , "FORCE_GenericForce" , "FORCE_GenericTorque" , "MEASURE1" , "MEASURE2","SETTINGS"]
 
     for line in fileContent:
         if(line.find("$") >= 0):                                      #new block found
@@ -33,6 +33,8 @@ def inputfilereader(file):  #als Funktion definiert
                     listOfMbsObjects.append(mbsObject.measure1(currentTextBlock))
                 elif(currentBlockType == "MEASURE2"):
                     listOfMbsObjects.append(mbsObject.measure2(currentTextBlock))
+                elif(currentBlockType == "SETTINGS"):
+                    listOfMbsObjects.append(mbsObject.gravity(currentTextBlock))
                     #numOfConstraints+=1
                 currentBlockType = ""
 

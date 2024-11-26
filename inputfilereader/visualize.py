@@ -1,5 +1,7 @@
 import vtk
 import os
+import numpy as np
+import math
 
 
 # Funktion zur Erstellung eines VTK-Actors aus einer OBJ-Datei
@@ -37,31 +39,43 @@ def create_constraint_actor(position1, position2):
 
 
 # Funktion zur Darstellung der Schwerkraft als Pfeil
-def create_gravity_actor(position, direction, magnitude):
+def create_gravity_actor(vector):
     """Erstellt einen Pfeil für die Schwerkraft."""
+    
+    
     arrow_source = vtk.vtkArrowSource()
+    direction = [1,0,0]
+
+    vectorNormalized = vector / np.linalg.norm(vector)
+    rotationvector = np.cross(direction,vectorNormalized)
+    angle = math.degrees(np.acos(np.dot(direction,vectorNormalized)))   #Umrechnen in grad
 
     # Transformiere den Pfeil basierend auf Richtung und Größe
     transform = vtk.vtkTransform()
-    transform.Translate(*position)
-    scale_factor = magnitude / 10.0  # Skaliere den Pfeil relativ zur Stärke
+    position = [0,0,0]
+    transform.Translate(position)
+    transform.RotateWXYZ(angle,rotationvector[0],rotationvector[1],rotationvector[2])
+    scale_factor = np.linalg.norm(vector) / 1000.0  # Skaliere den Pfeil relativ zur Stärke
     transform.Scale(scale_factor, scale_factor, scale_factor)
 
+    '''
     # Normalisiere die Richtung
     norm = (sum(d ** 2 for d in direction) ** 0.5)
     direction = [d / norm for d in direction]
     transform.RotateWXYZ(0, *direction)  # Rotation optional anpassen
-
+    
     transform_filter = vtk.vtkTransformPolyDataFilter()
     transform_filter.SetTransform(transform)
     transform_filter.SetInputConnection(arrow_source.GetOutputPort())
-
+    '''
     mapper = vtk.vtkPolyDataMapper()
-    mapper.SetInputConnection(transform_filter.GetOutputPort())
+    mapper.SetInputConnection(arrow_source.GetOutputPort())
+
 
     actor = vtk.vtkActor()
+    actor.SetUserTransform(transform)
     actor.SetMapper(mapper)
-    actor.GetProperty().SetColor(0.0, 1.0, 0.0)  # Grün für Schwerkraft
+    actor.GetProperty().SetColor(0.0, 0.0, 0.0)  # schwarz für Schwerkraft
     return actor
 
 
@@ -117,6 +131,8 @@ def process_objects(objects):
                 parameters[key] = [int(x) / 255.0 for x in value.split()]
             elif key == "transparency":
                 parameters[key] = int(value)
+            elif key == "gravity_vector":
+                parameters[key] = [float(x) for x in value.split(",")]
             else:
                 parameters[key] = value
 
@@ -124,7 +140,7 @@ def process_objects(objects):
             rigid_bodies.append(parameters)
         elif obj_type == "constraint":
             constraints.append(parameters)
-        elif obj_type == "gravity":
+        elif obj_type == "force":
             forces.append(parameters)
 
     return rigid_bodies, constraints, forces
@@ -179,13 +195,17 @@ def visualize():
 
     # Forces (Schwerkraft) hinzufügen
     for force in forces:
+        '''
         position = force["position"]
         direction1 = force["PointOfApplication_Body1"]
         direction2 = force["PointOfApplication_Body2"]
         magnitude = force["magnitude"]
-        actor = create_gravity_actor(position, direction1, magnitude)
+        '''
+        vector = force["gravity_vector"]
+        actor = create_gravity_actor(vector)
         renderer.AddActor(actor)
-
+    
+    
     # Hintergrundfarbe und Fenstergröße
     renderer.SetBackground(0.1, 0.2, 0.4)  # Dunkelblau
     render_window.SetSize(800, 600)
