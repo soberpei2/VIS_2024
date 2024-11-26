@@ -7,8 +7,8 @@ class mbsObject:
         self.__subtype = subtype
         self.parameter = parameter
         self.actor = vtk.vtkActor()      # wird immer benötigt
-        self.arrow_actor = vtk.vtkActor()   
-        self.arrow_source = vtk.vtkArrowSource() # erstellen eines Pfeiles (standart position)
+        self.arrow_actor = vtk.vtkActor()   # zum erstellen des Pfeils
+        self.arrow_source = vtk.vtkArrowSource() # erstellen eines Pfeiles 
 
         for line in text:
             splitted = line.split(":")
@@ -25,8 +25,9 @@ class mbsObject:
                     elif(parameter[key]["type"] == "integer"):
                         parameter[key]["value"] = self.str2integer(splitted[1])        # für constraint 
                     elif(parameter[key]["type"] == "color"):
-                        parameter[key]["value"] = self.color2vec(splitted[1])        
+                        parameter[key]["value"] = self.color2vec(splitted[1])   
 
+    # transformiert datentypen
     def writeInputfile(self, file):
         text = []
         text.append(self.__type + " " + self.__subtype + "\n")
@@ -45,9 +46,9 @@ class mbsObject:
                 text.append("\t" + key + " = " + self.vector2str(self.parameter[key]["value"])+"\n")
         text.append("End" + self.__type + "\n%\n")
 
-        file.writelines(text)
+        file.writelines(text)   # beschreibt neues File 
 
-    # zum umrechnen 
+    # zum umrechnen von ienem in einen anderen Datentyp
     def str2float(self,inString):
         return float(inString)
     def float2str(self,inFloat):
@@ -66,7 +67,7 @@ class mbsObject:
         stringcolor = inString[:12].split()
         return [float(v)/255 for v in stringcolor]  # color wird hier normiert --> einzelner float kein vektor
         
-
+# classe für starrkörper 
 class rigidBody(mbsObject):
     def __init__(self, text):
         parameter = {
@@ -88,7 +89,7 @@ class rigidBody(mbsObject):
         reader = vtk.vtkOBJReader()
         reader.SetFileName(self.parameter["geometry"]["value"])
         reader.Update()
-
+        # mappen 
         mapper = vtk.vtkPolyDataMapper()
         mapper.SetInputConnection(reader.GetOutputPort())
 
@@ -100,7 +101,7 @@ class rigidBody(mbsObject):
         # Transformation basierend auf der Position und Orientierung
         self.apply_transformations()
 
-        
+    # transfomieren, damit körper auf der richtigen pos ist 
     def apply_transformations(self):
         """Wendet die Position und Orientierung an den Actor an."""
         transform = vtk.vtkTransform()
@@ -121,6 +122,7 @@ class rigidBody(mbsObject):
         # Transformation dem Actor zuweisen
         self.actor.SetUserTransform(transform)
 
+# klasse für zwangsbedinungen 
 class constraint(mbsObject):
     def __init__(self, text):
         parameter = {
@@ -140,9 +142,8 @@ class constraint(mbsObject):
             
         }
 
-        mbsObject.__init__(self,"Constraint","Constraint_EulerParameter_PAI", text,parameter)
-        # Position und Achsen laden
- 
+        mbsObject.__init__(self,"Constraint","Constraint_EulerParameter_PAI", text,parameter)         # parameter laden
+
 
         self.visualize_constraint( parameter)
 
@@ -254,7 +255,7 @@ class constraint(mbsObject):
             self.text_actor.AddPosition(pos_vec[0] + 0.6, pos_vec[1] + 0.1, pos_vec[2] + 0.3)  # Textposition
             self.text_actor.GetProperty().SetColor(colors.GetColor3d('White')) # Textfarbe
     
-
+# klasse der einstellungen 
 class settings(mbsObject):
     def __init__(self, text):
         parameter = {
@@ -264,10 +265,9 @@ class settings(mbsObject):
         }
         mbsObject.__init__(self,"Settings","Visualization", text,parameter)
         
-        # Visualisierung des Schwerkraftpfeils erstellen
-        self.create_gravity_arrow()
+        self.create_gravity_arrow() # Visualisierung des Schwerkraftpfeils erstellen
 
-
+    # unter "funktion" der Einstellungen für den Schwerkraftvektor
     def create_gravity_arrow(self):
             colors = vtk.vtkNamedColors()
 
