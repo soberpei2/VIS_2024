@@ -141,7 +141,11 @@
                 "type": "float",
                 "value": 1.0
             },
-            "bodies": {
+            "body1": {
+                "type": "list",
+                "value": []
+            },
+            "body2": {
                 "type": "list",
                 "value": []
             },
@@ -179,7 +183,11 @@
                 "type": "float",
                 "value": 0.0
             },
-            "bodies": {
+            "body1": {
+                "type": "list",
+                "value": []
+            },
+            "body2": {
                 "type": "list",
                 "value": []
             },
@@ -187,6 +195,58 @@
                 "type": "vector",
                 "value": [
                     25.0,
+                    0.0,
+                    0.0
+                ]
+            }
+        },
+        {
+            "bodies": {
+                "type": "list",
+                "value": []
+            },
+            "PointOfApplication": {
+                "type": "vector",
+                "value": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            "mode": {
+                "type": "string",
+                "value": ""
+            },
+            "direction": {
+                "type": "vector",
+                "value": [
+                    -1.0,
+                    0.0,
+                    0.0
+                ]
+            }
+        },
+        {
+            "bodies": {
+                "type": "list",
+                "value": []
+            },
+            "mode": {
+                "type": "string",
+                "value": ""
+            },
+            "direction": {
+                "type": "vector",
+                "value": [
+                    0.0,
+                    1.0,
+                    0.0
+                ]
+            },
+            "position": {
+                "type": "vector",
+                "value": [
+                    0.0,
                     0.0,
                     0.0
                 ]

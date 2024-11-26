@@ -57,6 +57,7 @@ class mbsObject:
         return str(inVector[0]) + "," + str(inVector[1]) + "," + str(inVector[2])
     
     
+    
 class rigidBody(mbsObject):
     def __init__(self,text):
 
@@ -76,7 +77,7 @@ class rigidBody(mbsObject):
 
         
     def create_actor(self):
-        obj_path = r"C:/Users/hanne\Desktop/VIS/VIS_2024\Aufgabe 2/quader.obj"  # Absoluter Pfad zur Datei
+        obj_path = r"C:/Users/hanne/Desktop/VIS/VIS_2024\Aufgabe 2/quader.obj"  # Absoluter Pfad zur Datei
         obj_reader = vtk.vtkOBJReader()
         obj_reader.SetFileName(obj_path)  # Beispiel: Ihre Datei "quader.obj"
         obj_reader.Update()
@@ -87,9 +88,9 @@ class rigidBody(mbsObject):
         self.actor = vtk.vtkActor()
         self.actor.SetMapper(mapper)
 
-        #color = [c / 255 for c in self.parameter["color"]["value"]]
+        #color = [c / 255 for c in self.parameter["color"]["value"]] Farbe von 0 bis 1
         #self.actor.GetProperty().SetColor(color)
-        #self.actor.GetProperty().SetOpacity(self.parameter["transparency"]["value"])
+        self.actor.GetProperty().SetOpacity(self.parameter["transparency"]["value"])
 
 
 class constraint(mbsObject):
@@ -103,7 +104,8 @@ class constraint(mbsObject):
             "ay":       {"type": "float", "value": 0.},
             "az":       {"type": "float", "value": 0.},
 
-            "bodies":   {"type": "list", "value": []},  # Unterstützung für beliebig viele Körper!!!!?
+            "body1":   {"type": "list", "value": []}, # benötigt?
+            "body2":   {"type": "list", "value": []},
             "position": {"type": "vector", "value": [0., 0., 0.]},
             #"x_axis": {"type": "vector", "value": [1., 0., 0.]},
             #"y_axis": {"type": "vector", "value": [0., 1., 0.]},
@@ -140,10 +142,11 @@ class genericForce(mbsObject):
             "bodies":                 {"type": "list", "value": []},  # Unterstützung für beliebig viele Körper!!!!?
             "PointOfApplication":     {"type": "vector", "value": [0., 0., 0.]}, # zwishen 2 bodies!
             "mode":                   {"type": "string", "value": ""}, #string!!
-            "direction":              {"type": "vector", "value": [0., 0., 0.]}
+            "direction":              {"type": "vector", "value": [0., 0., 0.]},
+            "PointOfApplication":     {"type": "vector", "value": [0.,0.,0.]} # position dann von jeweiligem Körper
             #"ForceExpression":       {"type": "string", "value": ""}
         }
-        mbsObject.__init__("Force", "GenericForce", text, parameter)
+        mbsObject.__init__(self,"Force", "GenericForce", text, parameter)
 
     def create_actor(self):
         arrow = vtk.vtkArrowSource()
@@ -153,10 +156,10 @@ class genericForce(mbsObject):
 
         transform = vtk.vtkTransform()
         direction = self.parameter["direction"]["value"]
-        position = self.parameter["position"]["value"]
+        position = self.parameter["PointOfApplication"]["value"]
 
-        transform.Translate(position)
-        transform.Scale([d * self.parameter["magnitude"]["value"] for d in direction])
+        #transform.Translate(position)
+        #transform.Scale([d * self.parameter["magnitude"]["value"] for d in direction])
 
         transform_filter = vtk.vtkTransformPolyDataFilter()
         transform_filter.SetInputConnection(arrow.GetOutputPort())
@@ -175,14 +178,16 @@ class genericTorque(mbsObject):
             #"name":                   {"type": "string", "value": ""}, #string!!
             "bodies":                 {"type": "list", "value": []},  # Unterstützung für beliebig viele Körper!!!!?
             "mode":                   {"type": "string", "value": ""}, #string!!
-            "direction":              {"type": "vector", "value": [0., 0., 0.]}
+            "direction":              {"type": "vector", "value": [0., 0., 0.]},
+            "position":               {"type": "vector", "value": [0.0, 0.0, 0.0]},
+            #position COG von Körper
             #"TorqueExpression":
         }
-        mbsObject.__init__("Force", "GenericForce", text, parameter)
+        mbsObject.__init__(self, "Force", "GenericForce", text, parameter)
     
     def create_actor(self):
         circle = vtk.vtkRegularPolygonSource()
-        circle.SetCenter(self.parameter["position"]["value"])
+        circle.SetCenter(self.parameter["position"]["value"]) # hier COG
         circle.SetNormal(self.parameter["direction"]["value"])
         circle.SetRadius(1.0)
         circle.SetNumberOfSides(50)

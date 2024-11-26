@@ -11,6 +11,7 @@ inputfilereader.inputfilereader(Pfad)
 def visualize_model(filepath):
     # Liste der mbsObjects aus der Datei einlesen
     mbs_objects = inputfilereader.inputfilereader(filepath)
+    
 
     # Renderer und Render Window erstellen
     renderer = vtk.vtkRenderer()

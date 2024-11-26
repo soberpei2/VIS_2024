@@ -26,10 +26,10 @@ def inputfilereader(FilePath):
                     listOfMbsObjects.append(mbsObject.rigidBody(currentTextBlock))
                 elif currentBlockType == "CONSTRAINT":
                     listOfMbsObjects.append(mbsObject.constraint(currentTextBlock))
-                """elif currentBlockType == "FORCE_GenericForce":
+                elif currentBlockType == "FORCE_GenericForce":
                     listOfMbsObjects.append(mbsObject.genericForce(currentTextBlock))
                 elif currentBlockType == "FORCE_GenericTorque":
-                    listOfMbsObjects.append(mbsObject.genericTorque(currentTextBlock))"""
+                    listOfMbsObjects.append(mbsObject.genericTorque(currentTextBlock))
 
                 currentBlockType = ""  # Zurücksetzen des Blocktyps
 
@@ -69,8 +69,3 @@ def inputfilereader(FilePath):
     print(f"FDS-Datei erfolgreich erstellt: {fds_path}")
 
     return listOfMbsObjects
-
-# Beispielaufruf
-if __name__ == "__main__":
-    fdd_path = "Aufgabe 2/test.fdd"
-    inputfilereader(fdd_path)

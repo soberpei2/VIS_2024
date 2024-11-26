@@ -40,3 +40,13 @@ Constraint Generic
 	position = 25.0,0.0,0.0
 EndConstraint
 
+Force GenericForce
+	PointOfApplication = 0.0,0.0,0.0
+	direction = -1.0,0.0,0.0
+EndForce
+
+Force GenericForce
+	direction = 0.0,1.0,0.0
+	position = 0.0,0.0,0.0
+EndForce
+
