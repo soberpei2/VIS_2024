@@ -11,6 +11,8 @@ class mbsObject:
         self.arrow_source = vtk.vtkArrowSource() # Erstellen eines Pfeils
         self.text_actor = vtk.vtkTextActor()
         self.colors = vtk.vtkNamedColors()
+        self.line_source = vtk.vtkLineSource()
+        
 
         for line in text:
             splitted = line.split(":")
@@ -322,7 +324,7 @@ class settings(mbsObject):
         transform.Scale(2, 2, 2)  # Skaliere den Pfeil
 
         # Berechne die Mitte des normierten Vektors
-        middle_of_vector = [start_point[i] + normalized_x[i] * (1 / 2) * 2 for i in range(3)]
+        middle_of_vector = [(start_point[i] + normalized_x[i]) * (1 / 2) * 2 for i in range(3)] # *2 wegen skalierung des Vektors 
 
         # Transformiere die PolyData (Pfeil-Daten) direkt
         transform_pd = vtk.vtkTransformPolyDataFilter()
@@ -363,6 +365,8 @@ class force(mbsObject):
       
         # Aufruf Funktionen
         self.create_applicationPoints()
+        self.lineOfAction()
+        self.forceLine()
 
         # Funktion Applikation Punkte visualisieren
     def create_applicationPoints(self):
@@ -416,25 +420,43 @@ class force(mbsObject):
             self.text_actor2.AddPosition(point2[0] + 0.3, point2[1] + 0.3, point2[2] + 0.1)
             self.text_actor2.GetProperty().SetColor(0.0, 1.0, 0.0)  # Weiße Textfarbe
 
-        # Initialisieren von force_line_actor (wichtig für die Darstellung)
-        self.force_line_actor = vtk.vtkActor()  # Erstelle den Actor für die Kraftlinie
-        self.direction_line_actor = vtk.vtkActor()  # Erstelle den Actor für die Richtungslinie
+    def lineOfAction(self):
         # Punkte
         point1 = self.parameter["PointOfApplication_Body1"]["value"]
         point2 = self.parameter["PointOfApplication_Body2"]["value"]
+        # Linie zwischen Body1 und Body2
+        self.line_source.SetPoint1(point1)
+        self.line_source.SetPoint2(point2)
+        # Mappen
+        line_mapper1 = vtk.vtkPolyDataMapper()
+        line_mapper1.SetInputConnection(self.line_source.GetOutputPort())
+         # Mapping auf Actor
+        self.actor.SetMapper(line_mapper1)  # Body1 zu Body2
+        self.actor.GetProperty().SetColor(1.0, 0.0, 1.0) 
+
+        # Berechne die Mitte des normierten Vektors
+        middle_of_vector = [(point1[i] + point2[i]) * (1 / 2) for i in range(3)]
+
+        # Text erstellen und anzeigen 
+        atext = vtk.vtkVectorText()
+        atext.SetText('Wirkungslinie')
+        text_mapper = vtk.vtkPolyDataMapper()
+        text_mapper.SetInputConnection(atext.GetOutputPort())
+        self.text_actor = vtk.vtkFollower()
+        self.text_actor.SetMapper(text_mapper)
+        self.text_actor.SetScale(0.2, 0.2, 0.2)  # Textgröße skalieren
+        self.text_actor.AddPosition(middle_of_vector[0] + 0.1, middle_of_vector[1] + 0.1, middle_of_vector[2] + 0.3)  # Textposition
+        self.text_actor.GetProperty().SetColor(1.0, 0.0, 1.0)  # Textfarbe
+        
+    def forceLine(self):
+
+        point1 = self.parameter["PointOfApplication_Body1"]["value"]
+        direction = self.parameter["direction"]["value"]
         direction = self.parameter["direction"]["value"]
 
                     # Skalierung der Richtung für Visualisierung
         scale = 10.0  # Skaliere die Richtung für die Sichtbarkeit
         scaled_direction = [p1 + scale * d for p1, d in zip(point1, direction)]
-
-        # Linie zwischen Body1 und Body2
-        line_source1 = vtk.vtkLineSource()
-        line_source1.SetPoint1(point1)
-        line_source1.SetPoint2(point2)
-
-        line_mapper1 = vtk.vtkPolyDataMapper()
-        line_mapper1.SetInputConnection(line_source1.GetOutputPort())
 
         # Linie für die Richtung der Kraft
         line_source2 = vtk.vtkLineSource()
@@ -444,13 +466,11 @@ class force(mbsObject):
         line_mapper2 = vtk.vtkPolyDataMapper()
         line_mapper2.SetInputConnection(line_source2.GetOutputPort())
 
-        # Mapping auf Actor
-        self.force_line_actor.SetMapper(line_mapper1)  # Body1 zu Body2
-        self.force_line_actor.GetProperty().SetColor(0.0, 1.0, 0.0)  # Grün
-
-        self.direction_line_actor = vtk.vtkActor()  # Kraftlinie
+        self.direction_line_actor = vtk.vtkActor()  # Actor für die Kraft (mit self.actor alleine würde sich das ganze überschreiben)
         self.direction_line_actor.SetMapper(line_mapper2)
         self.direction_line_actor.GetProperty().SetColor(1.0, 0.0, 0.0)  # Rot
+
+        
 
 class torque(mbsObject):
     def __init__(self,text):
