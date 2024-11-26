@@ -1,8 +1,5 @@
 import vtk
 
-#Problem mit Pfad Aufruf, musste quader.obj in anderen Ordner schieben, da vtk reader falschen Ordner ausliest
-#weiß aber nicht warum
-
 class mbsObject:
 
     def __init__(self, type, subtype, text, parameter):
@@ -86,8 +83,8 @@ class rigidBody(mbsObject):
         position = self.parameter["position"]["value"]
         self.actor.SetPosition(position)
 
-        color = self.parameter["color"]["value"]
-        self.actor.GetProperty().SetColor(color[0] / 255, color[1] / 255, color[2] / 255)
+        #color = self.parameter["color"]["value"]
+        #self.actor.GetProperty().SetColor(color[0] / 255, color[1] / 255, color[2] / 255)
 
         transparency = self.parameter["transparency"]["value"]
         self.actor.GetProperty().SetOpacity(1 - transparency / 100)

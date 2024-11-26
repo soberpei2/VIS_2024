@@ -74,3 +74,9 @@ if __name__ == "__main__":
     else:
         input_file = sys.argv[1]
         main(input_file)
+
+
+#Problem mit Pfad Aufruf, musste quader.obj in anderen Ordner schieben, da vtk reader falschen Ordner ausliest
+#weiß aber nicht warum
+
+#Außerdem Problem mit den Farbcodes der Bodies
