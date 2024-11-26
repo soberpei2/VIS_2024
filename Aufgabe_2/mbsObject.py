@@ -86,8 +86,8 @@ class rigidBody(mbsObject):
         #color = self.parameter["color"]["value"]
         #self.actor.GetProperty().SetColor(color[0] / 255, color[1] / 255, color[2] / 255)
 
-        transparency = self.parameter["transparency"]["value"]
-        self.actor.GetProperty().SetOpacity(1 - transparency / 100)
+        #transparency = self.parameter["transparency"]["value"]
+        #self.actor.GetProperty().SetOpacity(1 - transparency / 100)
 
         renderer.AddActor(self.actor)
 
