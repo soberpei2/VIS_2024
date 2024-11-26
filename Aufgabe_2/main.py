@@ -1,45 +1,91 @@
-# Importiere alle notwendigen Module
-import os  # Für Operationen mit dem Betriebssystem, z.B. Pfadoperationen
-import json  # Für das Arbeiten mit JSON-Daten (Ein- und Ausgabe von JSON-Dateien)
-from inputfilereader import parse_input_file, save_to_json, write_input_file  # Importiere die Funktionen, die aus der inputfilereader.py Datei stammen
+import vtk
+import inputfilereader as ifr
+import mbsModel
+import sys
 
-def main():
-    # Definiere den Pfad zur Eingabedatei (das FDD-File)
-    input_file_path = 'C:/VIS_2024/test.fdd'  # Pfad zur Eingabedatei (beispielhafte .fdd-Datei)
-    
-    # Gebe eine Nachricht aus, dass die Eingabedatei nun gelesen wird
-    print("Eingabedatei wird gelesen und geparst...")
-    
-    try:
-        # Lese und parse die Eingabedatei mit der Funktion aus inputfilereader.py
-        objects = parse_input_file(input_file_path)  # Die Funktion gibt eine Liste von mbsObject-Instanzen zurück
-        print(f"Die Eingabedatei wurde erfolgreich geparst. {len(objects)} Objekte wurden gefunden.")
-    except ValueError as e:
-        # Falls ein unbekannter Typ oder Fehler in der Datei auftritt, wird der Fehler hier abgefangen und ausgegeben
-        print(f"Fehler beim Parsen der Eingabedatei: {e}")
-        return
+# ALTER CODE
 
-    # Definiere den Pfad für die Ausgabe-JSON-Datei
-    json_output_file = 'C:/VIS_2024/output_data.json'  # Pfad zur Ausgabedatei
-    
-    # Speichern der geparsten Objekte als JSON-Datei
-    try:
-        save_to_json(objects, json_output_file)  # Die Objekte werden in die JSON-Datei geschrieben
-        print(f"Die Daten wurden erfolgreich in die Datei {json_output_file} gespeichert.")
-    except Exception as e:
-        # Falls ein Fehler beim Speichern der Daten auftritt, wird dieser hier abgefangen
-        print(f"Fehler beim Speichern der Daten: {e}")
-    
-    # Optional: Eine Eingabedatei zurückschreiben, falls notwendig
-    write_output_file = 'C:/VIS_2024/output_inputfile.fdd'  # Pfad für die neue Eingabedatei
-    
-    try:
-        write_input_file(objects, write_output_file)  # Diese Funktion schreibt die geparsten Objekte zurück in das FDD-Format
-        print(f"Die Eingabedatei wurde erfolgreich unter {write_output_file} geschrieben.")
-    except Exception as e:
-        # Fehler beim Schreiben der Eingabedatei werden hier abgefangen
-        print(f"Fehler beim Schreiben der Eingabedatei: {e}")
+# Freedyn File lesen
+#fdd_file_path = "Aufgabe 2/test.fdd"
+#listOfMbsObjects = ifr.read_fdd_file(fdd_file_path)
 
-# Der Hauptteil des Programms wird nur ausgeführt, wenn dieses Skript direkt ausgeführt wird
+# # Daten in JSON speichern
+# json_file_path = "Aufgabe 2/test.json"
+# ifr.write_json_file(listOfMbsObjects, json_file_path)
+
+# # JSON lesen
+# data = ifr.read_json_file(json_file_path)
+
+# # Daten in .fds-Datei schreiben
+#fds_file_path = "Aufgabe 2/test.fds"
+#ifr.write_fds_file(listOfMbsObjects, fds_file_path)
+
+
+def main(input_file_path):
+    # Erstelle ein mbsModel-Objekt
+    model = mbsModel.mbsModel()
+
+    #Einlesen des FDD Files mittels Inputfilereader
+    listOfMbsObjects = ifr.read_fdd_file(input_file_path)
+
+    #mbsModel erstellen mithilfe der vom IFR eingelesenen Daten
+    for obj in listOfMbsObjects:
+        model.add_object(obj)
+
+    #Anlegen des Renderers
+    renderer = vtk.vtkRenderer()
+    renderer.SetBackground(1,1,1) #weißer Hintergrund
+
+    #Anzeige der Objekte lt. mbsModel
+    model.show(renderer)
+
+    #Ursprung-Koordinatensystem anzeigen
+    axes = vtk.vtkAxesActor()
+    axes.SetTotalLength(10, 10, 10)
+    renderer.AddActor(axes)
+
+    #Renderfenster anlegen
+    render_window = vtk.vtkRenderWindow()
+    render_window.AddRenderer(renderer)
+
+    def windowtype(type):
+        hint = vtk.vtkTextActor()
+        hint.SetInput("MKS Reader by fpointin: Press 'q' to exit.")
+        hint.GetTextProperty().SetFontSize(24)
+        hint.GetTextProperty().SetColor(0, 0, 0)  #Schwarzer Text
+        hint.SetPosition(10, 10)  #Position unten links
+        renderer.AddActor2D(hint)
+        
+        #kleines Fenster
+        if type == 1:
+            render_window.SetSize(800, 600)
+            render_window.SetWindowName("MKS Reader by fpointin")
+        #Fullscreen
+        if type == 2:
+            render_window.SetFullScreen(True)
+
+    windowtype(2)
+
+    #Interaktor anlegen
+    render_interactor = vtk.vtkRenderWindowInteractor()
+    render_interactor.SetRenderWindow(render_window)
+
+    #Starten
+    render_window.Render()
+    render_interactor.Start()
+
+    #fds file schreiben zum Test, ob sich was ändert vom einlesen her
+    ifr.write_fds_file(listOfMbsObjects,"test.fds")
+
+#zum Debuggen
+#main("test.fdd")
+
+#Aufruf geht nur direkt über main file
 if __name__ == "__main__":
-    main()  # Führe die main Funktion aus
+    #Fehlermeldung wenn nicht genau 2 Argumente (main.py und Filename) eingegeben werden
+    if len(sys.argv) != 2:
+        print("\n\n" + "VERWENDUNG DES PROGRAMMS" +"\n" + "in Konsole 'python main.py test.fdd' eingeben!" + "\n" + "Achtung auf korrekten Ordner, ggf. mit cd .. oder cd ''Ordner'' arbeiten!""\n\n")
+    #Start des Prozederes mit gewünschtem user input fdd file lt. Konsole
+    else:
+        input_file_path = sys.argv[1]
+        main(input_file_path)
