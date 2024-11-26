@@ -1,47 +1,97 @@
-
-
 import mbsObject
 import json
-import json
 
-f = open("inputfilereader/test.fdd","r")    #Öffnen des .fdd formates (dort steht der shit auf Freedyn)
-
-fileContent = f.read().splitlines()         #Das file ist in einer Wust, hier wird es in Zeilen formatiert und Abgespeichert
-f.close()                                   #Schließen das das Programm wieder benutzt werden kann (von anderen Programmen)
-
-currentBlockType = ""                       #Anlegen einer leeren Variable mit dem Namen currentBlockType (jetztiger Blocktyp)
-currentTextBlock = []                       #Anlegen einer leeren Variable mit dem Namen currentTextBlock (Variablen des Types)
-listOfMbsObjects = []                       #Anlegen einer leeren Variable mit dem Namen listOfMbsObjects (wie viele Objekte gibt es)
-search4Objects  = ["RIGID_BODY", "CONSTRAINT"]  #Suchen nach Gruppen
-for line in fileContent:                        #gehe durch die Zeilen im gespeicherten .fdd files
-    if(line.find("$") >= 0):                    #Schauen ob eine  Dollarzeichen gefunden wird
-        if(currentBlockType != ""):                 #Webn der BlockType nicht leer ist gehe weiter
-            if(currentBlockType == "RIGID_BODY"):   #Wenn ein Rigid Body gefunden wird gehe weiter
-                listOfMbsObjects.append(mbsObject.rigidBody(currentTextBlock))  #Füge die Eigenschaften des Objectes zur Liste dazu
-            currentBlockType = ""                   #Leere den currentBlockType
-
-    for type_i in search4Objects:           #for-Schleife bis das if wahr ist, Suchen ob es sich um ein search4Object handel (z.B: Rigid_Body)
-        if(line.find(type_i,1,len(type_i)+1) >= 0):    #Suchen ob die Buchstaben zusammenpassen für ein search4Object 
-            currentBlockType = type_i       #Schreibe das Wort in currentBlockType
-            currentTextBlock.clear()        #TextBlock(Variablen) bereinigen
-            break
+def read_file(file_path):
+    """
+    Liest eine Datei und gibt den Inhalt als Liste von Zeilen zurück.
     
-    currentTextBlock.append(line)           #Speichere die Informationen der aktive Zeile in den currentTextBlock
+    Parameter:
+    - file_path: Der Pfad zur Eingabedatei
+    
+    Rückgabewert:
+    - Eine Liste mit den Zeilen der Datei
+    """
+    with open(file_path, "r") as f:
+        # Die Datei wird Zeile für Zeile eingelesen und in einer Liste gespeichert
+        return f.read().splitlines()
 
-modelObjects =[]                                #Anlegen einer leeren Variable mit dem Namen modelObjects
-for object in listOfMbsObjects:                 #gehe durch die Objecte in listOfObjects
-    modelObjects.append(object.parameter)       #Wir schreiben in modelObjects alle Parameter der Objecte (search4Objects)
-jDataBase = json.dumps({"modelObjects": modelObjects})  #Speichern der Daten in eine Variable (jDataBase) die wir für json brauchen
-with open("inputfilereader/test.json","w") as outfile:  #leeres json öffnen
-    outfile.write(jDataBase)                          #schreiben der Daten in json
+def process_blocks(file_content, search_for_objects):
+    """
+    Verarbeitet die Zeilen der Datei und erstellt eine Liste von mbsObject-Instanzen.
+    
+    Parameter:
+    - file_content: Eine Liste von Zeilen aus der Eingabedatei
+    - search_for_objects: Eine Liste der Objekttypen, nach denen gesucht wird, wie "RIGID_BODY" oder "CONSTRAINT"
+    
+    Rückgabewert:
+    - Eine Liste von mbsObject-Instanzen, die auf den gesuchten Objekttypen basieren
+    """
+    current_block_type = ""          # Der aktuelle Blocktyp (z.B. "RIGID_BODY", "CONSTRAINT")
+    current_text_block = []          # Die Textdaten des aktuellen Blocks
+    list_of_mbs_objects = []         # Liste, die alle MBS-Objekte speichern wird
 
-fj = open("inputfilereader/test.json","r")      #öffnen der test.json Datei mit leseberechtigung
-data = json.load(fj)                            #Warum?? data ist unverwendet
-fj.close()                                      #Speichern und Schließen
+    # Durchlaufen jeder Zeile im eingelesenen Dateiinhalt
+    for line in file_content:
+        # Wenn ein Dollarzeichen "$" gefunden wird, überprüfen wir, ob der aktuelle Block abgeschlossen ist
+        if "$" in line:
+            if current_block_type != "":  # Wenn ein Blocktyp gesetzt ist
+                if current_block_type == "RIGID_BODY":
+                    # Falls der Blocktyp "RIGID_BODY" ist, wird das Objekt in die Liste aufgenommen
+                    list_of_mbs_objects.append(mbsObject.rigidBody(current_text_block))
+                # Der Blocktyp wird nach der Verarbeitung des Blocks zurückgesetzt
+                current_block_type = ""
 
-fds = open("inputfilereader/test.fds","w")          #Öffnen eines fds files mit dem Namen test.fds mit Schreibberechtigung
-for mbsObject_i in listOfMbsObjects:                #for mit mbsObject als Counter in listOfMbsObjects
-    mbsObject_i.writeInputfile(fds)                 #Schreibe das fds file (Zeilenweise die Daten von listOfMbsObjects)
-fds.close()                                         #Speichern und Schließen
+        # Durchlaufe die Objekttypen, nach denen wir suchen (z.B. "RIGID_BODY", "CONSTRAINT")
+        for search_type in search_for_objects:
+            # Wenn der Objekttyp in der Zeile gefunden wird, wird der Blocktyp gesetzt und der Block gelöscht
+            if line.find(search_type, 1, len(search_type) + 1) >= 0:
+                current_block_type = search_type
+                current_text_block.clear()  # Löscht den Textblock, um die neuen Daten zu speichern
+                break  # Beende die Suche, wenn ein passender Blocktyp gefunden wurde
 
-print(len(listOfMbsObjects))                        #Schreiben der Objectanzahl auf die Konsole
+        # Füge die aktuelle Zeile zum Textblock des aktuellen Objekts hinzu
+        current_text_block.append(line)
+
+    # Rückgabe der Liste von MBS-Objekten
+    return list_of_mbs_objects
+
+def write_json_output(list_of_mbs_objects, output_file_path):
+    """
+    Schreibt die MBS-Objekte in eine JSON-Datei.
+    
+    Parameter:
+    - list_of_mbs_objects: Liste der verarbeiteten MBS-Objekte
+    - output_file_path: Der Pfad zur Ausgabedatei, in der das JSON gespeichert wird
+    """
+    # Extrahiere die Parameter jedes Objekts und erstelle ein JSON-kompatibles Format
+    model_objects = [obj.parameter for obj in list_of_mbs_objects]
+    
+    # Erstelle den JSON-Datenstring
+    json_data = json.dumps({"modelObjects": model_objects})
+
+    # Schreibe den JSON-Datenstring in die Ausgabedatei
+    with open(output_file_path, "w") as outfile:
+        outfile.write(json_data)
+
+def write_fds_output(list_of_mbs_objects, output_file_path):
+    """
+    Schreibt die MBS-Objekte in eine FDS-Datei.
+    
+    Parameter:
+    - list_of_mbs_objects: Liste der verarbeiteten MBS-Objekte
+    - output_file_path: Der Pfad zur Ausgabedatei, in der das FDS gespeichert wird
+    """
+    # Öffne die Datei zum Schreiben
+    with open(output_file_path, "w") as fds:
+        # Schreibe jedes Objekt in die Datei, indem die Methode writeInputfile verwendet wird
+        for mbs_object in list_of_mbs_objects:
+            mbs_object.writeInputfile(fds)
+
+def print_object_count(list_of_mbs_objects):
+    """
+    Gibt die Anzahl der MBS-Objekte aus.
+    
+    Parameter:
+    - list_of_mbs_objects: Liste der verarbeiteten MBS-Objekte
+    """
+    print(len(list_of_mbs_objects))  # Anzahl der Objekte in der Konsole ausgeben
