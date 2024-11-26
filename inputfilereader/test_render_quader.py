@@ -1,4 +1,4 @@
-
+import vtk
 
 def render_obj_file(file_path):
     # OBJ-Datei laden
