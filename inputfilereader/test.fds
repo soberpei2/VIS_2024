@@ -1,10 +1,43 @@
 Body RIGID_EulerParamter_PAI
 	mass = 0.001
 	COG = 0.0,0.0,0.0
+	position = 0.0,0.0,0.0
+	color = 254 146 146
+	transparency = 0.0
 EndBody
 %
 Body RIGID_EulerParamter_PAI
 	mass = 0.001
 	COG = 0.0,0.0,0.0
+	position = 25.0,0.0,10.0
+	color = 170 230 228
+	transparency = 0.0
 EndBody
+%
+constraint constraint_fixed
+	position = 0.0,0.0,0.0
+	dx = 1.0
+	dy = 1.0
+	dz = 1.0
+	ax = 1.0
+	ay = 1.0
+	az = 1.0
+Endconstraint
+%
+constraint constraint_fixed
+	position = 25.0,0.0,0.0
+	dx = 1.0
+	dy = 1.0
+	dz = 1.0
+	ax = 1.0
+	ay = 1.0
+	az = 0.0
+Endconstraint
+%
+settings settings_fixed
+	constraint icon scale = 0.01
+	COG marker scale = 0.01
+	gravity_vector = 0.0,0.0,-9810.0
+	background color = 255 255 255
+Endsettings
 %
