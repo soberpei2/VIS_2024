@@ -29,7 +29,7 @@ def main(input_file):
     render_window_interactor = vtk.vtkRenderWindowInteractor()
     render_window_interactor.SetRenderWindow(render_window)
     
-    # Durchlaufe alle Objekte im MBS-Modell
+    # Durchlaufe alle Objekte im MBS-Modell (altes Programm als Referenz falls nocheinmal benötigt)
     '''for obj in mbs_model.objects:
         # Geometrie extrahieren und hinzufügen (angenommen, jedes Objekt hat `geometry`)
         geometry_path = obj.parameter["geometry"]["value"]
@@ -54,6 +54,7 @@ def main(input_file):
     print("Drücken Sie 'q', um die Visualisierung zu beenden...")
     render_window_interactor.Start()  
 
+#altes Programm als Referenz
 '''def main():
     # Überprüfen, ob ein Dateipfad als Argument übergeben wurde
     if len(sys.argv) != 2:
@@ -79,4 +80,6 @@ if __name__ == "__main__":
 #Problem mit Pfad Aufruf, musste quader.obj in anderen Ordner schieben, da vtk reader falschen Ordner ausliest
 #weiß aber nicht warum
 
-#Außerdem Problem mit den Farbcodes der Bodies
+#Außerdem Problem mit den Farbcodes und der Transparenz der Bodies (wieder entfernt aus Code weil Fehler verursacht)
+
+#Ausgabe in FDS bzw. json funktioniert nicht mehr (Bzw. gibt nur mehr Settings aus)

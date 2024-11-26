@@ -84,10 +84,10 @@ class rigidBody(mbsObject):
         self.actor.SetPosition(position)
 
         #color = self.parameter["color"]["value"]
-        #self.actor.GetProperty().SetColor(color[0] / 255, color[1] / 255, color[2] / 255)
+        #self.actor.GetProperty().SetColor(0,0,0)
 
         #transparency = self.parameter["transparency"]["value"]
-        #self.actor.GetProperty().SetOpacity(1 - transparency / 100)
+        #self.actor.GetProperty().SetOpacity(transparency)
 
         renderer.AddActor(self.actor)
 
@@ -140,9 +140,9 @@ class genericForce(mbsObject):
 class settings(mbsObject):
     def __init__(self, text):
         parameter = {
-                        "gravity_vector": {"type": "vector", "value": [0.,0.,0.]},
-                        "geometry": {"type": "path", "value": "C:\\Users\\lukas\\VIS_2024\\Aufgabe_2\\quader.obj"}
-                    }   
+            "gravity_vector": {"type": "vector", "value": [0.,0.,0.]},
+            "geometry": {"type": "path", "value": "C:\\Users\\lukas\\VIS_2024\\Aufgabe_2\\quader.obj"}
+            }   
 
         mbsObject.__init__(self, "settings", "Settings", text, parameter)
 
