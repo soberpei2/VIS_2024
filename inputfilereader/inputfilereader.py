@@ -1,5 +1,6 @@
 import json
 import mbsObject
+import json
 
 def read_input_file(filepath): #Liest eine Eingabedatei und gibt den Inhalt als Liste von Zeilen zurück.
     with open(filepath, "r") as file:
