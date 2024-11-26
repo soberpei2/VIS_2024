@@ -51,7 +51,7 @@ def main(input_file):
     
     # Render-Fenster starten
     render_window.Render()
-    print("Drücken Sie eine Taste, um die Visualisierung zu beenden...")
+    print("Drücken Sie 'q', um die Visualisierung zu beenden...")
     render_window_interactor.Start()  
 
 '''def main():

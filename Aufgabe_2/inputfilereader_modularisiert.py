@@ -8,13 +8,12 @@ def readFile(filePath):
     with open(filePath, "r") as file:
         fileInhalt = file.read().splitlines()
         fileInhalt.append("$")
-        file.close
 
     listOfMbsObjects = []
     currentBlockType = ""
     currentTextBlock = []
 
-    search4Objects = ["RIGID_BODY", "CONSTRAINT", "Settings", "Force_GenericForce"]
+    search4Objects = ["RIGID_BODY", "CONSTRAINT", "SETTINGS", "FORCE_GenericForce"]
 
 
     for line in fileInhalt:
@@ -51,7 +50,7 @@ def writeToJson(listOfMbsObjects, jsonPath):
     modelObjects = []
     for object in listOfMbsObjects:
         modelObjects.append(object.parameter)
-    jDataBase = json.dumps({"modelObjects": modelObjects})
+    jDataBase = json.dumps({"modelObjects": modelObjects}, indent=4)
     with open(jsonPath, "w") as outfile:
         outfile.write(jDataBase)
 

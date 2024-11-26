@@ -1,5 +1,8 @@
 import vtk
 
+#Problem mit Pfad Aufruf, musste quader.obj in anderen Ordner schieben, da vtk reader falschen Ordner ausliest
+#weiß aber nicht warum
+
 class mbsObject:
 
     def __init__(self, type, subtype, text, parameter):
@@ -58,7 +61,7 @@ class mbsObject:
 class rigidBody(mbsObject):
     def __init__(self, text):
         parameter = {
-            "name": {"type": "str", "value": "Name prüfen"},
+            "name": {"type": "string", "value": "Name prüfen"},
             "mass": {"type": "float", "value": 1.},
             "COG": {"type": "vector", "value": [0., 0., 0.]},
             "position": {"type": "vector", "value": [0., 0., 0.]},
@@ -67,7 +70,7 @@ class rigidBody(mbsObject):
             "x_axis": {"type": "vector", "value": [1., 1., 1.]},
             "y_axis": {"type": "vector", "value": [1., 1., 1.]}, 
             "z_axis": {"type": "vector", "value": [1., 1., 1.]},
-            "color" : {"type": "color", "value" : [0,0,0],} 
+            "color" : {"type": "color", "value" : [128,128,128]} 
             }
         mbsObject.__init__(self, "rigidBody", "Rigid_EulerParameter_PAI", text, parameter)
 
@@ -96,9 +99,9 @@ class rigidBody(mbsObject):
 class constraint(mbsObject):
     def __init__(self, text):
         parameter = {
-            "name": {"type": "str", "value": "Name prüfen"},
-            "body1": {"type": "str", "value": "Body1 Text prüfen"},
-            "body2": {"type": "str", "value": "Body2 Text prüfen"},
+            "name": {"type": "string", "value": "Name prüfen"},
+            "body1": {"type": "string", "value": "Body1 Text prüfen"},
+            "body2": {"type": "string", "value": "Body2 Text prüfen"},
             "position": {"type": "vector", "value": [0., 0., 0.]},
             "x_axis": {"type": "vector", "value": [1., 1., 1.]},
             "y_axis": {"type": "vector", "value": [1., 1., 1.]}, 
@@ -110,8 +113,8 @@ class constraint(mbsObject):
         
         sphere = vtk.vtkSphereSource()
         sphere.SetRadius(1)
-        sphere.SetPhiResolution(5)
-        sphere.SetThetaResolution(5)
+        sphere.SetPhiResolution(10)
+        sphere.SetThetaResolution(10)
 
         self.mapper.SetInputConnection(sphere.GetOutputPort())
         self.actor.SetMapper(self.mapper)
@@ -119,31 +122,30 @@ class constraint(mbsObject):
         position = self.parameter["position"]["value"]
         self.actor.SetPosition(position)
 
-        self.actor.GetProperty().SetColor(0,0,0)
+        self.actor.GetProperty().SetColor(1,1,1)
 
         renderer.AddActor(self.actor)
 #######################################################################################
-class force(mbsObject):
+class genericForce(mbsObject):
     def __init__(self, text):
         parameter = {
-            "name": {"type": "str", "value": "Name prüfen"},
-            "body1": {"type": "str", "value": "Body1 Text prüfen"},
-            "body2": {"type": "str", "value": "Body2 Text prüfen"},
+            "name": {"type": "string", "value": "Name prüfen"},
+            "body1": {"type": "string", "value": "Body1 Text prüfen"},
+            "body2": {"type": "string", "value": "Body2 Text prüfen"},
             "PointOfApplication_Body1": {"type": "vector", "value": [0., 0., 0.]},
             "PointOfApplication_Body2": {"type": "vector", "value": [0., 0., 0.]},
             "direction": {"type": "vector", "value": [0., 0., 0.]},
             }
 
-        mbsObject.__init__(self, "force", "Force", text, parameter)
+        mbsObject.__init__(self, "genericForce", "Force", text, parameter)
 
 #######################################################################################
 class settings(mbsObject):
     def __init__(self, text):
         parameter = {
                         "gravity_vector": {"type": "vector", "value": [0.,0.,0.]},
-                        "body2": {"type": "string"},
-                        "geometry": {"type": "string", "value": "C:\\Users\\lukas\\VIS_2024\\Aufgabe_2\\quader.obj"}
-                    }
+                        "geometry": {"type": "path", "value": "C:\\Users\\lukas\\VIS_2024\\Aufgabe_2\\quader.obj"}
+                    }   
 
         mbsObject.__init__(self, "settings", "Settings", text, parameter)
 
