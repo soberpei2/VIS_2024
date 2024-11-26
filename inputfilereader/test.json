@@ -1,1 +1,100 @@
-{"modelObjects": [{"mass": {"type": "float", "value": 0.001}, "COG": {"type": "vector", "value": [0.0, 0.0, 0.0]}}, {"mass": {"type": "float", "value": 0.001}, "COG": {"type": "vector", "value": [0.0, 0.0, 0.0]}}]}
+{
+    "modelObjects": [
+        {
+            "mass": {
+                "type": "float",
+                "value": 0.001
+            },
+            "COG": {
+                "type": "vector",
+                "value": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            }
+        },
+        {
+            "mass": {
+                "type": "float",
+                "value": 0.001
+            },
+            "COG": {
+                "type": "vector",
+                "value": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            }
+        },
+        {
+            "name": {
+                "type": "float",
+                "value": 0.0
+            },
+            "value": {
+                "type": "float",
+                "value": 0.0
+            }
+        },
+        {
+            "name": {
+                "type": "float",
+                "value": 0.0
+            },
+            "value": {
+                "type": "float",
+                "value": 0.0
+            }
+        },
+        {
+            "magnitude": {
+                "type": "float",
+                "value": 0.0
+            },
+            "direction": {
+                "type": "vector",
+                "value": [
+                    -1.0,
+                    0.0,
+                    0.0
+                ]
+            }
+        },
+        {
+            "magnitude": {
+                "type": "float",
+                "value": 0.0
+            },
+            "direction": {
+                "type": "vector",
+                "value": [
+                    0.0,
+                    1.0,
+                    0.0
+                ]
+            }
+        },
+        {
+            "sensorType": {
+                "type": "float",
+                "value": 0.0
+            },
+            "reading": {
+                "type": "float",
+                "value": 0.0
+            }
+        },
+        {
+            "sensorType": {
+                "type": "float",
+                "value": 0.0
+            },
+            "reading": {
+                "type": "float",
+                "value": 0.0
+            }
+        }
+    ]
+}

@@ -1,48 +1,139 @@
-
 import mbsObject
 import json
 
-f = open("inputfilereader/test.fdd","r")
-
-fileContent = f.read().splitlines()
-f.close()
-
-currentBlockType = ""
-currentTextBlock = []
-listOfMbsObjects = []
-search4Objects  = ["RIGID_BODY", "CONSTRAINT"]
-for line in fileContent:
-    if(line.find("$") >= 0):#new block found
-        if(currentBlockType != ""):
-            if(currentBlockType == "RIGID_BODY"):
-                listOfMbsObjects.append(mbsObject.rigidBody(currentTextBlock))
-            currentBlockType = ""
-
-    for type_i in search4Objects:
-        if(line.find(type_i,1,len(type_i)+1) >= 0):
-            currentBlockType = type_i
-            currentTextBlock.clear()
-            break
+def import_fdd_file(file_path):
+    """
+    Importiert eine .fdd-Datei und analysiert deren Inhalt, um MBS-Objekte zu erstellen.
     
-    currentTextBlock.append(line)
+    Args:
+        file_path (str): Pfad zur .fdd-Datei.
+    
+    Returns:
+        list: Liste von MBS-Objekten.
+    """
+    with open(file_path, "r") as f:
+        file_content = f.read().splitlines()
 
-print(len(listOfMbsObjects))
+    # Suchbegriffe
+    search_objects = ["$RIGID_BODY", "$CONSTRAINT", "$MOTION", "$FORCE", "$MEASURE"]
+    search_subtypes = ["GenericForce", "GenericTorque"]
+
+    # Initialisierung
+    current_block_type = ""
+    current_block_subtype = ""
+    current_text_block = []
+    list_of_mbs_objects = []
+
+    # Datei parsen
+    for line in file_content:
+        # Wenn neuer Block beginnt
+        if any(line.startswith(obj) for obj in search_objects):
+            # Vorherigen Block verarbeiten (falls vorhanden)
+            if current_block_type:
+                list_of_mbs_objects.append(process_block(current_block_type, current_text_block))
+                current_text_block = []
+
+            # Neuen Block starten
+            current_block_type = next(obj for obj in search_objects if line.startswith(obj))
+            current_text_block = [line]  # Ersten Blockinhalt hinzufügen
+        else:
+            # Blockinhalt sammeln
+            current_text_block.append(line)
+
+    # Letzten Block verarbeiten
+    if current_block_type:
+        list_of_mbs_objects.append(process_block(current_block_type, current_text_block))
+
+    return list_of_mbs_objects
 
 
-#import/export functionality (for later use in model.py)
-modelObjects = []
-for object in listOfMbsObjects:
-    modelObjects.append(object.parameter)
-jDataBase = json.dumps({"modelObjects": modelObjects})
-with open("inputfilereader/test.json", "w") as outfile:
-    outfile.write(jDataBase)
+def process_block(block_type, block_content):
+    """
+    Erstellt ein MBS-Objekt basierend auf dem Blocktyp und Blockinhalt.
+    
+    Args:
+        block_type (str): Typ des Blocks (z. B. "$RIGID_BODY").
+        block_content (list): Inhalt des Blocks.
+    
+    Returns:
+        object: Ein MBS-Objekt.
+    """
+    # Blocktyp zu Klassenerstellung mappen
+    if block_type == "$RIGID_BODY":
+        return mbsObject.rigidBody(block_content)
+    elif block_type == "$CONSTRAINT":
+        return mbsObject.constraint(block_content)
+    elif block_type == "$MOTION":
+        return mbsObject.motion(block_content)
+    elif block_type == "$FORCE":
+        return mbsObject.force(block_content)
+    elif block_type == "$MEASURE":
+        return mbsObject.measure(block_content)
+    else:
+        raise ValueError(f"Unbekannter Blocktyp: {block_type}")
 
-f = open("inputfilereader/test.json","r")
-data = json.load(f)
-f.close()
 
-fds = open("inputfilereader/test.fds","w")
-for mbsObject_i in listOfMbsObjects:
-    mbsObject_i.writeInputfile(fds)
-fds.close()
-#-------------------------------------------------------
+def write_fds(list_of_mbs_objects, fds_path):
+    """
+    Exportiert MBS-Objekte in eine .fds-Datei.
+    
+    Args:
+        list_of_mbs_objects (list): Liste von MBS-Objekten.
+        fds_path (str): Zielpfad der .fds-Datei.
+    """
+    with open(fds_path, "w") as fds_file:
+        for mbs_object in list_of_mbs_objects:
+            mbs_object.writeInputfile(fds_file)
+
+
+def export_to_json(list_of_mbs_objects, output_path):
+    """
+    Exportiert MBS-Objekte als JSON-Datei.
+    
+    Args:
+        list_of_mbs_objects (list): Liste von MBS-Objekten.
+        output_path (str): Zielpfad der JSON-Datei.
+    """
+    model_objects = [obj.parameter for obj in list_of_mbs_objects]
+    json_data = json.dumps({"modelObjects": model_objects}, indent=4)
+    with open(output_path, "w") as outfile:
+        outfile.write(json_data)
+
+
+def import_from_json(input_path):
+    """
+    Liest eine JSON-Datei ein und gibt die Inhalte zurück.
+    
+    Args:
+        input_path (str): Pfad zur JSON-Datei.
+    
+    Returns:
+        dict: Geladene JSON-Daten.
+    """
+    with open(input_path, "r") as f:
+        data = json.load(f)
+    return data
+
+
+# Testbare Hauptfunktionalität
+if __name__ == "__main__":
+    # Beispiel: Datei einlesen, verarbeiten und exportieren
+    input_file = "VIS_2024/inputfilereader/test.fdd"
+    json_file = "VIS_2024/inputfilereader/test.json"
+    fds_file = "VIS_2024/inputfilereader/test.fds"
+
+    # 1. Datei importieren und analysieren
+    mbs_objects = import_fdd_file(input_file)
+    print(f"{len(mbs_objects)} MBS-Objekte importiert.")
+
+    # 2. In JSON exportieren
+    export_to_json(mbs_objects, json_file)
+    print(f"Daten in JSON-Datei exportiert: {json_file}")
+
+    # 3. JSON wieder einlesen (Validierung)
+    data = import_from_json(json_file)
+    print("Geladene Daten aus JSON:", data)
+
+    # 4. In FDS exportieren
+    write_fds(mbs_objects, fds_file)
+    print(f"Daten in FDS-Datei exportiert: {fds_file}")
