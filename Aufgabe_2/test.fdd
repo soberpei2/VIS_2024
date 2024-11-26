@@ -6,7 +6,7 @@ x_axis: 1.00000000, 0.00000000, 0.00000000
 y_axis: 0.00000000, 1.00000000, 0.00000000
 z_axis:0.00000000, 0.00000000, 1.00000000
 color: 254 146 146   255
-transparency: 0
+transparency: 50
 initial velocity: 0.000000, 0.000000, 0.000000
 initial omega: 0.000000, 0.000000, 0.000000
 consider vel inertia forces: 0
@@ -25,7 +25,7 @@ x_axis: 1.00000000, 0.00000000, 0.00000000
 y_axis: 0.00000000, 1.00000000, 0.00000000
 z_axis:0.00000000, 0.00000000, 1.00000000
 color: 170 230 228   255
-transparency: 0
+transparency: 50
 initial velocity: 0.000000, 0.000000, 0.000000
 initial omega: 0.000000, 0.000000, 0.000000
 consider vel inertia forces: 0
@@ -88,7 +88,7 @@ $DATAOBJECT_PARAMETER:
 name: periodDuration
 InitialValue: 1.000000
 
-$MEASURE:
+$MEASURE1:
 name: new_measure_0
 body1: new_body_0
 body2: GROUND
@@ -98,7 +98,7 @@ location_body1: 0.000000, 0.000000, 0.000000
 location_body2: 0.000000, 0.000000, 0.000000
 use_initial_value: 1
 
-$MEASURE:
+$MEASURE2:
 name: new_measure_1
 body1: new_body_1
 body2: new_body_0
@@ -144,4 +144,4 @@ constraint icon scale: 0.010000
 force icon scale: 0.010000
 gravity_vector: 0.000, 0.000, -9810.000
 End of activation period: 0.000000
-
+$

@@ -1,126 +1,91 @@
-import uuid
-from vtkmodules.vtkRenderingCore import vtkActor
-
-class mbsObject:
-    def __init__(self,type,subtype,input,parameter):
-        self.__id = uuid.uuid4()
-        self.__type = type
-        self.__subtype = subtype
-        self.actor = vtkActor()
+class ModelObject:
+    """Basisklasse für alle Modellobjekte"""
+    def __init__(self, object_type, subtype, text, parameters):
+        self._type = object_type
+        self._subtype = subtype
+        self.parameters = parameters
         
-        if(isinstance(input,dict)):
-            self.parameter = input
-        else:
-            self.parameter = parameter
+        # Verarbeite den Text, um Parameter zu extrahieren
+        for line in text:
+            if ":" in line:
+                parts = line.split(":", 1)
+                key = parts[0].strip()
+                value = parts[1].strip()
+                for param_key, param_value in self.parameters.items():
+                    if key == param_key:
+                        self._set_parameter_value(param_key, param_value, value)
 
-            for line in input:
-                splitted = line.split(":")
-                value = splitted[1]
-                for block in splitted[2:]:
-                    value = value + ":" + block
+    def _set_parameter_value(self, key, param_info, value):
+        """Setzt den Parameterwert basierend auf dem Typ"""
+        param_type = param_info["type"]
+        if param_type == "float":
+            param_info["value"] = float(value)
+        elif param_type == "vector":
+            param_info["value"] = self._parse_vector(value)
+        elif param_type == "string":
+            param_info["value"] = value.strip()
+        elif param_type == "vectorInt":
+            param_info["value"] = self._parse_vector_int(value)
+        elif param_type == "int":
+            param_info["value"] = int(value)
+        elif param_type == "bool":
+            param_info["value"] = self._parse_bool(value)
 
-                for key in parameter.keys():
-                    if(splitted[0].strip() == key):
-                        if(parameter[key]["type"]=="float"):
-                            parameter[key]["value"] = self.str2float(value)
-                        if(parameter[key]["type"]=="vector"):
-                            parameter[key]["value"] = self.str2floatVector(value)
-                        if(parameter[key]["type"]=="rotMat"):
-                            parameter[key]["value"] = self.str2floatMatrix3x3(value)
-                        if(parameter[key]["type"]=="string"):
-                            parameter[key]["value"] = value
-                        if(parameter[key]["type"]=="color"):
-                            parameter[key]["value"] = self.str2color(value)
-                        if(parameter[key]["type"]=="boolean"):
-                            parameter[key]["value"] = self.str2boolean(value)
-                        if(parameter[key]["type"]=="vec2D"):
-                            parameter[key]["value"] = self.str2vec2D(value)
-                        if(parameter[key]["type"]=="geometry"):
-                            parameter[key]["value"] = self.str2geometry(value)
-    
-    def getId(self):
-        return self.__id
+    def _parse_vector(self, value):
+        """Parst einen Vektor aus dem String"""
+        return [float(v) for v in value.split(",")]
 
-    def getType(self):
-        return self.__type
-    
-    def getSubType(self):
-        return self.__subtype
+    def _parse_vector_int(self, value):
+        """Parst einen Vektor aus Ganzzahlen"""
+        return [int(v) for v in value.split()]
 
-    def getDictionary(self):
-        return {"type": self.__type, \
-                "subtype": self.__subtype, \
-                "parameter": self.parameter}
+    def _parse_bool(self, value):
+        """Parst einen Bool-Wert aus der Eingabe"""
+        return value.lower() in ['true', '1']
 
-    def str2float(self,inString):
-        return float(inString)
+    def write_input_file(self, file):
+        """Schreibt die Objektparameter in die Ausgabedatei"""
+        lines = [f"{self._type} {self._subtype}\n"]
+        for key, param in self.parameters.items():
+            lines.append(f"\t{key} = {self._convert_to_string(param['value'])}\n")
+        lines.append(f"End {self._type}\n%\n")
+        file.writelines(lines)
 
-    def float2str(self,floatVal):
-        return str(floatVal)
+    def _convert_to_string(self, value):
+        """Konvertiert Werte in einen String"""
+        if isinstance(value, list):
+            return " ".join(map(str, value))
+        return str(value)
 
-    def str2floatVector(self,inString):
-        splitted = inString.split(",")
-        return [float(splitted[0]),float(splitted[1]),float(splitted[2])]
 
-    def floatVector2str(self,floatVec):
-        return str(floatVec[0]) + "," + str(floatVec[1]) + "," + str(floatVec[2])
+# Beispiel der Subklassen
+class RigidBody(ModelObject):
+    def __init__(self, text):
+        parameters = {
+            "name": {"type": "string", "value": "UNKNOWN"},
+            "geometry": {"type": "string", "value": "UNKNOWN"},
+            "position": {"type": "vector", "value": [1.0, 1.0, 1.0]},
+            "mass": {"type": "float", "value": 1.0}
+        }
+        super().__init__("rigidBody", "Rigid_EulerParameter_PAI", text, parameters)
 
-    def str2floatMatrix3x3(self,inString):
-        retMat = [[1,0,0],[0,1,0],[0,0,1]]
-        splitted = inString.split(",")
-        for i in range(0,3):
-            for j in range(0,3):
-                retMat[j][i] = float(splitted[i+3*j])
-        return retMat
 
-    def floatMatrix3x3_2str(self,floatMatrix3x3):
-        return  str(floatMatrix3x3[0][0]) + "," + str(floatMatrix3x3[0][1]) + "," + str(floatMatrix3x3[0][2]) + "," + \
-                str(floatMatrix3x3[1][0]) + "," + str(floatMatrix3x3[1][1]) + "," + str(floatMatrix3x3[1][2]) + "," + \
-                str(floatMatrix3x3[2][0]) + "," + str(floatMatrix3x3[2][1]) + "," + str(floatMatrix3x3[2][2])
-    
-    def str2color(self,inString):
-        splitted = inString.split(" ")
-        while("" in splitted):
-            splitted.remove("")
-        return [int(splitted[0]),int(splitted[1]),int(splitted[2]),int(splitted[3])]
-    
-    def color2str(self,color):
-        return color[0] + " " + color[1] + " " + color[2] + "   " + color[3]
-    
-    def str2boolean(self,inString):
-        if(inString.strip()=="1"):
-            return True
-        else:
-            return False
-        
-    def boolean2str(self,boolVal):
-        if(boolVal==True):
-            return "1"
-        else:
-            return "0"
+class Constraint(ModelObject):
+    def __init__(self, text):
+        parameters = {
+            "name": {"type": "string", "value": "UNKNOWN"},
+            "body1": {"type": "string", "value": "UNKNOWN"},
+            "body2": {"type": "string", "value": "UNKNOWN"}
+        }
+        super().__init__("constraint", "Rigid_EulerParameter_PAI", text, parameters)
 
-    def str2vec2D(self,inString):
-        splitted = inString.split(",")
-        while("" in splitted):
-            splitted.remove("")
-        return [int(splitted[0]),int(splitted[1])]
-    
-    def vec2D2str(self,vec2D):
-        return str(vec2D[0]) + "," + str(vec2D[1])
-    
-    def str2geometry(self,inString):
-        splitted = inString.split(" ")
-        while("" in splitted):
-            splitted.remove("")
-        if len(splitted)==1:
-            splitted = inString.split("\\")
-            return [splitted[-1]]
-        elif len(splitted)==2:
-            return [splitted[0], float(splitted[1])]
-        elif len(splitted)==3:
-            return [splitted[0], float(splitted[1]), float(splitted[2])]
-        else:
-            return ""
-        
-    def show(self, renderer):
-        renderer.AddActor(self.actor)
+class GenericForce(ModelObject):
+    def __init__(self, text):
+        parameters = {
+            "name": {"type": "string", "value": "UNKNOWN"},
+            "force": {"type": "vector", "value": [1.0, 0.0, 0.0]}
+        }
+        super().__init__("force_GenericForce", "GenericForce", text, parameters)
+
+
+# Weitere Subklassen wie `GenericTorque`, `Measure1`, `Measure2` und `Gravity` können hier auf ähnliche Weise hinzugefügt werden.
