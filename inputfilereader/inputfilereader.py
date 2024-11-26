@@ -115,25 +115,3 @@ def import_from_json(input_path):
     return data
 
 
-# Testbare Hauptfunktionalität
-if __name__ == "__main__":
-    # Beispiel: Datei einlesen, verarbeiten und exportieren
-    input_file = "VIS_2024/inputfilereader/test.fdd"
-    json_file = "VIS_2024/inputfilereader/test.json"
-    fds_file = "VIS_2024/inputfilereader/test.fds"
-
-    # 1. Datei importieren und analysieren
-    mbs_objects = import_fdd_file(input_file)
-    print(f"{len(mbs_objects)} MBS-Objekte importiert.")
-
-    # 2. In JSON exportieren
-    export_to_json(mbs_objects, json_file)
-    print(f"Daten in JSON-Datei exportiert: {json_file}")
-
-    # 3. JSON wieder einlesen (Validierung)
-    data = import_from_json(json_file)
-    print("Geladene Daten aus JSON:", data)
-
-    # 4. In FDS exportieren
-    write_fds(mbs_objects, fds_file)
-    print(f"Daten in FDS-Datei exportiert: {fds_file}")

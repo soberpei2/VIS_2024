@@ -73,27 +73,3 @@ class mbsModel:
         return actors
 
 
-# Beispiel zur Nutzung
-
-if __name__ == "__main__":
-    # Erstellen eines Modells
-    model = mbsModel()
-
-    # Hinzufügen von Objekten zum Modell
-    model.add_object(rigidBody(["mass: 5.0", "COG: 1.0, 2.0, 3.0"]))
-    model.add_object(force(["magnitude: 10.0", "direction: 1.0, 0.0, 0.0"]))
-
-    # Anzeigen der Objekte im Modell
-    model.show_model()
-
-    # Schreiben des Modells in eine Input-Datei
-    model.write_model_to_file("model_input.txt")
-
-    # Laden des Modells aus einer Input-Datei
-    new_model = mbsModel()
-    new_model.load_from_inputfile("model_input.txt")
-    new_model.show_model()  # Überprüfen des geladenen Modells
-
-    # Holen der VTK Actors für Visualisierung
-    actors = new_model.get_vtk_actors()
-    # Hier können Sie die VTK Actors in einer VTK Rendering-Umgebung anzeigen
