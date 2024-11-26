@@ -30,6 +30,8 @@ for obj in listOfObjects:
     elif isinstance(obj, inputfilereader.mbsObject.force): 
         renderer.AddActor(obj.actor1)  # Erste Kugel
         renderer.AddActor(obj.actor2)  # Zweite Kugel
+        renderer.AddActor(obj.text_actor1)
+        renderer.AddActor(obj.text_actor2)
         renderer.AddActor(obj.force_line_actor)  # Verbindungslinie
         renderer.AddActor(obj.direction_line_actor)  # Richtungslinie
 
