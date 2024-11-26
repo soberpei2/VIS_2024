@@ -44,52 +44,8 @@ class mbsObject:
                     elif(parameter[key]["type"] == "geom_path"):                        # Behandlung, wenn key ein geom_path ist
                         parameter[key]["value"] = self.str2str(line[10:])
 
-    def forceArrow(self, direction, position, color, renderer):
-        """"
-        size = 10
-        arrow = vtk.vtkArrowSource()
-        self.mapper.SetInputConnection(arrow.GetOutputPort())
-        
-        self.actor.SetMapper(self.mapper)
-
-        #Achtung direction muss Einheitsvektor sein
-        directionLength = np.linalg.norm(direction)
-        directionNorm = direction / directionLength
-
-        directionArrow = [1, 0, 0]      
-        axis = np.cross(directionArrow,directionNorm)
-        angle = math.degrees(math.acos(np.dot(directionArrow,directionNorm)))
-        
-        # vectorText = vtk.vtkVectorText()
-        # vectorText.SetText(text)
-        # vectorText
-        # textMapper = vtk.vtkPolyDataMapper()
-        # textMapper.SetInputConnection(vectorText.GetOutputPort())
-        
-        # transformText = vtk.vtkTransform()
-        # transformText.Scale(0.1,0.1,0.1)
-
-        # textActor = vtk.vtkFollower()
-        # textActor.SetMapper(textMapper)
-        # textActor.SetUserTransform(transformText)
-        # textActor.SetPosition(0, 1, 0)
-
-        # assembly = vtk.vtkAssembly()
-        # assembly.AddPart(actor)
-        # assembly.AddPart(textActor)
-
-        transform = vtk.vtkTransform()
-        transform.Translate(position[0], position[1], position[2])
-        transform.RotateWXYZ(angle, axis[0], axis[1], axis[2])
-
-        self.actor.SetUserTransform(transform)
-        self.actor.SetScale(size,size,size)
-
-        #Actor zum Renderer hinzufügen
-        renderer.AddActor(self.actor)
-        """
+    def forceArrow(self, direction, position, color, size, renderer):
         #Pfeil erstellen
-        size = 10
         arrow = vtk.vtkArrowSource()
         self.mapper.SetInputConnection(arrow.GetOutputPort())
         self.actor.SetMapper(self.mapper)
@@ -120,8 +76,7 @@ class mbsObject:
             xdir[0], ydir[0], zdir[0], 0,
             xdir[1], ydir[1], zdir[1], 0,
             xdir[2], ydir[2], zdir[2], 0,
-            0, 0, 0, 1
-        ])
+            0, 0, 0, 1])
 
         #Anwenden der Transformation
         self.actor.SetUserTransform(transform)
@@ -336,7 +291,7 @@ class genericForce(mbsObject):
         """
         Visualisierung des rigidBodies 
         """
-        self.forceArrow(self.parameter["direction"]["value"],self.parameter["PointOfApplication_Body1"]["value"],[1,0,0],renderer)
+        self.forceArrow(self.parameter["direction"]["value"],self.parameter["PointOfApplication_Body1"]["value"],[1,0,0],15,renderer)
 
 
 class genericTorque(mbsObject):
