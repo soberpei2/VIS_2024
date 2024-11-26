@@ -32,7 +32,7 @@ listOfActors.append(axes)        # Hinzufügen zur Aktorliste
 ren1 = vtk.vtkRenderer()
 for Actor in listOfActors:
     ren1.AddActor(Actor)
-ren1.SetBackground(0.255, 0.255, 0.255)
+ren1.SetBackground(1, 1, 1)
 
 # Definieren einer Leinwand
 renWin = vtk.vtkRenderWindow()
