@@ -43,4 +43,3 @@ def main():
 # Der Hauptteil des Programms wird nur ausgeführt, wenn dieses Skript direkt ausgeführt wird
 if __name__ == "__main__":
     main()  # Führe die main Funktion aus
-9
