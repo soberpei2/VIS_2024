@@ -255,7 +255,7 @@ class mbsObject:
         return planeActor
     #===================================================================================================
 
-    # Memberfunktion - Erstellen eines Vektor-Aktors
+    # Memberfunktion - Erstellen eines Pfeil-Aktors
     #===============================================
     def getArrow(self, mbsObject):
         # Erzeugen einer Pfeilquelle
@@ -295,6 +295,55 @@ class mbsObject:
         # Rückgabe des Aktors
         return arrowActor
     #===================================================================================================
+
+    # Memberfunktion - Erstellen eines Vektor-Aktors
+    #===============================================
+    def getVector(self, mbsObject):
+        # Erzeugen einer Pfeilquelle
+        vector = vtk.vtkArrowSource()
+  
+        # Definieren des Start- und Endpunktes
+        startPoint = mbsObject.parameter["PointOfApplication_Body1"]["value"]
+        endPoint = startPoint + mbsObject.parameter["direction"]["value"] * 5
+
+        # Anlegen eines Vektors
+        vec = [0] * 3
+
+        # Berechnen des Vektors
+        vtk.vtkMath.Subtract(endPoint, startPoint, vec)
+        length = vtk.vtkMath.Norm(vec)
+        vtk.vtkMath.Normalize(vec)
+
+        # Erzeugen eines Filters mit dem Eingang body
+        vectorMapper = vtk.vtkPolyDataMapper()
+        vectorMapper.SetInputConnection(vector.GetOutputPort())
+
+        # Erzeugen eines Aktors (Filter als Eingang)
+        vectorActor = vtk.vtkActor()
+        vectorActor.SetMapper(vectorMapper)
+
+        # Farbe des Aktors ändern
+        vectorActor.GetProperty().SetColor(0, 0, 0)
+
+        # Transformation erstellen
+        transform = vtk.vtkTransform()
+
+        # Schwerkraft in y-Richtung -> Drehung um z-Achse um 90°
+        if mbsObject.parameter["gravity_vector"]["value"][1] != 0:
+            transform.RotateZ(-90)
+
+        # Schwerkraft in z-Richtung -> Drehung um y-Achse um 90°
+        if mbsObject.parameter["gravity_vector"]["value"][2] != 0:
+            transform.RotateY(90)   
+
+        # Anwenden der Transformation
+        vectorActor.SetUserTransform(transform)
+        vectorActor.SetScale(10,10,10)
+
+        # Rückgabe des Aktors
+        return vectorActor
+    #===================================================================================================
+
 
     # Memberfunktion - Erstellen eines Aktors lt. .fdd-File
     #======================================================
