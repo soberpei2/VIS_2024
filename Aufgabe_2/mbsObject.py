@@ -58,7 +58,7 @@ class ModelObject:
         return str(value)
 
 
-# Beispiel der Subklassen
+# Subklassen
 class RigidBody(ModelObject):
     def __init__(self, text):
         parameters = {
@@ -86,6 +86,3 @@ class GenericForce(ModelObject):
             "force": {"type": "vector", "value": [1.0, 0.0, 0.0]}
         }
         super().__init__("force_GenericForce", "GenericForce", text, parameters)
-
-
-# Weitere Subklassen wie `GenericTorque`, `Measure1`, `Measure2` und `Gravity` können hier auf ähnliche Weise hinzugefügt werden.

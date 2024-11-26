@@ -1,6 +1,6 @@
 import os
 import json
-import mbsObject
+import mbsObject as mo
 
 # Diese Funktion liest die Datei und extrahiert die Modelle
 def process_input_file(input_file):
@@ -47,7 +47,7 @@ def process_input_file(input_file):
         current_text_block.append(line)
     
     # Ausgabe der Modelle als JSON
-    model_data = [{"parameter": obj.parameter} for obj in model_objects]
+    model_data = [{"parameter": obj.parameters} for obj in model_objects]
     with open("output_data.json", "w") as outfile:
         json.dump({"modelObjects": model_data}, outfile)
     
@@ -64,5 +64,5 @@ def process_input_file(input_file):
     print(f"Verarbeitete {len(model_objects)} Objekte.")
 
 # Aufruf der Funktion, um die Eingabedatei zu verarbeiten
-input_file = "path/to/your/input_file.fdd"  # Beispielpfad
+input_file = "C://Users//Stefan//Documents//FH-Wels/VIS3IL//VIS_2024/Aufgabe_2//input_file.fdd"  
 process_input_file(input_file)

@@ -4,12 +4,12 @@ import json
 def visualize():
     """Visualisiert die Modelle basierend auf den geladenen Daten"""
     # Laden der JSON-Daten
-    with open("Aufgabe_2//test.json", "r") as json_file:
+    with open("Aufgabe_2/test.json", "r") as json_file:
         data = json.load(json_file)
     
     # Visualisierung 
-    for obj in data["modedelObject"]:
-        # Parametern v Visualisierungen erzeugen
+    for obj in data["modelObject"]:
+        # Parametern für Visualisierungen erzeugen
         position = obj["parameter"].get("position", [0, 0, 0])
         color = obj["parameter"].get("color", [0, 0, 0])
         
