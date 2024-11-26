@@ -22,7 +22,7 @@ def readInputFile(filePath):
     listOfMbsObjects = []  # Liste, in der die erstellten Objekte gespeichert werden
 
     # Schlüsselwörter, nach denen in der Datei gesucht wird
-    search4Objects = ["RIGID_BODY", "CONSTRAINT", "SETTINGS","FORCE_GenericForce"]
+    search4Objects = ["RIGID_BODY", "CONSTRAINT", "SETTINGS","FORCE_GenericForce","FORCE_GenericTorque"]
 
     # Datei zeilenweise durchgehen
     for line in fileContent:
@@ -38,6 +38,8 @@ def readInputFile(filePath):
                     listOfMbsObjects.append(mbsObject.settings(currentTextBlock))
                 elif currentBlockType == "FORCE_GenericForce":
                     listOfMbsObjects.append(mbsObject.force(currentTextBlock))
+                elif currentBlockType == "FORCE_GenericTorque":
+                    listOfMbsObjects.append(mbsObject.torque(currentTextBlock))
                 # Nach Verarbeitung des Blocks wird der Typ zurückgesetzt
                 currentBlockType = ""
 

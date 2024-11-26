@@ -290,7 +290,7 @@ class settings(mbsObject):
 
         # Definiere Start- und Endpunkte des Pfeils
         start_point = [0, 0, 0]  # Startpunkt des Pfeils
-        end_point = [0, 0, -9.81]  # Endpunkt des Pfeils
+        end_point = self.parameter["gravity_vector"]["value"]  # Endpunkt des Pfeils
 
         # Normalisiere den Vektor zwischen Start- und Endpunkt
         normalized_x = [0] * 3
@@ -353,11 +353,146 @@ class force(mbsObject):
             "name": {"type": "string", "value": "leer"}, # Default Leer
             "body1": {"type": "string", "value": "leer"}, # name  body 1
             "body2": {"type": "string", "value": "leer"}, # name body 2
+            "PointOfApplication_Body1": {"type": "vector", "value": [0., 0., 0.]}, # Kraftrichtung
+            "PointOfApplication_Body2": {"type": "vector", "value": [0., 0., 0.]}, # Kraftrichtung
             "mode": {"type": "string", "value": "leer"}, # Art der Kraft
             "direction": {"type": "vector", "value": [0, 0, 0]}, # Kraftrichtung
+            "ForceExpression": {"type": "string", "value": "leer"}, # Beschreibung der Kraft
         }
 
         mbsObject.__init__(self,"FORCE","GenericForce",text,parameter)
+
+
+        self.actor1 = vtk.vtkActor()
+        self.actor2 = vtk.vtkActor()
+        # Nutze einen Punkt und Linien für die Darstellung
+        sphere_source1 = vtk.vtkSphereSource()
+        sphere_source1.SetCenter(self.parameter["PointOfApplication_Body1"]["value"])
+        sphere_source1.SetRadius(1)
+
+        # Mapping und Actor
+        sphere_mapper1 = vtk.vtkPolyDataMapper()
+        sphere_mapper1.SetInputConnection(sphere_source1.GetOutputPort())
+         # Actor für die Kugel
+        self.actor1.SetMapper(sphere_mapper1)
+        self.actor1.GetProperty().SetColor(1.0, 1.0, 0.0)  # Gelbe Farbe für Constraints
+
+        # Nutze einen Punkt und Linien für die Darstellung
+        sphere_source2 = vtk.vtkSphereSource()
+        sphere_source2.SetCenter(self.parameter["PointOfApplication_Body2"]["value"])
+        sphere_source2.SetRadius(1)
+
+        # Mapping und Actor
+        sphere_mapper2 = vtk.vtkPolyDataMapper()
+        sphere_mapper2.SetInputConnection(sphere_source2.GetOutputPort())
+         # Actor für die Kugel
+        self.actor2.SetMapper(sphere_mapper2)
+        self.actor2.GetProperty().SetColor(1.0, 0.0, 1.0)  # Gelbe Farbe für Constraints
+
+        # Initialisieren von force_line_actor (wichtig für die Darstellung)
+        self.force_line_actor = vtk.vtkActor()  # Erstelle den Actor für die Kraftlinie
+        self.direction_line_actor = vtk.vtkActor()  # Erstelle den Actor für die Richtungslinie
+        # Punkte
+        point1 = self.parameter["PointOfApplication_Body1"]["value"]
+        point2 = self.parameter["PointOfApplication_Body2"]["value"]
+        direction = self.parameter["direction"]["value"]
+
+                # Skalierung der Richtung für Visualisierung
+        scale = 10.0  # Skaliere die Richtung für die Sichtbarkeit
+        scaled_direction = [p1 + scale * d for p1, d in zip(point1, direction)]
+
+        # Linie zwischen Body1 und Body2
+        line_source1 = vtk.vtkLineSource()
+        line_source1.SetPoint1(point1)
+        line_source1.SetPoint2(point2)
+
+        line_mapper1 = vtk.vtkPolyDataMapper()
+        line_mapper1.SetInputConnection(line_source1.GetOutputPort())
+
+        # Linie für die Richtung der Kraft
+        line_source2 = vtk.vtkLineSource()
+        line_source2.SetPoint1(point1)
+        line_source2.SetPoint2(scaled_direction)
+
+        line_mapper2 = vtk.vtkPolyDataMapper()
+        line_mapper2.SetInputConnection(line_source2.GetOutputPort())
+
+        # Mapping auf Actor
+        self.force_line_actor.SetMapper(line_mapper1)  # Body1 zu Body2
+        self.force_line_actor.GetProperty().SetColor(0.0, 1.0, 0.0)  # Grün
+
+        self.direction_line_actor = vtk.vtkActor()  # Kraftlinie
+        self.direction_line_actor.SetMapper(line_mapper2)
+        self.direction_line_actor.GetProperty().SetColor(1.0, 0.0, 0.0)  # Rot
+      
+
+
+    """
+    def force_arrow(self):
+        colors = vtk.vtkNamedColors()
+
+        # Definiere Start- und Endpunkte des Pfeils
+        start_point = [0, 0, 0]  # Startpunkt des Pfeils
+        end_point = self.parameter["gravity_vector"]["value"]  # Endpunkt des Pfeils
+
+        # Normalisiere den Vektor zwischen Start- und Endpunkt
+        normalized_x = [0] * 3
+        vtk.vtkMath.Subtract(end_point, start_point, normalized_x)
+        length = vtk.vtkMath.Norm(normalized_x)  # Länge des Pfeils
+        vtk.vtkMath.Normalize(normalized_x)  # Vektor normalisieren
+
+        # Erstelle einen beliebigen Vektor für das Kreuzprodukt
+        arbitrary = [1, 0, 0]  # Beliebiger Vektor (nicht parallel zu normalized_x)
+        normalized_z = [0] * 3
+        vtk.vtkMath.Cross(normalized_x, arbitrary, normalized_z)
+        vtk.vtkMath.Normalize(normalized_z)
+
+        # Berechne die Y-Achse
+        normalized_y = [0] * 3
+        vtk.vtkMath.Cross(normalized_z, normalized_x, normalized_y)
+
+        # Erstelle eine 3D-Rotationsmatrix
+        matrix = vtk.vtkMatrix4x4()
+        matrix.Identity()
+        for i in range(3):
+            matrix.SetElement(i, 0, normalized_x[i])  # X-Achse
+            matrix.SetElement(i, 1, normalized_y[i])  # Y-Achse
+            matrix.SetElement(i, 2, normalized_z[i])  # Z-Achse
+
+        # Transformationen anwenden
+        transform = vtk.vtkTransform()
+        transform.Translate(start_point)  # Verschieben zum Startpunkt
+        transform.Concatenate(matrix)  # Rotationsmatrix anwenden
+        transform.Scale(2, 2, 2)  # Skaliere den Pfeil
+
+        # Berechne die Mitte des normierten Vektors
+        middle_of_vector = [start_point[i] + normalized_x[i] * (1 / 2) * 2 for i in range(3)]
+
+        # Transformiere die PolyData (Pfeil-Daten) direkt
+        transform_pd = vtk.vtkTransformPolyDataFilter()
+        transform_pd.SetTransform(transform)
+        transform_pd.SetInputConnection(self.arrow_source.GetOutputPort())  # Wende Transformation auf den Pfeil an
+
+        # Mapper und Actor für den Pfeil erstellen
+        arrow_mapper = vtk.vtkPolyDataMapper()
+        arrow_mapper.SetInputConnection(transform_pd.GetOutputPort())  # Die transformierten Pfeil-Daten verwenden
+        self.actor.SetMapper(arrow_mapper)
+        self.actor.GetProperty().SetColor(colors.GetColor3d('White'))  # Pfeilfarbe
+        
+        # Text erstellen und anzeigen 
+        atext = vtk.vtkVectorText()
+        atext.SetText('Schwerkraftrichtung')
+        text_mapper = vtk.vtkPolyDataMapper()
+        text_mapper.SetInputConnection(atext.GetOutputPort())
+        self.text_actor = vtk.vtkFollower()
+        self.text_actor.SetMapper(text_mapper)
+        self.text_actor.SetScale(0.2, 0.2, 0.2)  # Textgröße skalieren
+        self.text_actor.AddPosition(middle_of_vector[0] + 0.1, middle_of_vector[1] + 0.1, middle_of_vector[2] + 0.3)  # Textposition
+        self.text_actor.GetProperty().SetColor(colors.GetColor3d('White'))  # Textfarbe
+    """
+
+    
+
 
 class torque(mbsObject):
     def __init__(self,text):
@@ -367,6 +502,7 @@ class torque(mbsObject):
             "body2": {"type": "string", "value": "leer"}, # name body 2
             "mode": {"type": "string", "value": "leer"}, # Art der Kraft
             "direction": {"type": "vector", "value": [0, 0, 0]}, # Kraftrichtung
+            "TorqueExpression": {"type": "string", "value": "leer"}, # Beschreibung des Moments
         }
 
         mbsObject.__init__(self,"FORCE","GenericTorque",text,parameter)

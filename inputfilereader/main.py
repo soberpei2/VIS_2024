@@ -27,6 +27,11 @@ for obj in listOfObjects:
     elif isinstance(obj, inputfilereader.mbsObject.settings):  # Settings-Objekt (einschließlich Gravitationsvektor)
         renderer.AddActor(obj.actor)
         renderer.AddActor(obj.text_actor)
+    elif isinstance(obj, inputfilereader.mbsObject.force): 
+        renderer.AddActor(obj.actor1)  # Erste Kugel
+        renderer.AddActor(obj.actor2)  # Zweite Kugel
+        renderer.AddActor(obj.force_line_actor)  # Verbindungslinie
+        renderer.AddActor(obj.direction_line_actor)  # Richtungslinie
 
 
 # Koordinatensystem hinzufügen

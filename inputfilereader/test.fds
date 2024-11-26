@@ -52,13 +52,25 @@ Constraint Constraint_EulerParameter_PAI
 	az = 0
 EndConstraint
 %
-FORCE_GenericTorque 
+FORCE GenericForce
 	name =  new_force_0
 	body1 =  new_body_0
 	body2 =  new_body_1
+	PointOfApplication_Body1 = 10.0,20.0,30.0
+	PointOfApplication_Body2 = 0.0,0.0,0.0
 	mode =  Space fixed
 	direction = -1.0,0.0,0.0
-EndFORCE_GenericTorque
+	ForceExpression =  sin(2*pi/PARVAL[periodDuration]*SIMTIME[]) 
+EndFORCE
+%
+FORCE GenericTorque
+	name =  new_torque_1
+	body1 =  new_body_1
+	body2 =  new_body_0
+	mode =  Body fixed
+	direction = 0.0,1.0,0.0
+	TorqueExpression =  STEP[SIMTIME[],0,0,1,1,cosine]
+EndFORCE
 %
 Settings Visualization
 	gravity_vector = 0.0,0.0,-9810.0
