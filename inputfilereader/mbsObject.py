@@ -45,3 +45,5 @@ class rigidBody(mbsObject):
         }
 
         mbsObject.__init__(self,"Body","Rigid_EulerParameter_PAI",text,parameter)
+
+        
