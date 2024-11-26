@@ -66,3 +66,4 @@ def writeFdsFile(listOfMbsObjects, fdsPath):
     with open(fdsPath, "w") as fds:
         for mbs_object in listOfMbsObjects:
             mbs_object.writeInputfile(fds)
+            

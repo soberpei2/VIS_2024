@@ -153,3 +153,4 @@ class settings(mbsObject):
             self.textactor.SetInput("GRAVITY (x y z) = " + self.vector2str(self.parameter["gravity_vector"]["value"]))
         
         renderer.AddActor2D(self.textactor)
+        
