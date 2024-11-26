@@ -19,6 +19,7 @@ class genericForce(mbsObject):
         point = self.parameter["PointOfApplication_Body1"]["value"]
         direction = self.parameter["direction"]["value"]
         #force_expr = self.parameter["ForceExpression"]["value"]
+        force_expr = 10.
         
 
         # Berechne die Kraftgröße (hier als statischer Wert)

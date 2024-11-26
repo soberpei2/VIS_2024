@@ -6,7 +6,6 @@ from force import genericForce
 
 # Datei einlesen
 file = "Aufgabe_2/test.fdd"
-
 fileContent = Inputfilereader_modularisiert.inputFileReader(file)
 
 # Datei analysieren
@@ -18,31 +17,42 @@ sim_time = 0.5
 # JSON erstellen
 Inputfilereader_modularisiert.write_json(listOfMbsObjects, "Aufgabe_2/test.json")
 
-
 # JSON lesen
 data = Inputfilereader_modularisiert.read_json("Aufgabe_2/test.json")
 
 # FDS schreiben
-Inputfilereader_modularisiert.write_fds(listOfMbsObjects, "Aufgabe_2/test.fds")# Iteriere durch die Liste der MBS-Objekte und visualisiere jedes mit vtk_body
-
+Inputfilereader_modularisiert.write_fds(listOfMbsObjects, "Aufgabe_2/test.fds")
 
 # Erstellen des Renderers und des Renderfensters
 renderer = vtk.vtkRenderer()
 renderWindow = vtk.vtkRenderWindow()
 renderWindow.AddRenderer(renderer)
-renderWindow.SetSize(800, 800)
+renderWindow.SetSize(800, 800)  # Fenstergröße setzen
+
+# Setze den weißen Hintergrund
+renderer.SetBackground(1.0, 1.0, 1.0)  # RGB-Werte für Weiß
 
 # Erstellen eines Interactors
 iren = vtk.vtkRenderWindowInteractor()
 iren.SetRenderWindow(renderWindow)
 
-# Iteriere durch die Liste der MBS-Objekte und visualisiere jedes mit vtk_body
+# Kamera erstellen und anpassen
+camera = vtk.vtkCamera()
+renderer.SetActiveCamera(camera)
+camera.SetPosition(0, 0, 100)  # Kamera positionieren, so dass alle Objekte sichtbar sind
+camera.SetFocalPoint(0, 0, 0)
+camera.SetViewUp(0, 1, 0)
+
+# Iteriere durch die Liste der MBS-Objekte und visualisiere jedes
 for obj in listOfMbsObjects:
     if isinstance(obj, rigidbody):  # Sicherstellen, dass es ein Rigid Body ist
         obj.vtk_body(renderer)  # Füge das Objekt dem gemeinsamen Renderer hinzu
     elif isinstance(obj, constraint):
         obj.vtk_constraint(renderer)  # Falls es sich um ein Constraint handelt, visualisieren
     elif isinstance(obj, genericForce):  # Wenn es sich um eine Kraft handelt
+        # Kraft visualisieren
+        obj.parameter["direction"]["value"] = [1.0, 0.0, 0.0]  # Beispielrichtung
+        obj.parameter["PointOfApplication_Body1"]["value"] = [10.0, 10.0, 10.0]  # Beispielpunkt
         obj.vtk_force(renderer)  # Visualisiere die Kraft
 
 # Koordinatensystem hinzufügen
@@ -59,7 +69,7 @@ iren.Start()
 # Anzahl der Objekte ausgeben
 print(f"Anzahl der MBS-Objekte: {len(listOfMbsObjects)}")
 
-# Ausgabe der Kraftparameter (Optional, falls mehr Informationen benötigt werden)
+# Ausgabe der Kraftparameter (Optional)
 for obj in listOfMbsObjects:
     if isinstance(obj, genericForce):
-        print(f"Kraftname: {obj.name}, Punkt: {obj.pointOfApplication_body1}, Richtung: {obj.direction}, Magnitude: 10")
+        print(f"Kraftname: {obj.name}, Punkt: {obj.parameter['PointOfApplication_Body1']['value']}, Richtung: {obj.parameter['direction']['value']}, Magnitude: 10")
