@@ -44,11 +44,23 @@ def create_gravity_actor(vector):
     
     
     arrow_source = vtk.vtkArrowSource()
-    direction = [1,0,0]
 
-    vectorNormalized = vector / np.linalg.norm(vector)
-    rotationvector = np.cross(direction,vectorNormalized)
-    angle = math.degrees(np.acos(np.dot(direction,vectorNormalized)))   #Umrechnen in grad
+    vectorNormalized = vector / np.linalg.norm(vector)  #Vektor normieren
+    direction = [1, 0, 0]
+
+    if np.array_equal(direction,vectorNormalized):
+        rotationvector = [0,1,0]
+        angle = 0
+    elif np.array_equal(direction,-vectorNormalized):
+        rotationvector = [0,1,0]
+        angle = 180
+    else:
+        rotationvector = np.cross(direction,vectorNormalized)
+        angle = np.degrees(np.acos(np.dot(direction,vectorNormalized)))
+
+
+
+
 
     # Transformiere den Pfeil basierend auf Richtung und Größe
     transform = vtk.vtkTransform()
@@ -58,19 +70,8 @@ def create_gravity_actor(vector):
     scale_factor = np.linalg.norm(vector) / 1000.0  # Skaliere den Pfeil relativ zur Stärke
     transform.Scale(scale_factor, scale_factor, scale_factor)
 
-    '''
-    # Normalisiere die Richtung
-    norm = (sum(d ** 2 for d in direction) ** 0.5)
-    direction = [d / norm for d in direction]
-    transform.RotateWXYZ(0, *direction)  # Rotation optional anpassen
-    
-    transform_filter = vtk.vtkTransformPolyDataFilter()
-    transform_filter.SetTransform(transform)
-    transform_filter.SetInputConnection(arrow_source.GetOutputPort())
-    '''
     mapper = vtk.vtkPolyDataMapper()
     mapper.SetInputConnection(arrow_source.GetOutputPort())
-
 
     actor = vtk.vtkActor()
     actor.SetUserTransform(transform)
@@ -195,12 +196,7 @@ def visualize():
 
     # Forces (Schwerkraft) hinzufügen
     for force in forces:
-        '''
-        position = force["position"]
-        direction1 = force["PointOfApplication_Body1"]
-        direction2 = force["PointOfApplication_Body2"]
-        magnitude = force["magnitude"]
-        '''
+
         vector = force["gravity_vector"]
         actor = create_gravity_actor(vector)
         renderer.AddActor(actor)
