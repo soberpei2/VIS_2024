@@ -4,7 +4,8 @@ import os
 class mbsObject:
     def __init__(self,type,subtype,text,parameter):
         self.__type = type
-        self.__subtype = subtype
+        self._subtype = subtype
+        self._symbolsScale = 10.
         self.parameter = parameter
         self.actors = []
 
@@ -28,7 +29,7 @@ class mbsObject:
     
     def writeSolverInput(self,file):
         text = []
-        text.append(self.__type + " " + self.__subtype + "\n")
+        text.append(self.__type + " " + self._subtype + "\n")
         for key in self.parameter.keys():
             if(self.parameter[key]["type"] == "float"):
                 text.append("\t"+key+" = "+self.float2str(self.parameter[key]["value"])+"\n")

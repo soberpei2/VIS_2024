@@ -47,20 +47,18 @@ class measure(mbsObject):
             "Z": (0, 0, 1),
         }
 
-        scale = 10.0
-
         if self.__subtype == "Translational":
             for i, axis in enumerate(["X", "Y", "Z"]):
                 start = [0, 0, 0]
                 end = [0, 0, 0]
-                end[i] = scale
+                end[i] = self._symbolsScale
                 line = vtkLineSource()
                 line.SetPoint1(*start)
                 line.SetPoint2(*end)
 
                 tube = vtkTubeFilter()
                 tube.SetInputConnection(line.GetOutputPort())
-                tube.SetRadius(0.05*scale)
+                tube.SetRadius(0.05*self._symbolsScale)
                 tube.SetNumberOfSides(50) 
                 tube.CappingOn()
 
@@ -86,7 +84,7 @@ class measure(mbsObject):
 
             tube = vtkTubeFilter()
             tube.SetInputConnection(line.GetOutputPort())
-            tube.SetRadius(0.025*scale)
+            tube.SetRadius(0.025*self._symbolsScale)
             tube.SetNumberOfSides(50) 
             tube.CappingOn()
 
@@ -105,15 +103,15 @@ class measure(mbsObject):
 
             center = [0, 0, 0]
 
-            start = center - 0.5*normal*scale
-            end = center + 0.5*normal*scale
+            start = center - 0.5*normal*self._symbolsScale
+            end = center + 0.5*normal*self._symbolsScale
             axis = vtkLineSource()
             axis.SetPoint1(*start)
             axis.SetPoint2(*end)
 
             axisTube = vtkTubeFilter()
             axisTube.SetInputConnection(axis.GetOutputPort())
-            axisTube.SetRadius(0.05*scale)
+            axisTube.SetRadius(0.05*self._symbolsScale)
             axisTube.SetNumberOfSides(50) 
             axisTube.CappingOn()
 
@@ -128,13 +126,13 @@ class measure(mbsObject):
             arc = vtkArcSource()
             arc.SetCenter(center)
 
-            arc.SetPoint1(vec2*scale)
-            arc.SetPoint2(vec3*scale)
+            arc.SetPoint1(vec2*self._symbolsScale)
+            arc.SetPoint2(vec3*self._symbolsScale)
             arc.SetResolution(10)
 
             tube = vtkTubeFilter()
             tube.SetInputConnection(arc.GetOutputPort())
-            tube.SetRadius(0.05*scale)
+            tube.SetRadius(0.05*self._symbolsScale)
             tube.SetNumberOfSides(50)  # Glätte der Röhrenoberfläche
             tube.CappingOn()
 
@@ -146,15 +144,15 @@ class measure(mbsObject):
             tube_actor.SetMapper(tube_mapper)
 
             arrow = vtkConeSource()
-            arrow.SetRadius(0.2*scale)  # Radius der Spitze
-            arrow.SetHeight(0.5*scale)  # Höhe der Spitze
+            arrow.SetRadius(0.2*self._symbolsScale)  # Radius der Spitze
+            arrow.SetHeight(0.5*self._symbolsScale)  # Höhe der Spitze
             arrow.SetResolution(50)
 
             arrow_mapper = vtkPolyDataMapper()
             arrow_mapper.SetInputConnection(arrow.GetOutputPort())
 
             arrow_transform = vtkTransform()
-            arrow_transform.Translate(vec3*scale)
+            arrow_transform.Translate(vec3*self._symbolsScale)
             angle = np.arccos(np.dot(vec3, vec2))*180/np.pi
             arrow_transform.RotateZ(90+angle)
 

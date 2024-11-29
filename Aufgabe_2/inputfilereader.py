@@ -1,9 +1,9 @@
 
 import body
 import constraint
-#import force
+import force
 import measure
-#import dataobject
+import dataobject
 
 import json
 
@@ -16,7 +16,7 @@ def readInput(path2File):
     currentBlockType = ""
     currentTextBlock = []
     listOfMbsObjects = []
-    search4Objects  = ["RIGID_BODY", "CONSTRAINT","FORCE_GenericForce","MEASURE","DATAOBJECT_PARAMETER"]
+    search4Objects  = ["RIGID_BODY", "CONSTRAINT","FORCE_GenericForce","FORCE_GenericTorque","MEASURE","DATAOBJECT_PARAMETER"]
     for line in fileContent:
         if(line.find("$") >= 0):#new block found
             if(currentBlockType != ""):
@@ -24,14 +24,14 @@ def readInput(path2File):
                     listOfMbsObjects.append(body.rigidBody(currentTextBlock))
                 elif(currentBlockType == "CONSTRAINT"):
                     listOfMbsObjects.append(constraint.genericConstraint(currentTextBlock))
-                # elif(currentBlockType == "FORCE_GenericForce"):
-                #     listOfMbsObjects.append(force.genericForce(currentTextBlock))
-                # elif(currentBlockType == "FORCE_GenericTorque"):
-                #     listOfMbsObjects.append(force.genericTorqueForce(currentTextBlock))
+                elif(currentBlockType == "FORCE_GenericForce"):
+                    listOfMbsObjects.append(force.genericForce(currentTextBlock))
+                elif(currentBlockType == "FORCE_GenericTorque"):
+                    listOfMbsObjects.append(force.genericTorque(currentTextBlock))
                 elif(currentBlockType == "MEASURE"):
                     listOfMbsObjects.append(measure.measure(currentTextBlock))
-                # elif(currentBlockType == "DATAOBJECT_PARAMETER"):
-                #     listOfMbsObjects.append(dataobject.parameter(currentTextBlock))
+                elif(currentBlockType == "DATAOBJECT_PARAMETER"):
+                    listOfMbsObjects.append(dataobject.parameter(currentTextBlock))
                 currentBlockType = ""
 
         for type_i in search4Objects:

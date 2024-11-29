@@ -44,12 +44,11 @@ class genericConstraint(constraint):
             "Z": (0, 0, 1),
         }
 
-        scale = 10.0
         for i, axis in enumerate(["X", "Y", "Z"]):
             line = vtkLineSource()
             start = [0, 0, 0]
             end = [0, 0, 0]
-            end[i] = scale
+            end[i] = self._symbolsScale
             line.SetPoint1(*start)
             line.SetPoint2(*end)
 
@@ -64,7 +63,7 @@ class genericConstraint(constraint):
             if self.__locks["translation"][i]:
                 sphere = vtkSphereSource()
                 sphere.SetCenter(*end)
-                sphere.SetRadius(0.05*scale)
+                sphere.SetRadius(0.05*self._symbolsScale)
 
                 sphere_mapper = vtkPolyDataMapper()
                 sphere_mapper.SetInputConnection(sphere.GetOutputPort())
@@ -77,7 +76,7 @@ class genericConstraint(constraint):
             if self.__locks["rotation"][i]:
                 ring = vtkRegularPolygonSource()
                 ring.SetCenter([0.7 * v for v in end])
-                ring.SetRadius(0.2*scale)
+                ring.SetRadius(0.2*self._symbolsScale)
                 ring.SetNumberOfSides(50)
                 if axis == "X":
                     ring.SetNormal(1, 0, 0)
