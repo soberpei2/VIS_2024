@@ -6,30 +6,36 @@ from vtkmodules.vtkRenderingCore import (
     vtkActor
 )
 from vtkmodules.all import vtkMatrix4x4, vtkTransform
+import numpy as np
 
 class body(mbsObject):
-    def __init__(self,subtype,text,parameter):
-
-        mbsObject.__init__(self,"Body",subtype,text,parameter)
+    def __init__(self,subtype,**kwargs):
+        mbsObject.__init__(self,"Body",subtype,**kwargs)
 
 class rigidBody(body):
-    def __init__(self,text):
-        parameter = {
-            "mass": {"type": "float", "value": 1.},
-            "COG": {"type": "vector", "value": [0.,0.,0.]},
-            "geometry": {"type": "filepath", "value": ""},
-            "position": {"type": "vector", "value": [0.,0.,0.]},
-            "x_axis": {"type": "vector", "value": [1.,0.,0.]},
-            "y_axis": {"type": "vector", "value": [0.,1.,0.]},
-            "z_axis": {"type": "vector", "value": [0.,0.,1.]}
-        }
+    def __init__(self,**kwargs):
+        if "text" in kwargs:
+            parameter = {
+                "mass": {"type": "float", "value": 1.},
+                "COG": {"type": "vector", "value": [0.,0.,0.]},
+                "geometry": {"type": "filepath", "value": ""},
+                "position": {"type": "vector", "value": [0.,0.,0.]},
+                "x_axis": {"type": "vector", "value": [1.,0.,0.]},
+                "y_axis": {"type": "vector", "value": [0.,1.,0.]},
+                "z_axis": {"type": "vector", "value": [0.,0.,1.]},
+                "color": {"type": "colorvector", "value": [0,0,0,0]}
+            }
 
-        body.__init__(self,"Rigid_EulerParameter_PAI",text,parameter)
+            body.__init__(self,"Rigid_EulerParameter_PAI",text=kwargs["text"],parameter=parameter)
+            #compute rgb values in [0,1] as vtk uses rgb in this range and fdd uses [0,255]
+            self.parameter["color"]["value"] = [rgb/255 for rgb in self.parameter["color"]["value"]]
+
+        else:
+            body.__init__(self,"Rigid_EulerParameter_PAI",**kwargs)
 
         # read OBJ file (CAD graphics)
-        # this script assumes that .obj is located in current working directory
         reader = vtkOBJReader()
-        reader.SetFileName(parameter["geometry"]["value"])  
+        reader.SetFileName(self.parameter["geometry"]["value"])  
         reader.Update()
         
         mapper = vtkPolyDataMapper()
@@ -41,17 +47,17 @@ class rigidBody(body):
         bodyActor.GetProperty().SetDiffuse(0.8)
         bodyActor.GetProperty().SetSpecular(0.3)
         bodyActor.GetProperty().SetSpecularPower(60.0)
+        bodyActor.GetProperty().SetColor(self.parameter["color"]["value"][0:3])
 
-        #create transformation matrix
-        transformationMatrix = vtkMatrix4x4()
-        transformationMatrix.Identity()
-        for i in range(0,3):
-            transformationMatrix.SetElement(i,3,parameter["position"]["value"][i])
-            transformationMatrix.SetElement(i,0,parameter["x_axis"]["value"][i])
-            transformationMatrix.SetElement(i,1,parameter["y_axis"]["value"][i])
-            transformationMatrix.SetElement(i,2,parameter["z_axis"]["value"][i])
+        transform_matrix = np.eye(4) 
+        transform_matrix[:3, 0] = np.array(self.parameter["x_axis"]["value"])
+        transform_matrix[:3, 1] = np.array(self.parameter["y_axis"]["value"])
+        transform_matrix[:3, 2] = np.array(self.parameter["z_axis"]["value"])
+        transform_matrix[:3, 3] = np.array(self.parameter["position"]["value"])
 
-        #create and apply transformation by using transformation-matrix
+        vtk_matrix = vtkMatrix4x4()
+        vtk_matrix.DeepCopy(transform_matrix.ravel()) 
+
         transform = vtkTransform()
-        transform.SetMatrix(transformationMatrix)
+        transform.SetMatrix(vtk_matrix)
         bodyActor.SetUserTransform(transform)

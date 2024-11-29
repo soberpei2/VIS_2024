@@ -21,17 +21,17 @@ def readInput(path2File):
         if(line.find("$") >= 0):#new block found
             if(currentBlockType != ""):
                 if(currentBlockType == "RIGID_BODY"):
-                    listOfMbsObjects.append(body.rigidBody(currentTextBlock))
+                    listOfMbsObjects.append(body.rigidBody(text=currentTextBlock))
                 elif(currentBlockType == "CONSTRAINT"):
-                    listOfMbsObjects.append(constraint.genericConstraint(currentTextBlock))
+                    listOfMbsObjects.append(constraint.genericConstraint(text=currentTextBlock))
                 elif(currentBlockType == "FORCE_GenericForce"):
-                    listOfMbsObjects.append(force.genericForce(currentTextBlock))
+                    listOfMbsObjects.append(force.genericForce(text=currentTextBlock))
                 elif(currentBlockType == "FORCE_GenericTorque"):
-                    listOfMbsObjects.append(force.genericTorque(currentTextBlock))
+                    listOfMbsObjects.append(force.genericTorque(text=currentTextBlock))
                 elif(currentBlockType == "MEASURE"):
-                    listOfMbsObjects.append(measure.measure(currentTextBlock))
+                    listOfMbsObjects.append(measure.measure(text=currentTextBlock))
                 elif(currentBlockType == "DATAOBJECT_PARAMETER"):
-                    listOfMbsObjects.append(dataobject.parameter(currentTextBlock))
+                    listOfMbsObjects.append(dataobject.parameter(text=currentTextBlock))
                 currentBlockType = ""
 
         for type_i in search4Objects:
@@ -43,22 +43,3 @@ def readInput(path2File):
         currentTextBlock.append(line)
     
     return listOfMbsObjects
-
-
-# #import/export functionality (for later use in model.py)
-# modelObjects = []
-# for object in listOfMbsObjects:
-#     modelObjects.append(object.parameter)
-# jDataBase = json.dumps({"modelObjects": modelObjects})
-# with open("inputfilereader/test.json", "w") as outfile:
-#     outfile.write(jDataBase)
-
-# f = open("inputfilereader/test.json","r")
-# data = json.load(f)
-# f.close()
-
-# fds = open("inputfilereader/test.fds","w")
-# for mbsObject_i in listOfMbsObjects:
-#     mbsObject_i.writeInputfile(fds)
-# fds.close()
-# #-------------------------------------------------------

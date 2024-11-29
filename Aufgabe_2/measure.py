@@ -16,30 +16,32 @@ from vtkmodules.vtkRenderingCore import vtkActor
 import numpy as np
 
 class measure(mbsObject):
-    def __init__(self,text):
-        parameter = {
-            "body1": {"type": "string", "value": "no"},
-            "body2": {"type": "string", "value": "no"},
-            "type": {"type": "string", "value": ""},
-            "component": {"type": "int", "value": "0"},
-            "location_body1": {"type": "vector", "value": [0.,0.,0.]},
-            "location_body2": {"type": "vector", "value": [0.,0.,0.]},
-            "vector_body1": {"type": "vector", "value": [0.,0.,0.]},
-            "vector1_body2": {"type": "vector", "value": [0.,0.,0.]},
-            "vector2_body2": {"type": "vector", "value": [0.,0.,0.]},
-            "use_initial_value": {"type": "bool", "value": False}
-        }
+    def __init__(self,**kwargs):
+        if "text" in kwargs:
+            parameter = {
+                "body1": {"type": "string", "value": "no"},
+                "body2": {"type": "string", "value": "no"},
+                "type": {"type": "string", "value": ""},
+                "component": {"type": "int", "value": "0"},
+                "location_body1": {"type": "vector", "value": [0.,0.,0.]},
+                "location_body2": {"type": "vector", "value": [0.,0.,0.]},
+                "vector_body1": {"type": "vector", "value": [0.,0.,0.]},
+                "vector1_body2": {"type": "vector", "value": [0.,0.,0.]},
+                "vector2_body2": {"type": "vector", "value": [0.,0.,0.]},
+                "use_initial_value": {"type": "bool", "value": False}
+            }
+            mbsObject.__init__(self,"Measure","",text=kwargs["text"],parameter=parameter)
+        else:
+            mbsObject.__init__(self,"Measure","",**kwargs)
 
-        mbsObject.__init__(self,"Measure","",text,parameter)
-
-        if(parameter["type"]["value"] == "displacement"):
-            self.__subtype = "Translational"
-        if(parameter["type"]["value"] == "velocity"):
-            self.__subtype = "Translational"        
-        if(parameter["type"]["value"] == "angle"):
-            self.__subtype = "Rotational"   
-        if(parameter["type"]["value"] == "angular velocity"):
-            self.__subtype = "Rotational"
+        if(self.parameter["type"]["value"] == "displacement"):
+            self._subtype = "Translational"
+        if(self.parameter["type"]["value"] == "velocity"):
+            self._subtype = "Translational"        
+        if(self.parameter["type"]["value"] == "angle"):
+            self._subtype = "Rotational"   
+        if(self.parameter["type"]["value"] == "angular velocity"):
+            self._subtype = "Rotational"
 
         colors = {
             "X": (1, 0, 0),
@@ -47,7 +49,7 @@ class measure(mbsObject):
             "Z": (0, 0, 1),
         }
 
-        if self.__subtype == "Translational":
+        if self._subtype == "Translational":
             for i, axis in enumerate(["X", "Y", "Z"]):
                 start = [0, 0, 0]
                 end = [0, 0, 0]
@@ -71,13 +73,13 @@ class measure(mbsObject):
                 tube_actor.GetProperty().SetColor(colors[axis])
 
             transform = vtkTransform()
-            transform.Translate(parameter["location_body1"]["value"])
+            transform.Translate(self.parameter["location_body1"]["value"])
             
             for actor in self.actors:
                 actor.SetUserTransform(transform)
                 
-            start = parameter["location_body1"]["value"]
-            end = parameter["location_body2"]["value"]
+            start = self.parameter["location_body1"]["value"]
+            end = self.parameter["location_body2"]["value"]
             line = vtkLineSource()
             line.SetPoint1(*start)
             line.SetPoint2(*end)
@@ -95,9 +97,9 @@ class measure(mbsObject):
             self.actors.append(tube_actor)
             tube_actor.SetMapper(tube_mapper)
 
-        elif self.__subtype == "Rotational":
-            vec2 = np.array(parameter["vector1_body2"]["value"])
-            vec3 = np.array(parameter["vector2_body2"]["value"])
+        elif self._subtype == "Rotational":
+            vec2 = np.array(self.parameter["vector1_body2"]["value"])
+            vec3 = np.array(self.parameter["vector2_body2"]["value"])
             normal = np.cross(vec2, vec3)
             normal = normal/np.linalg.norm(normal)
 
@@ -122,7 +124,6 @@ class measure(mbsObject):
             self.actors.append(axisTube_actor)
             axisTube_actor.SetMapper(axisTube_mapper)
 
-            # Create the arc (a portion of a circle)
             arc = vtkArcSource()
             arc.SetCenter(center)
 
@@ -133,7 +134,7 @@ class measure(mbsObject):
             tube = vtkTubeFilter()
             tube.SetInputConnection(arc.GetOutputPort())
             tube.SetRadius(0.05*self._symbolsScale)
-            tube.SetNumberOfSides(50)  # Glätte der Röhrenoberfläche
+            tube.SetNumberOfSides(50)
             tube.CappingOn()
 
             tube_mapper = vtkPolyDataMapper()
@@ -144,8 +145,8 @@ class measure(mbsObject):
             tube_actor.SetMapper(tube_mapper)
 
             arrow = vtkConeSource()
-            arrow.SetRadius(0.2*self._symbolsScale)  # Radius der Spitze
-            arrow.SetHeight(0.5*self._symbolsScale)  # Höhe der Spitze
+            arrow.SetRadius(0.2*self._symbolsScale)
+            arrow.SetHeight(0.5*self._symbolsScale)
             arrow.SetResolution(50)
 
             arrow_mapper = vtkPolyDataMapper()

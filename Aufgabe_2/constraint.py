@@ -8,35 +8,37 @@ from vtkmodules.vtkFiltersSources import (
 from vtkmodules.vtkRenderingCore import (
     vtkPolyDataMapper
 )
-from vtkmodules.vtkCommonTransforms import vtkTransform
 from vtkmodules.vtkRenderingCore import vtkActor
+from vtkmodules.all import vtkMatrix4x4, vtkTransform
+import numpy as np
 
 class constraint(mbsObject):
-    def __init__(self,subtype,text,parameter):
-
-        mbsObject.__init__(self,"Constraint",subtype,text,parameter)
+    def __init__(self,subtype,**kwargs):
+        mbsObject.__init__(self,"Constraint",subtype,**kwargs)
 
 class genericConstraint(constraint):
-    def __init__(self,text):
-        parameter = {
-            "body1": {"type": "string", "value": "no"},
-            "body2": {"type": "string", "value": "no"},
-            "position": {"type": "vector", "value": [0.,0.,0.]},
-            "x_axis": {"type": "vector", "value": [0.,0.,0.]},
-            "y_axis": {"type": "vector", "value": [0.,0.,0.]},
-            "z_axis": {"type": "vector", "value": [0.,0.,0.]},
-            "dx": {"type": "bool", "value": False},
-            "dy": {"type": "bool", "value": False},
-            "dz": {"type": "bool", "value": False},
-            "ax": {"type": "bool", "value": False},
-            "ay": {"type": "bool", "value": False},
-            "az": {"type": "bool", "value": False}
-        }
+    def __init__(self,**kwargs):
+        if "text" in kwargs:
+            parameter = {
+                "body1": {"type": "string", "value": "no"},
+                "body2": {"type": "string", "value": "no"},
+                "position": {"type": "vector", "value": [0.,0.,0.]},
+                "x_axis": {"type": "vector", "value": [0.,0.,0.]},
+                "y_axis": {"type": "vector", "value": [0.,0.,0.]},
+                "z_axis": {"type": "vector", "value": [0.,0.,0.]},
+                "dx": {"type": "bool", "value": False},
+                "dy": {"type": "bool", "value": False},
+                "dz": {"type": "bool", "value": False},
+                "ax": {"type": "bool", "value": False},
+                "ay": {"type": "bool", "value": False},
+                "az": {"type": "bool", "value": False}
+            }
+            constraint.__init__(self,"Generic",text=kwargs["text"],parameter=parameter)
+        else:
+            constraint.__init__(self,"Generic",**kwargs)
 
-        constraint.__init__(self,"Generic",text,parameter)
-
-        self.__locks = {"translation":  [parameter["dx"]["value"],parameter["dy"]["value"],parameter["dz"]["value"]],
-                        "rotation":     [parameter["ax"]["value"],parameter["ay"]["value"],parameter["az"]["value"]]}
+        self.__locks = {"translation":  [self.parameter["dx"]["value"],self.parameter["dy"]["value"],self.parameter["dz"]["value"]],
+                        "rotation":     [self.parameter["ax"]["value"],self.parameter["ay"]["value"],self.parameter["az"]["value"]]}
 
         colors = {
             "X": (1, 0, 0),
@@ -93,10 +95,17 @@ class genericConstraint(constraint):
                 ring_actor.SetMapper(ring_mapper)
                 ring_actor.GetProperty().SetColor(colors[axis])
 
-        # Transformation erstellen
-        transform = vtkTransform()
-        transform.Translate(parameter["position"]["value"])
-        #transform.RotateWXYZ(*orientation)
+        transform_matrix = np.eye(4) 
+        transform_matrix[:3, 0] = np.array(self.parameter["x_axis"]["value"])
+        transform_matrix[:3, 1] = np.array(self.parameter["y_axis"]["value"])
+        transform_matrix[:3, 2] = np.array(self.parameter["z_axis"]["value"])
+        transform_matrix[:3, 3] = np.array(self.parameter["position"]["value"])
+
+        vtk_matrix = vtkMatrix4x4()
+        vtk_matrix.DeepCopy(transform_matrix.ravel()) 
         
+        transform = vtkTransform()
+        transform.SetMatrix(vtk_matrix)
+
         for actor in self.actors:
             actor.SetUserTransform(transform)
