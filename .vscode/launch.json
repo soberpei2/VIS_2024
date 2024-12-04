@@ -19,7 +19,7 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "args": ["Aufgabe_2/main.py"]
+            "args": ["Aufgabe_2/test.fdd"]
         }
     ]
 }
