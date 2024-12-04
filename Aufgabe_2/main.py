@@ -1,4 +1,4 @@
-import mbsModel #pointi
+import mbsModel 
 import sys
 from pathlib import Path
 
@@ -8,6 +8,13 @@ from vtkmodules.vtkRenderingCore import (
     vtkRenderer
 )
 from vtkmodules.all import vtkInteractorStyleTrackballCamera
+
+
+
+
+
+
+
 
 #if len(sys.argv) < 2:
     #sys.exit("No fdd file provided! Please run script with additional argument: fdd-filepath!")
