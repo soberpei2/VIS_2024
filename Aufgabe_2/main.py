@@ -9,13 +9,13 @@ from vtkmodules.vtkRenderingCore import (
 )
 from vtkmodules.all import vtkInteractorStyleTrackballCamera
 
-if len(sys.argv) < 2:
-    sys.exit("No fdd file provided! Please run script with additional argument: fdd-filepath!")
+#if len(sys.argv) < 2:
+    #sys.exit("No fdd file provided! Please run script with additional argument: fdd-filepath!")
 
 myModel = mbsModel.mbsModel()
 
 #read fdd file path from input arguments
-fdd_path = Path(sys.argv[1])
+fdd_path = Path("C:\VIS_2024\Aufgabe_2//test.fdd")
 myModel.importFddFile(fdd_path)
 #create path for solver input file (fds)
 fds_path = fdd_path.with_suffix(".fds")
