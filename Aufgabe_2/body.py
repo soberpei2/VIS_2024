@@ -9,7 +9,7 @@ from vtkmodules.all import vtkMatrix4x4, vtkTransform
 import numpy as np
 
 class body(mbsObject):
-    def __init__(self,subtype,**kwargs):
+    def __init__(self,subtype,**kwargs): #kwargs: keyword arguments, zum überladen
         mbsObject.__init__(self,"Body",subtype,**kwargs)
 
 class rigidBody(body):

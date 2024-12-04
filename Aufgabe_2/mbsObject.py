@@ -12,7 +12,7 @@ class mbsObject:
         else:
             sys.exit("parameter not provided, cannot create mbsObject!")    
 
-        self.actors = []
+        self.actors = [] #Liste von Actors
 
         if "text" in kwargs:
             for line in kwargs["text"]:

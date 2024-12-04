@@ -28,7 +28,7 @@ myModel.saveDatabase(json_path)
 #create new model and load json generated above
 #(content should be the same)
 newModel = mbsModel.mbsModel()
-newModel.loadDatabase(json_path)
+newModel.loadDatabase(json_path) #Proof, dass das json-file gelesen werden kann
 
 #visualization part
 #-----------------------------------------------------------------------------
@@ -63,7 +63,7 @@ style = vtkInteractorStyleTrackballCamera()
 interactor.SetInteractorStyle(style)
 
 # Modell anzeigen
-newModel.showModel(renderer)
+newModel.showModel(renderer) #von json gelesenes Modell
 
 # Render- und Interaktionsloop starten
 renWin.Render()
