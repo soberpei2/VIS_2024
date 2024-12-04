@@ -14,7 +14,7 @@
         }
         ,
         {
-            "name": "Aufgabe3",
+            "name": "Python Debugger: Aufgabe3",
             "type": "debugpy",
             "request": "launch",
             "program": "${file}",
