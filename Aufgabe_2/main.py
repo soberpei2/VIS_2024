@@ -33,6 +33,7 @@ newModel.loadDatabase(json_path)
 #visualization part
 #-----------------------------------------------------------------------------
 renderer = vtkRenderer()
+renderer.SetBackground(1,1,1) #weißer Hintergrund
 renWin = vtkRenderWindow()
 renWin.AddRenderer(renderer)
 
@@ -40,7 +41,7 @@ def windowtype(type):
         hint = vtkTextActor()
         hint.SetInput("MKS Reader by fpointin: Press 'q' to exit.")
         hint.GetTextProperty().SetFontSize(24)
-        hint.GetTextProperty().SetColor(1, 1, 1)  #Schwarzer Text
+        hint.GetTextProperty().SetColor(0, 0, 0)  #Schwarzer Text
         hint.SetPosition(10, 10)  #Position unten links
         renderer.AddActor2D(hint)
         
