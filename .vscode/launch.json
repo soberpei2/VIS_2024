@@ -12,5 +12,14 @@
             "console": "integratedTerminal",
             "args": ["-f","Tutorial/all_day.csv"]
         }
+        ,
+        {
+            "name": "Aufgabe3",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": ["Aufgabe_2/main.py"]
+        }
     ]
 }
