@@ -5,7 +5,8 @@ from pathlib import Path
 from vtkmodules.vtkRenderingCore import (
     vtkRenderWindow,
     vtkRenderWindowInteractor,
-    vtkRenderer
+    vtkRenderer,
+    vtkTextActor
 )
 from vtkmodules.all import vtkInteractorStyleTrackballCamera
 
@@ -34,8 +35,24 @@ newModel.loadDatabase(json_path)
 renderer = vtkRenderer()
 renWin = vtkRenderWindow()
 renWin.AddRenderer(renderer)
-renWin.SetWindowName('pyFreeDyn')
-renWin.SetSize(1024,768)
+
+def windowtype(type):
+        hint = vtkTextActor()
+        hint.SetInput("MKS Reader by fpointin: Press 'q' to exit.")
+        hint.GetTextProperty().SetFontSize(24)
+        hint.GetTextProperty().SetColor(1, 1, 1)  #Schwarzer Text
+        hint.SetPosition(10, 10)  #Position unten links
+        renderer.AddActor2D(hint)
+        
+        #kleines Fenster
+        if type == 1:
+            renWin.SetSize(1024,768)
+            renWin.SetWindowName("MKS Reader by fpointin")
+        #Fullscreen
+        if type == 2:
+            renWin.SetFullScreen(True)
+
+windowtype(2)
 
 # Interactor einrichten
 interactor = vtkRenderWindowInteractor()
