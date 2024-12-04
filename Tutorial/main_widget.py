@@ -1,3 +1,5 @@
+# Copyright (C) 2022 The Qt Company Ltd.
+# SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
 from __future__ import annotations
 
 from PySide6.QtWidgets import (QHBoxLayout, QHeaderView, QSizePolicy,
@@ -39,3 +41,5 @@ class Widget(QWidget):
 
         # Set the layout to the QWidget
         self.setLayout(self.main_layout)
+
+

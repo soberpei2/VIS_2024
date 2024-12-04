@@ -1,10 +1,12 @@
+# Copyright (C) 2022 The Qt Company Ltd.
+# SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
 from __future__ import annotations
 
 from PySide6.QtCore import Slot
 from PySide6.QtGui import QAction, QKeySequence
 from PySide6.QtWidgets import QMainWindow
 
-
+#C:\Users\126al\AppData\Local\Programs\Python\Python312\python.exe Tutorial\main.py -f Tutorial\all_day.csv
 class MainWindow(QMainWindow):
     def __init__(self, widget):
         QMainWindow.__init__(self)
@@ -28,3 +30,4 @@ class MainWindow(QMainWindow):
         # Window dimensions
         geometry = self.screen().availableGeometry()
         self.setFixedSize(geometry.width() * 0.8, geometry.height() * 0.7)
+
