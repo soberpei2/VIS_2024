@@ -9,6 +9,7 @@ from PySide6.QtGui import QColor
 class CustomTableModel(QAbstractTableModel):
     def __init__(self, data=None):
         QAbstractTableModel.__init__(self)
+        self.color = None
         self.load_data(data)
 
     def load_data(self, data):
@@ -44,7 +45,7 @@ class CustomTableModel(QAbstractTableModel):
                 magnitude = self.input_magnitudes[row]
                 return f"{magnitude:.2f}"
         elif role == Qt.BackgroundRole:
-            return QColor(Qt.white)
+            return (QColor(Qt.white), QColor(self.color))[column]
         elif role == Qt.TextAlignmentRole:
             return Qt.AlignRight
 

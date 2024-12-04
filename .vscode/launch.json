@@ -1,0 +1,16 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "nimm das all_day.csv file",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "Tutorial/main.py",
+            "console": "integratedTerminal",
+            "args": ["-f","Tutorial/all_day.csv"]
+        }
+    ]
+}

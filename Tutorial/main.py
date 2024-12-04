@@ -1,6 +1,7 @@
 # Copyright (C) 2022 The Qt Company Ltd.
 # SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
 from __future__ import annotations
+#C:\Users\126al\AppData\Local\Programs\Python\Python312\python.exe Tutorial\main.py -f Tutorial\all_day.csv
 
 import sys
 import argparse
@@ -46,9 +47,11 @@ if __name__ == "__main__":
     # Qt Application
     app = QApplication(sys.argv)
 
+    # QWidget
     widget = Widget(data)
+    # QMainWindow using QWidget as central widget
     window = MainWindow(widget)
-    window.show()
 
+    window.show()
     sys.exit(app.exec())
 

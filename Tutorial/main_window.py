@@ -11,12 +11,12 @@ class MainWindow(QMainWindow):
     def __init__(self, widget):
         QMainWindow.__init__(self)
         self.setWindowTitle("Eartquakes information")
-        self.setCentralWidget(widget)
+
         # Menu
         self.menu = self.menuBar()
         self.file_menu = self.menu.addMenu("File")
 
-        ## Exit QAction
+        # Exit QAction
         exit_action = QAction("Exit", self)
         exit_action.setShortcut(QKeySequence.Quit)
         exit_action.triggered.connect(self.close)
@@ -30,4 +30,4 @@ class MainWindow(QMainWindow):
         # Window dimensions
         geometry = self.screen().availableGeometry()
         self.setFixedSize(geometry.width() * 0.8, geometry.height() * 0.7)
-
+        self.setCentralWidget(widget)
