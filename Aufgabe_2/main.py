@@ -1,4 +1,4 @@
-import mbsModel
+import mbsModel #imoort
 import sys
 from pathlib import Path
 
