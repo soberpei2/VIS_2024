@@ -45,7 +45,7 @@ style = vtkInteractorStyleTrackballCamera()
 interactor.SetInteractorStyle(style)
 
 # Modell anzeigen
-newModel.showModel(renderer)
+newModel.showModel(renderer) #R
 
 # Render- und Interaktionsloop starten
 renWin.Render()
