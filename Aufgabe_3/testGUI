@@ -23,5 +23,5 @@ def QVTKRenderWidgetConeExample(argv):
     widget.Start()
     app.exec()
 
-if __name__ == "_main_":
+if __name__ == "__main__":
     QVTKRenderWidgetConeExample(sys.argv)
