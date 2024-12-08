@@ -24,6 +24,13 @@ class mbsWidget(QWidget):
         FileButton = QPushButton("File")
         FileButton.clicked.connect(self.submenu)
 
+        # File-Submenü Buttons anlegen
+        #-----------------------------
+        self.LoadButton = QPushButton("Load")
+        self.SaveButton = QPushButton("Save")
+        self.ImportButton = QPushButton("ImportFdd")
+        self.ExitButton = QPushButton("Exit")
+
         # Layout des Menü-Widgets
         self.menu_layout = QVBoxLayout()
         self.menu_layout.addWidget(FileButton, alignment=Qt.AlignTop | Qt.AlignLeft)
@@ -35,14 +42,8 @@ class mbsWidget(QWidget):
     #=======================================
     @Slot()
     def submenu(self):
-        # File-Submenü Buttons
-        #---------------------
-        LoadButton = QPushButton("Load")
-        SaveButton = QPushButton("Save")
-        ImportButton = QPushButton("ImportFdd")
-        ExitButton = QPushButton("Exit")
-
-        self.menu_layout.addWidget(LoadButton)
-        self.menu_layout.addWidget(SaveButton)
-        self.menu_layout.addWidget(ImportButton)
-        self.menu_layout.addWidget(ExitButton)
+        # Hinzufügen zum Layout
+        self.menu_layout.addWidget(self.LoadButton, alignment=Qt.AlignTop | Qt.AlignLeft)
+        self.menu_layout.addWidget(self.SaveButton, alignment=Qt.AlignTop | Qt.AlignLeft)
+        self.menu_layout.addWidget(self.ImportButton, alignment=Qt.AlignTop | Qt.AlignLeft)
+        self.menu_layout.addWidget(self.ExitButton, alignment=Qt.AlignTop | Qt.AlignLeft)
