@@ -22,17 +22,27 @@ class mbsWidget(QWidget):
         # Button für File
         #----------------
         FileButton = QPushButton("File")
-        FileButton.clicked.connect(self.hello)
+        FileButton.clicked.connect(self.submenu)
 
         # Layout des Menü-Widgets
-        menu_layout = QHBoxLayout()
-        menu_layout.addWidget(FileButton)
+        self.menu_layout = QVBoxLayout()
+        self.menu_layout.addWidget(FileButton, alignment=Qt.AlignTop | Qt.AlignLeft)
 
         # Layout dem Widget zuweisen
-        self.setLayout(menu_layout)
+        self.setLayout(self.menu_layout)
 
-    # Funktion - hello
-    #=================
+    # Funktion - Anlegen der Submenü-Buttons
+    #=======================================
     @Slot()
-    def hello(self):
-        print("Hello")
+    def submenu(self):
+        # File-Submenü Buttons
+        #---------------------
+        LoadButton = QPushButton("Load")
+        SaveButton = QPushButton("Save")
+        ImportButton = QPushButton("ImportFdd")
+        ExitButton = QPushButton("Exit")
+
+        self.menu_layout.addWidget(LoadButton)
+        self.menu_layout.addWidget(SaveButton)
+        self.menu_layout.addWidget(ImportButton)
+        self.menu_layout.addWidget(ExitButton)
