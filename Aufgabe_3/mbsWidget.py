@@ -1,5 +1,5 @@
 import sys
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Slot
 from PySide6.QtWidgets import (QApplication, QLabel, QWidget, QListWidget,
                                QListWidgetItem, QPushButton, QVBoxLayout, QHBoxLayout)
 
@@ -14,16 +14,26 @@ class mbsWidget(QWidget):
         # Mutterklassenkonstruktor
         super(mbsWidget, self).__init__(parent)
 
+        # Menüwidget
+        #-----------
         # Fenstertitel definieren
         self.setWindowTitle("pyFreedyn")
 
-        # Anlegen eines Menü-Widgets
-        menu_widget = QListWidget()
-        item = QListWidgetItem("File")
-        menu_widget.addItem(item)
+        # Button für File
+        #----------------
+        FileButton = QPushButton("File")
+        FileButton.clicked.connect(self.hello)
+        FileButton.show()
 
         # Layout des Menü-Widgets
         menu_layout = QHBoxLayout()
-        menu_layout.addWidget(menu_widget)
+        menu_layout.addWidget(FileButton)
 
+        # Layout dem Widget zuweisen
         self.setLayout(menu_layout)
+
+    # Funktion - hello
+    #=================
+    @Slot()
+    def hello():
+        print("Hello")
