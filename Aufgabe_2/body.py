@@ -47,6 +47,7 @@ class rigidBody(body):
         bodyActor.GetProperty().SetDiffuse(0.8)
         bodyActor.GetProperty().SetSpecular(0.3)
         bodyActor.GetProperty().SetSpecularPower(60.0)
+        bodyActor.GetProperty().SetOpacity(0.5)
         bodyActor.GetProperty().SetColor(self.parameter["color"]["value"][0:3])
 
         transform_matrix = np.eye(4) 

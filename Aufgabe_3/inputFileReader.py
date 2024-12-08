@@ -1,11 +1,18 @@
 import json
-from rigidBody import rigidBody
-from constraint import constraint
-from force import force
-from force import torque
-from force import gravity
-from measure import measure
 
+import body
+import constraint
+import force
+import measure
+import dataobject
+
+
+
+def readFile(filePath):
+    file2read = open(filePath,"r")
+    file2readContent = file2read.read().splitlines()
+    file2read.close()
+    return file2readContent
 
 def parseText2blocksOfMbsObjects(fileContent,keySign,search4Typ):
     currentBlockType = ""
@@ -29,41 +36,15 @@ def parseText2blocksOfMbsObjects(fileContent,keySign,search4Typ):
         currentTextBlock.append(line)
     return listOfMbsObjects
 
-def readFile(filePath):
-    file2read = open(filePath,"r")
-    file2readContent = file2read.read().splitlines()
-    file2read.close()
-    return file2readContent
-
-def readJsonFile (filePath,nameWithExtension):
-    file2read = open(filePath + "/" + nameWithExtension,"r")
-    file2readContent = json.load(file2read)
-    file2read.close()
-    return file2readContent
-
-def writeJsonFile (listOfMbsObjects,filePath,nameWithExtension):
-    modelObjects = []
-    for object in listOfMbsObjects:
-        modelObjects.append(object.parameter)
-
-    jsonDataBase = json.dumps({"modelObjects": modelObjects})
-    with open(filePath + "/" + nameWithExtension,"w") as outfile:
-        outfile.write(jsonDataBase)
-
-def writeFdsFile(listOfMbsObjects,filePath,nameWithExtension):
-    fds = open(filePath + "/" + nameWithExtension,"w")
-    for mbsObject_i in listOfMbsObjects:
-        mbsObject_i.write2File(fds)
-    fds.close()
-
-def mbsObjectFactory(object,textblock):
+def mbsObjectFactory(object,currentTextblock):
     mbsObjectList = {
-        "RIGID_BODY": rigidBody,
-        "CONSTRAINT": constraint,
-        "FORCE_GenericForce": force,
-        "FORCE_GenericTorque": torque,
-        "MEASURE": measure,
-        "SETTINGS": gravity,
+        "RIGID_BODY": body.rigidBody,
+        "CONSTRAINT": constraint.genericConstraint,
+        "FORCE_GenericForce": force.genericForce,
+        "FORCE_GenericTorque": force.genericTorque,
+        "MEASURE": measure.measure,
+        "DATAOBJECT_PARAMETER": dataobject.parameter,
+        "SETTINGS": force.gravity,
     }
 
-    return mbsObjectList[object](textblock)
+    return mbsObjectList[object](text=currentTextblock)

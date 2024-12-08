@@ -1,34 +1,50 @@
 import sys
-import inputFileReader
+from pathlib import Path
+
 import vtk
+
 import mbsModel
 
-def main():
-    #if len(sys.argv) != 2:
-    #    print("Usage: python main.py /path/to/your/fdd-File")
-    #    sys.exit(1)
-    #inputFile = sys.argv[1]
-    inputFile = "Aufgabe_2/test.fdd"
-    listOfMbsObjects = inputFileReader.parseText2blocksOfMbsObjects(inputFileReader.readFile(inputFile),"$",["RIGID_BODY","CONSTRAINT","FORCE_GenericForce","FORCE_GenericTorque","MEASURE","SETTINGS"])
-    
-    model = mbsModel.mbsModel()
-    for obj in listOfMbsObjects:
-        model.addMbsObject(obj)
 
-    renderer = vtk.vtkRenderer()
-    model.showModel(renderer)
-    renderer.SetBackground(0.1, 0.2, 0.4)
+if len(sys.argv) < 2:
+    sys.exit("No fdd file provided! Please run script with additional argument: fdd-filepath!")
 
-    renderWindow = vtk.vtkRenderWindow()
-    renderWindow.AddRenderer(renderer)
-    renderWindow.SetSize(1000,600)
+myModel = mbsModel.mbsModel()
 
-    renderWindowInteractor = vtk.vtkRenderWindowInteractor()
-    renderWindowInteractor.SetRenderWindow(renderWindow)
+#read fdd file path from input arguments
+fdd_path = Path(sys.argv[1])
+myModel.importFddFile(fdd_path)
+#create path for solver input file (fds)
+fds_path = fdd_path.with_suffix(".fds")
+myModel.exportFdsFile(fds_path)
+#create path for model database file (json)
+json_path = fdd_path.with_suffix(".json")
+myModel.exportJsonFile(json_path)
 
-    renderWindow.Render()
-    renderWindowInteractor.Start()
+#create new model and load json generated above
+#(content should be the same)
+newModel = mbsModel.mbsModel()
+newModel.importJsonFile(json_path)
 
+#visualization part
+#-----------------------------------------------------------------------------
+renderer = vtk.vtkRenderer()
+renWin = vtk.vtkRenderWindow()
+renWin.AddRenderer(renderer)
+renWin.SetWindowName('pyFreeDyn')
+renWin.SetSize(1024,768)
 
-#if __name__ == "__main__":
-main()
+# Interactor einrichten
+interactor = vtk.vtkRenderWindowInteractor()
+interactor.SetRenderWindow(renWin)
+
+style = vtk.vtkInteractorStyleTrackballCamera()
+interactor.SetInteractorStyle(style)
+
+# Modell anzeigen
+newModel.showModel(renderer)
+
+# Render- und Interaktionsloop starten
+renWin.Render()
+interactor.Start()
+#-----------------------------------------------------------------------------
