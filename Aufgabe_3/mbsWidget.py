@@ -23,7 +23,6 @@ class mbsWidget(QWidget):
         #----------------
         FileButton = QPushButton("File")
         FileButton.clicked.connect(self.hello)
-        FileButton.show()
 
         # Layout des Menü-Widgets
         menu_layout = QHBoxLayout()
@@ -35,5 +34,5 @@ class mbsWidget(QWidget):
     # Funktion - hello
     #=================
     @Slot()
-    def hello():
+    def hello(self):
         print("Hello")
