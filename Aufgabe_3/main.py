@@ -13,6 +13,8 @@ if __name__ == "__main__":
 
     # Widget anlegen und zeigen
     w = mbsW.mbsWidget()
+    # 1. Option: Größe und Position mit setGeometry festlegen
+    w.setGeometry(100, 100, 800, 600)
     w.show()
 
     # Ausführen der Anwendung
