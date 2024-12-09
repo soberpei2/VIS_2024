@@ -134,8 +134,4 @@ class MainWindow(QMainWindow):
         msg_box.setWindowTitle(title)
         msg_box.setText(message)
         msg_box.exec()
- 
-    def closeEvent(self, event):
-        """Schließt das Fenster und gibt Ressourcen frei."""
-        self.widget.GetRenderWindow().Finalize()  # Bereinigt das RenderWindow
-        event.accept()
+        
