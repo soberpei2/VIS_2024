@@ -17,7 +17,6 @@ QVTKRenderWindowInteractor = QVTK.QVTKRenderWindowInteractor  # Alias für das Q
  
 class MainWindow(QMainWindow):
     def __init__(self):
-        """Initialisiert das Hauptfenster der Anwendung."""
         super().__init__()
  
         # Hauptfenster konfigurieren
@@ -26,7 +25,6 @@ class MainWindow(QMainWindow):
        
         # Menüleiste erstellen
         self.create_menu()
- 
         # Statusleiste erstellen
         self.create_status_bar()
  
@@ -43,12 +41,13 @@ class MainWindow(QMainWindow):
         self.widget.GetRenderWindow().Render()  # Rendere das Fenster, um den schwarzen Hintergrund zu sehen
  
     def create_menu(self):
-        """Erstellt die Menüleiste und ihre Aktionen."""
         menubar = self.menuBar()
        
         # Datei-Menü hinzufügen
         file_menu = menubar.addMenu('File')
- 
+        view_menu = menubar.addMenu('View')
+
+
         # 'Load' Aktion hinzufügen
         load_action = QAction('Load', self)
         load_action.triggered.connect(self.load_model)
@@ -73,10 +72,12 @@ class MainWindow(QMainWindow):
         """Erstellt die Statusleiste und zeigt eine Nachricht an."""
         self.statusBar().showMessage("Kein Modell geladen")
  
+
+ # verbesserung möglich indem man mehr files einlesen kann
     def load_model(self):
         """Lädt ein Modell aus einer JSON-Datei."""
         options = QFileDialog.Options()
-        filename, _ = QFileDialog.getOpenFileName(self, "Open Model File", "", "JSON Files (*.json)", options=options)
+        filename, _ = QFileDialog.getOpenFileName(self, "Open JSON File", "", "JSON Files (*.json)", options=options) # filename = pfad, _ = art des files 
        
         if filename:
             if filename.lower().endswith(".json"):  # Überprüfe, ob die Datei eine JSON-Datei ist
@@ -92,7 +93,7 @@ class MainWindow(QMainWindow):
             self.myModel = mbsModel.mbsModel()  # Erstelle ein neues Modell
             self.myModel.loadDatabase(Path(filename))  # Lade das Modell aus der JSON-Datei
             self.statusBar().showMessage(f"Modell geladen: {filename}")
-            self.widget.update_renderer(self.myModel)  # Aktualisiere das Rendering mit dem neuen Modell
+            self.widget.update_renderer(self.myModel)  # ohne update sieht man es noch ned 
         except Exception as e:
             self.statusBar().showMessage(f"Fehler beim Laden des Modells: {e}")
  
