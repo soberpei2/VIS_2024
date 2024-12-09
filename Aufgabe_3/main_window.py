@@ -76,7 +76,7 @@ class MainWindow(QMainWindow):
     def load_model(self):
         """Lädt ein Modell aus einer JSON-Datei."""
         options = QFileDialog.Options()
-        filename, _ = QFileDialog.getOpenFileName(self, "Open Model File", "", "JSON Files (*.json)", options=options)
+        filename, _ = QFileDialog.getOpenFileName(self, "Open json File", "", "JSON and FDD Files (*.json *.fdd)", options=options) # Filter gleich nach fdd und json datein
         
         if filename:
             if filename.lower().endswith(".json"):  # Überprüfe, ob die Datei eine JSON-Datei ist
@@ -107,9 +107,15 @@ class MainWindow(QMainWindow):
     def import_fdd(self):
         """Importiert ein FDD-Modell aus einer Datei."""
         options = QFileDialog.Options()
-        filename, _ = QFileDialog.getOpenFileName(self, "Import FDD File", "", "FDD Files (*.fdd)", options=options)
+        filename, _ = QFileDialog.getOpenFileName(self, "Import FDD File", "", "JSON and FDD Files (*.json *.fdd)", options=options) # Filter gleich nach fdd und json datein
+
         if filename:
-            self.import_fdd_file(Path(filename))
+            if filename.lower().endswith(".fdd"):  # Überprüfe, ob die Datei eine Fdd-Datei ist
+                self.import_fdd_file(Path(filename))
+            else:
+                self.show_error_message("Ungültige Datei", "Bitte wählen Sie eine gültige Fdd-Datei aus.")
+        else:
+            self.statusBar().showMessage("Modell-Laden abgebrochen")
 
     def import_fdd_file(self, filename):
         """Lädt das Modell aus einer FDD-Datei."""
@@ -128,8 +134,3 @@ class MainWindow(QMainWindow):
         msg_box.setWindowTitle(title)
         msg_box.setText(message)
         msg_box.exec()
-
-    def closeEvent(self, event):
-        """Schließt das Fenster und gibt Ressourcen frei."""
-        self.widget.GetRenderWindow().Finalize()  # Bereinigt das RenderWindow
-        event.accept()
