@@ -8,6 +8,17 @@ from vtkmodules.vtkRenderingCore import (
     vtkRenderer
 )
 from vtkmodules.all import vtkInteractorStyleTrackballCamera
+#-------------------------------------------------------------------
+from PySide6.QtWidgets import QMainWindow, QApplication
+from vtkmodules.vtkRenderingCore import vtkRenderer
+from vtkmodules.all import vtkConeSource, vtkPolyDataMapper, vtkActor
+import QVTKRenderWindowInteractor as QVTK
+
+
+QVTKRenderWindowInteractor = QVTK.QVTKRenderWindowInteractor
+
+#------------------------------------------------------------------
+
 
 if len(sys.argv) < 2:
     sys.exit("No fdd file provided! Please run script with additional argument: fdd-filepath!")
