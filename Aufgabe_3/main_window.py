@@ -99,19 +99,24 @@ class MainWindow(QMainWindow):
  
     def save_model(self):
         """Speichert das Modell in einer JSON-Datei."""
-        options = QFileDialog.Options()
+        options = QFileDialog.Options()     # dialog ist öffnen vom explorer
         filename, _ = QFileDialog.getSaveFileName(self, "Save Model File", "", "JSON Files (*.json)", options=options)
         if filename:
-            self.myModel.saveDatabase(Path(filename))  # Speichert das Modell
+            self.myModel.saveDatabase(Path(filename))  # Speichert das Modell bzw den Pfad + Pfadnahme
             self.statusBar().showMessage(f"Modell gespeichert: {filename}")
  
     def import_fdd(self):
         """Importiert ein FDD-Modell aus einer Datei."""
         options = QFileDialog.Options()
-        filename, _ = QFileDialog.getOpenFileName(self, "Import FDD File", "", "FDD Files (*.fdd)", options=options)
+        filename, _ = QFileDialog.getOpenFileName(self, "Import FDD File", "", "FDD Files (*.fdd *.json)", options=options)
         if filename:
-            self.import_fdd_file(Path(filename))
- 
+            if filename.lower().endswith(".fdd"):  # Überprüfe, ob die Datei eine JSON-Datei ist
+                self.import_fdd_file(filename)
+            else:
+                self.show_error_message("Ungültige Datei", "Bitte wählen Sie eine gültige FDD-Datei aus.")
+        else:
+            self.statusBar().showMessage("Modell-Laden abgebrochen")
+
     def import_fdd_file(self, filename):
         """Lädt das Modell aus einer FDD-Datei."""
         try:
