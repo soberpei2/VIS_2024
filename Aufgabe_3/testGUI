@@ -1,27 +1,87 @@
+import mbsModel
 import sys
-from PySide6.QtWidgets import QMainWindow, QApplication
+from pathlib import Path
+ 
+from vtkmodules.vtkRenderingCore import (
+    vtkRenderWindow,
+    vtkRenderWindowInteractor,
+    vtkRenderer
+)
+from vtkmodules.all import vtkInteractorStyleTrackballCamera
+#-------------------------------------------------------------------
+from PySide6.QtGui import QAction, QKeySequence
+from PySide6.QtWidgets import QMainWindow, QApplication, QMenuBar, QStatusBar
 from vtkmodules.vtkRenderingCore import vtkRenderer
 from vtkmodules.all import vtkConeSource, vtkPolyDataMapper, vtkActor
 import QVTKRenderWindowInteractor as QVTK
+ 
+
 QVTKRenderWindowInteractor = QVTK.QVTKRenderWindowInteractor
+ 
+#------------------------------------------------------------------
+ 
+ 
+if len(sys.argv) < 2:
+    sys.exit("No fdd file provided! Please run script with additional argument: fdd-filepath!")
+ 
+myModel = mbsModel.mbsModel()
+ 
+#read fdd file path from input arguments
+fdd_path = Path(sys.argv[1])
+myModel.importFddFile(fdd_path)
+#create path for solver input file (fds)
+fds_path = fdd_path.with_suffix(".fds")
+myModel.exportFdsFile(fds_path)
+#create path for model database file (json)
+json_path = fdd_path.with_suffix(".json")
+myModel.saveDatabase(json_path)
+ 
+#create new model and load json generated above
+#(content should be the same)
+newModel = mbsModel.mbsModel()
+newModel.loadDatabase(json_path)
+ 
+ 
 def QVTKRenderWidgetConeExample(argv):
     app = QApplication(['QVTKRenderWindowInteractor'])
     window = QMainWindow()
+ 
+   
+    # Ändern des Fenstertitels
+    window.setWindowTitle("Model")
+ 
+    # Menüleiste erstellen
+    menubar = window.menuBar()
+ 
+    # File-Menü hinzufügen
+    fileMenu = menubar.addMenu("File")
+ 
+    # Aktionen erstellen und zum Menü hinzufügen
+    loadAction = QAction("Load", window)
+    saveAction = QAction("Save", window)
+    importFddAction = QAction("Import Fdd", window)
+    exitAction = QAction("Exit", window)
+
+    # Exit QAction
+    exitAction.setShortcut(QKeySequence.Quit)
+    exitAction.triggered.connect(window.close)
+    fileMenu.addAction(exitAction)
+ 
+    fileMenu.addAction(loadAction)
+    fileMenu.addAction(saveAction)
+    fileMenu.addAction(importFddAction)
+    fileMenu.addAction(exitAction)
+   
+   
     widget = QVTKRenderWindowInteractor(window)
     window.setCentralWidget(widget)
-    ren = vtkRenderer()
-    widget.GetRenderWindow().AddRenderer(ren)
-    cone = vtkConeSource()
-    cone.SetResolution(8)
-    coneMapper = vtkPolyDataMapper()
-    coneMapper.SetInputConnection(cone.GetOutputPort())
-    coneActor = vtkActor()
-    coneActor.SetMapper(coneMapper)
-    ren.AddActor(coneActor)
+    renderer = vtkRenderer()
+    widget.GetRenderWindow().AddRenderer(renderer)
+    newModel.showModel(renderer)
     window.show()
     widget.Initialize()
     widget.Start()
     app.exec()
-
+   
 if __name__ == "__main__":
     QVTKRenderWidgetConeExample(sys.argv)

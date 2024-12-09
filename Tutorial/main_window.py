@@ -23,6 +23,9 @@ class MainWindow(QMainWindow):
 
         self.file_menu.addAction(exit_action)
 
+        # Load Function 
+
+
         # Status Bar
         self.status = self.statusBar()
         self.status.showMessage("Data loaded and plotted")
