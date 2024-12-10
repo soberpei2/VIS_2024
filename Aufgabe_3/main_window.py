@@ -152,9 +152,9 @@ class MainWindow(QMainWindow):
     def set_front_view(self):
         """Setzt die Kamera in die Frontansicht."""
         camera = self.widget.renderer.GetActiveCamera()  # Aktive Kamera holen
-        camera.SetPosition(0, -1, 0)  # Setze die Kamera vor das Modell
+        camera.SetPosition(0, -100, 0)  # Setze die Kamera vor das Modell
         camera.SetFocalPoint(0, 0, 0)  # Fokus auf den Ursprung
-        camera.SetViewUp(0, 0, 1)  # Oben ist die Z-Achse
+        camera.SetViewUp(1, 0, 0)  # Oben ist die Z-Achse
         self.widget.GetRenderWindow().Render()  # Szene neu rendern
 
     def set_top_view(self):
