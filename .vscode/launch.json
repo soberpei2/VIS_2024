@@ -20,5 +20,14 @@
             "console": "integratedTerminal",
             "args": "Aufgabe_3/test.fdd"
         }
+
+        {
+            "name": "Python Debugger: qt",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": "-f qt/all_day.csv"
+        }
     ]
 }
