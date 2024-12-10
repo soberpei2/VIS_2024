@@ -46,9 +46,9 @@ class MainWindow(QMainWindow):
         """Erstellt die Menüleiste und ihre Aktionen."""
         menubar = self.menuBar()
         
-        # Datei-Menü hinzufügen
+        # Menü unterpunkt File hinzugefügt
         file_menu = menubar.addMenu('File')
-
+        
         # 'Load' Aktion hinzufügen
         load_action = QAction('Load', self)
         load_action.triggered.connect(self.load_model)
@@ -68,6 +68,20 @@ class MainWindow(QMainWindow):
         exit_action = QAction('Exit', self)
         exit_action.triggered.connect(self.close)
         file_menu.addAction(exit_action)
+
+        # Menü Unterpunkt view hinzugefügt
+        view_menu = menubar.addMenu('view')
+
+        # Front Ansicht hinzufügen
+        front_action = QAction('Front Ansicht', self)
+        front_action.triggered.connect(self.set_front_view)  # Verknüpfe die Aktion mit einer Methode
+        view_menu.addAction(front_action)
+
+        # Top Ansicht hinzufügen
+        top_action = QAction('Top Ansicht', self)
+        top_action.triggered.connect(self.set_top_view)  # Verknüpfe die Aktion mit einer Methode
+        view_menu.addAction(top_action)
+
 
     def create_status_bar(self):
         """Erstellt die Statusleiste und zeigt eine Nachricht an."""
@@ -134,3 +148,19 @@ class MainWindow(QMainWindow):
         msg_box.setWindowTitle(title)
         msg_box.setText(message)
         msg_box.exec()
+
+    def set_front_view(self):
+        """Setzt die Kamera in die Frontansicht."""
+        camera = self.widget.renderer.GetActiveCamera()  # Aktive Kamera holen
+        camera.SetPosition(0, -1, 0)  # Setze die Kamera vor das Modell
+        camera.SetFocalPoint(0, 0, 0)  # Fokus auf den Ursprung
+        camera.SetViewUp(0, 0, 1)  # Oben ist die Z-Achse
+        self.widget.GetRenderWindow().Render()  # Szene neu rendern
+
+    def set_top_view(self):
+        """Setzt die Kamera in die Draufsicht."""
+        camera = self.widget.renderer.GetActiveCamera()  # Aktive Kamera holen
+        camera.SetPosition(0, 0, 1)  # Setze die Kamera über das Modell
+        camera.SetFocalPoint(0, 0, 0)  # Fokus auf den Ursprung
+        camera.SetViewUp(0, 1, 0)  # Oben ist die Y-Achse
+        self.widget.GetRenderWindow().Render()  # Szene neu rendern
