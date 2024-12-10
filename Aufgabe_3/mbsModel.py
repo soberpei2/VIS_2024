@@ -38,6 +38,10 @@ class mbsModel:
         #     obj.show(renderer)
         for obj in self.__listOfMbsObject:
             obj.show(renderer)
+
+    def hideModel(self,renderer):
+        for obj in self.__listOfMbsObject:
+            obj.hide(renderer)
     
     def importFddFile(self,filePathFdd):
         [fileName, fileExtension] = os.path.splitext(filePathFdd)
