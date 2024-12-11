@@ -2,20 +2,6 @@ from mbsObject import mbsObject
 
 import vtk
 import numpy as np
-
-def measureSphere(position):
-    size = 0.5
-    sphere = vtk.vtkSphereSource()
-    sphere.SetRadius(size)
-    mapper = vtk.vtkPolyDataMapper()
-    mapper.SetInputConnection(sphere.GetOutputPort())
-    actor = vtk.vtkActor()
-    actor.SetMapper(mapper)
-    transform = vtk.vtkTransform()
-    transform.Translate(position[0], position[1], position[2])
-    actor.SetUserTransform(transform)
-    return actor
-
 class measure(mbsObject):
     def __init__(self, **kwargs):
         if "text" in kwargs:
@@ -40,11 +26,11 @@ class measure(mbsObject):
 
         if(self.parameter["type"]["value"] == "displacement"):
             self._subtype = "Translational"
-        if(self.parameter["type"]["value"] == "velocity"):
+        elif(self.parameter["type"]["value"] == "velocity"):
             self._subtype = "Translational"        
-        if(self.parameter["type"]["value"] == "angle"):
+        elif(self.parameter["type"]["value"] == "angle"):
             self._subtype = "Rotational"   
-        if(self.parameter["type"]["value"] == "angular velocity"):
+        elif(self.parameter["type"]["value"] == "angular velocity"):
             self._subtype = "Rotational"
 
         colors = {

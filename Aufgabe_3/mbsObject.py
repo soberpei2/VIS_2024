@@ -5,7 +5,7 @@ import sys
 class mbsObject:
     def __init__(self,type,subtype,**kwargs):
         self.__type = type
-        self.__subtype = subtype
+        self._subtype = subtype
         self._symbolScale = 10.
         self.actors = []
         if "parameter" in kwargs:
@@ -40,7 +40,7 @@ class mbsObject:
         return self.__type
     
     def getSubtype(self):
-        return self.__subtype
+        return self._subtype
 
     def show(self,renderer):
         for actor in self.actors:
@@ -59,7 +59,7 @@ class mbsObject:
 
     def writeSolverFile(self,file):
         text = []
-        text.append(self.__type + " " + self.__subtype + "\n")
+        text.append(self.__type + " " + self._subtype + "\n")
         for key in self.parameter.keys():
             value = self.parameter[key]["value"]
             if(self.parameter[key]["type"] == "float"):

@@ -8,7 +8,7 @@ class parameter(dataobject):
     def __init__(self,**kwargs):
         if "text" in kwargs:
             parameter = {
-                "name": {"type": "string", "value": "testName"},
+                "name": {"type": "str", "value": "testName"},
                 "InitialValue": {"type": "float", "value": 0.}
             }
             dataobject.__init__(self,"Parameter",text=kwargs["text"],parameter=parameter)
