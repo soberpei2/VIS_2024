@@ -8,8 +8,9 @@ from PySide6.QtCore import Qt
 
 
 class mbsModelWidget(QWidget):
-    def __init__(self):
+    def __init__(self, mbsModel):
         QWidget.__init__(self)
+        self.mbsModel = mbsModel
         self.layout = QHBoxLayout(self)
         self.QVTKWidget = None
         self.treeWidget = None
@@ -24,39 +25,95 @@ class mbsModelWidget(QWidget):
         self.setLayout(self.layout)
         self.QVTKWidget.Initialize()
 
-    def modelTree(self, mbsModel):
+    def modelTree(self):
         self.treeWidget = QTreeWidget()
         
         self.treeWidget.setHeaderLabels(["mbsModel"])
 
-        rootItem = QTreeWidgetItem([os.path.basename(mbsModel._filePath)])
-        for obj in mbsModel.getListOfMbsModel():
-            rootItem.addChild(QTreeWidgetItem([obj.getType()]))
-        self.treeWidget.addTopLevelItem(rootItem)
+        self.rootBody = QTreeWidgetItem(["Body"])
+        self.treeWidget.addTopLevelItem(self.rootBody)
+        self.childRigidBody = QTreeWidgetItem(["RigidBody"])
+        self.childFlexibleBody = QTreeWidgetItem(["FlexibleBody"])
+        self.rootBody.addChild(self.childRigidBody)
+        self.rootBody.addChild(self.childFlexibleBody)
+        #rootBody.setExpanded(True)
+
+        self.rootConstraint = QTreeWidgetItem(["Constraint"])
+        self.treeWidget.addTopLevelItem(self.rootConstraint)
+        self.childGenericConstraint = QTreeWidgetItem(["Generic"])
+        self.rootConstraint.addChild(self.childGenericConstraint)
+        #rootConstraint.setExpanded(True)
+
+
+        self.rootForce = QTreeWidgetItem(["Force"])
+        self.treeWidget.addTopLevelItem(self.rootForce)
+        self.childGenericForce = QTreeWidgetItem(["GenericForce"])
+        self.childGenericTorque = QTreeWidgetItem(["GenericTorque"])
+        self.rootForce.addChild(self.childGenericForce)
+        self.rootForce.addChild(self.childGenericTorque)
+        #rootForce.setExpanded(True)
+
+        self.rootMeasure = QTreeWidgetItem(["Measure"])
+        self.treeWidget.addTopLevelItem(self.rootMeasure)
+        self.childTranslational = QTreeWidgetItem(["Translational"])
+        self.childRotational = QTreeWidgetItem(["Rotational"])
+        self.rootMeasure.addChild(self.childTranslational)
+        self.rootMeasure.addChild(self.childRotational)
+        #rootMeasure.setExpanded(True)
+
+        self.rootDataobject = QTreeWidgetItem(["DataObject"])
+        self.treeWidget.addTopLevelItem(self.rootDataobject)
+        self.childParameter = QTreeWidgetItem(["Parameter"])
+        self.rootDataobject.addChild(self.childParameter)
+        #rootDataobject.setExpanded(True)
+
+        self.treeWidget.expandAll()
 
         treeWithPixels = int(self.logicalDpiX() * 50 / 25.4)  # Umrechnung in Pixel
         self.treeWidget.setFixedWidth(treeWithPixels)
         
-        self.layout.removeWidget(self.QVTKWidget)
+        #self.deleteModel()
         self.layout.addWidget(self.treeWidget)
         self.layout.addWidget(self.QVTKWidget)
         self.setLayout(self.layout)
 
+    def deleteModel(self):
+        self.layout.removeWidget(self.QVTKWidget)
 
-    def showModel(self, mbsModel):
-        mbsModel.showModel(self.renderer)
+    def deleteTree(self):
+        self.layout.removeWidget(self.treeWidget)
+
+    def renderModel(self):
+        self.mbsModel.showModel(self.renderer)
         self.renderer.ResetCamera()
 
-    def hideModel(self, mbsModel):
-        mbsModel.hideModel(self.renderer)
+    def renderTree(self):
+        self.treeWidget.setHeaderLabels(["mbsModel " + os.path.basename(self.mbsModel._filePath)])
+        for obj in self.mbsModel.getListOfMbsModel():
+            if obj.getType() == "Body":
+                if obj.getSubtype() == "Rigid_EulerParameter_PAI":
+                    self.childRigidBody.addChild(QTreeWidgetItem([obj.parameter["name"]["value"]]))
+            elif obj.getType() == "Constraint":
+                if obj.getSubtype() == "Generic":
+                    self.childGenericConstraint.addChild(QTreeWidgetItem([obj.parameter["name"]["value"]]))
+            elif obj.getType() == "Force":
+                if obj.getSubtype() == "GenericForce":
+                    self.childGenericForce.addChild(QTreeWidgetItem([obj.parameter["name"]["value"]]))
+                elif obj.getSubtype() == "GenericTorque":
+                    self.childGenericTorque.addChild(QTreeWidgetItem([obj.parameter["name"]["value"]]))
+            elif obj.getType() == "Measure":
+                if obj.getSubtype() == "Translational":
+                    self.childTranslational.addChild(QTreeWidgetItem([obj.parameter["name"]["value"]]))
+                elif obj.getSubtype() == "Rotational":
+                    self.childRotational.addChild(QTreeWidgetItem([obj.parameter["name"]["value"]]))
+            elif obj.getType() == "DataObject":
+                if obj.getSubtype() == "Parameter":
+                    self.childParameter.addChild(QTreeWidgetItem([obj.parameter["name"]["value"]]))
 
-    #def renderTree(self, mbsModel):
+    def hideModel(self):
+        self.mbsModel.hideModel(self.renderer)
 
-    
-    def renderModelWithTree(self, mbsModel):
-        self.modelRenderer()
-        self.modelTree(mbsModel)
-        self.showModel(mbsModel)
+
         
         
 

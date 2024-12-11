@@ -14,7 +14,7 @@ class MainWindow(QMainWindow):
         self.showMaximized()
 
         self.mbsModel = None
-        self.widget = mbsModelWidget()
+        self.widget = mbsModelWidget(self.mbsModel)
 
         # Menu
         self.menu = self.menuBar()
@@ -64,41 +64,39 @@ class MainWindow(QMainWindow):
         self.status.showMessage("Data loaded and plotted")
 
 
-        self.setCentralWidget(self.widget)
+        
 
     def newMbsModel(self):
-        if self.mbsModel == None:
-            self.mbsModel = mbsModel()
-            self.widget.renderModelWithTree(self.mbsModel)      
-        else:
+        if self.mbsModel != None:
             reply = QMessageBox.question(self, "Attention", "You have not saved the file yet do you want to continue? The changes to the current model will be deleted.",
                                      QMessageBox.Yes | QMessageBox.No,
                                      QMessageBox.No)
 
             if reply == QMessageBox.Yes:
-                self.widget.hideModel(self.mbsModel)
-                self.mbsModel = mbsModel()
-                self.widget.showModel(self.mbsModel)
+                self.widget.deleteModel()
+                self.widget.deleteTree()
+            elif reply == QMessageBox.No:
+                return
+        self.mbsModel = mbsModel()
+        self.mbsWidget()
 
             
 
     def loadFile(self):
-        if self.mbsModel == None:
-            self.mbsModel = mbsModel()
-            filePath, _ = QFileDialog.getOpenFileName(self, "load File", "", "pyFreeDyn-File (*.json)")
-            self.mbsModel.importJsonFile(filePath)
-            self.widget.renderModelWithTree(self.mbsModel)
-        else:
+        if self.mbsModel != None:
             reply = QMessageBox.question(self, "Attention", "You have not saved the file yet do you want to continue? The changes to the current model will be deleted.",
                                      QMessageBox.Yes | QMessageBox.No,
                                      QMessageBox.No)
 
             if reply == QMessageBox.Yes:
-                self.widget.hideModel(self.mbsModel)
-                self.mbsModel = mbsModel()
-                filePath, _ = QFileDialog.getOpenFileName(self, "load File", "", "pyFreeDyn-File (*.json)")
-                self.mbsModel.importJsonFile(filePath)
-                self.widget.showModel(self.mbsModel)
+                self.widget.deleteModel()
+                self.widget.deleteTree()
+            elif reply == QMessageBox.No:
+                return
+        self.mbsModel = mbsModel()
+        filePath, _ = QFileDialog.getOpenFileName(self, "load File", "", "pyFreeDyn-File (*.json)")
+        self.mbsModel.importJsonFile(filePath)
+        self.mbsWidget()
         
 
     def saveFile(self):
@@ -120,21 +118,20 @@ class MainWindow(QMainWindow):
             self.widget.saveJsonFile(filePath)
 
     def importFile(self):
-        if self.mbsModel == None:
-            filePath, _ = QFileDialog.getOpenFileName(self, "import file", "", "FreeDyn-File (*.fdd)")
-            self.mbsModel = mbsModel()
-            self.mbsModel.importFddFile(filePath)
-        else:
-            reply = QMessageBox.question(self, "Attention", "You have not saved the file yet do you want to continue? The changes to the current model will be deleted.",
+        if self.mbsModel != None:
+            reply = QMessageBox.question(self, "Attention", "You have not saved file yet do you want to continue? The changes to the current model will be deleted.",
                                      QMessageBox.Yes | QMessageBox.No,
                                      QMessageBox.No)
 
             if reply == QMessageBox.Yes:
-                self.widget.hideModel(self.mbsModel)
-                self.mbsModel = mbsModel()
-                filePath, _ = QFileDialog.getOpenFileName(self, "load File", "", "pyFreeDyn-File (*.json)")
-                self.mbsModel.importFddFile(filePath)
-                self.widget.showModel(self.mbsModel)
+                self.widget.deleteModel()
+                self.widget.deleteTree()
+            elif reply == QMessageBox.No:
+                return
+        filePath, _ = QFileDialog.getOpenFileName(self, "load File", "", "pyFreeDyn-File (*.json)")
+        self.mbsModel = mbsModel()
+        self.mbsModel.importFddFile(filePath)
+        self.mbsWidget()
 
     def exportFile(self,exportModel):
         if self.mbsModel == None:
@@ -143,6 +140,14 @@ class MainWindow(QMainWindow):
             filePath, _ = QFileDialog.getSaveFileName(self, "export file", "", "pyFreeDyn-File (*.fds)")
             exportModel.exportFdsFile(filePath)
 
+    
+    def mbsWidget(self):
+        self.widget = mbsModelWidget(self.mbsModel)
+        self.setCentralWidget(self.widget)
+        self.widget.modelRenderer()
+        self.widget.renderModel()
+        self.widget.modelTree()
+        self.widget.renderTree()
     
 
 
