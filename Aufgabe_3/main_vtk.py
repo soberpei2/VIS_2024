@@ -1,6 +1,12 @@
 import mbsModel
 import sys
 from pathlib import Path
+import argparse
+
+from PySide6.QtCore import QDateTime, QTimeZone
+from PySide6.QtWidgets import QApplication
+from main_window import MainWindow
+from main_widget import Widget
 
 from vtkmodules.vtkRenderingCore import (
     vtkRenderWindow,
@@ -68,4 +74,19 @@ newModel.showModel(renderer) #von json gelesenes Modell
 # Render- und Interaktionsloop starten
 renWin.Render()
 interactor.Start()
+
+# if __name__ == "__main__":
+#     options = argparse.ArgumentParser()
+#     options.add_argument("-f", "--file", type=str, required=True)
+#     args = options.parse_args()
+
+#     # Qt Application
+#     app = QApplication(sys.argv)
+
+#     widget = Widget()
+window = MainWindow()
+window.show()
+
+    #sys.exit(app.exec())
+
 #-----------------------------------------------------------------------------
