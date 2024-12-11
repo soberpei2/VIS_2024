@@ -1,14 +1,16 @@
 from mbsModel import mbsModel
+import os
 
 from PySide6.QtGui import QAction, QKeySequence
-from PySide6.QtWidgets import QMainWindow, QFileDialog
+from PySide6.QtWidgets import QMainWindow, QFileDialog, QApplication
+from mbsModelWidget import mbsModelWidget
 
 
 
 class MainWindow(QMainWindow):
     def __init__(self, widget):
         QMainWindow.__init__(self)
-
+        self.showMaximized()
         self.widget = widget
 
         self.setWindowTitle("pyFreeDyn")
@@ -59,8 +61,12 @@ class MainWindow(QMainWindow):
         
 
     def loadFile(self):
+        self.mbsModel = mbsModel()
         filePath, _ = QFileDialog.getOpenFileName(self, "load File", "", "pyFreeDyn-File (*.json)")
-        self.widget.loadJsonFile(filePath)
+        self.mbsModel.importJsonFile(filePath)
+        self.widget.modelRenderer()
+        self.widget.renderModel(self.mbsModel)
+        self.widget.modelTree(self.mbsModel)
 
     def saveFile(self, saveModel):
         filePath, _ = QFileDialog.getSaveFileName(self, "save File", "", "pyFreeDyn-File (*.json)")
