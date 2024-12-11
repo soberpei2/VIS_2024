@@ -41,6 +41,7 @@ class mbsWindow(QMainWindow):
         # Load-Aktion definieren
         #-----------------------
         load_action = QAction("Load", self)
+        load_action.triggered.connect(lambda: self.load(widget))
 
         # Speicher-Aktion defnieren
         #--------------------------
@@ -120,5 +121,30 @@ class mbsWindow(QMainWindow):
         # .fdd-File einlesen und anzeigen
         self.mbsModel.importFddFile(fdd_path)
         self.mbsModel.showModel(self.renderer)
-        
+    #=======================================================================================
+
+    # Fkt. - load
+    #============
+    def load(self, widget):
+        '''
+        Fkt.-Beschreibung:
+        \t load lädt ein json-File und visualisiert dieses
+        \n
+        Input-Variablen:
+        \t widget...Objekt vom Typ QWidget oder einer abgeleiteten Klasse
+        '''
+         # Überprüfen, ob schon ein vtk-Widget existiert (wenn nicht -> Widget erstellen)
+        if not self.vtkWidget:
+            self.loadVTKbackGround(widget)
+
+        # Objekt vom Typ mbsModel anlegen
+        self.mbsModel = mbsModel.mbsModel()
+
+        # Abspeichern des .json-Pfades
+        fdd_path = Path(sys.argv[1])
+        json_path = fdd_path.with_suffix(".json")
+
+        # json-File einlesen und anzeigen
+        self.mbsModel.loadDatabase(json_path)
+        self.mbsModel.showModel(self.renderer)
     
