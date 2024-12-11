@@ -1,49 +1,30 @@
-import sys
-from PySide6.QtCore import Qt, Slot
-from PySide6.QtWidgets import (QApplication, QLabel, QWidget, QListWidget,
-                               QListWidgetItem, QPushButton, QVBoxLayout, QHBoxLayout)
+from __future__ import annotations
 
-#================================================================================
+from PySide6.QtCore import QDateTime, Qt
+from PySide6.QtGui import QPainter
+from PySide6.QtWidgets import (QWidget, QHeaderView, QHBoxLayout, QTableView,
+                               QSizePolicy)
+from PySide6.QtCharts import QChart, QChartView, QLineSeries, QDateTimeAxis, QValueAxis
+
+#===================================================================================
 #                               KLASSE - mbsWidget                                 #
-#================================================================================
+#===================================================================================
 
 class mbsWidget(QWidget):
     # Konstruktor
     #============
-    def __init__(self, parent = None):
+    def __init__(self):
         # Mutterklassenkonstruktor
-        super(mbsWidget, self).__init__(parent)
+        #-------------------------
+        QWidget.__init__(self)
 
-        # Menüwidget
-        #-----------
-        # Fenstertitel definieren
-        self.setWindowTitle("pyFreedyn")
+        # Layout des Widgets
+        #-------------------
+        self.main_layout = QHBoxLayout()
+        size = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
 
-        # Button für File
-        #----------------
-        FileButton = QPushButton("File")
-        FileButton.clicked.connect(self.submenu)
+        # Layout auf das Widget anwenden
+        #-------------------------------
+        self.setLayout(self.main_layout)
 
-        # File-Submenü Buttons anlegen
-        #-----------------------------
-        self.LoadButton = QPushButton("Load")
-        self.SaveButton = QPushButton("Save")
-        self.ImportButton = QPushButton("ImportFdd")
-        self.ExitButton = QPushButton("Exit")
-
-        # Layout des Menü-Widgets
-        self.menu_layout = QVBoxLayout()
-        self.menu_layout.addWidget(FileButton, alignment=Qt.AlignTop | Qt.AlignLeft)
-
-        # Layout dem Widget zuweisen
-        self.setLayout(self.menu_layout)
-
-    # Funktion - Anlegen der Submenü-Buttons
-    #=======================================
-    @Slot()
-    def submenu(self):
-        # Hinzufügen zum Layout
-        self.menu_layout.addWidget(self.LoadButton, alignment=Qt.AlignTop | Qt.AlignLeft)
-        self.menu_layout.addWidget(self.SaveButton, alignment=Qt.AlignTop | Qt.AlignLeft)
-        self.menu_layout.addWidget(self.ImportButton, alignment=Qt.AlignTop | Qt.AlignLeft)
-        self.menu_layout.addWidget(self.ExitButton, alignment=Qt.AlignTop | Qt.AlignLeft)
+        
