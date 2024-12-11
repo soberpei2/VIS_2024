@@ -61,7 +61,6 @@ class mbsWindow(QMainWindow):
         #--------------------
         self.loadVTK(widget)
 
-
         # Abmessungen des Main-Windows festlegen
         #---------------------------------------
         geometry = self.screen().availableGeometry()
@@ -82,14 +81,7 @@ class mbsWindow(QMainWindow):
         # Interactor initialisieren
         interactor = vtkWidget.GetRenderWindow().GetInteractor()
 
-        # Beispiel: Einen Würfel in die Szene einfügen
-        cube = vtk.vtkCubeSource()
-        cube_mapper = vtk.vtkPolyDataMapper()
-        cube_mapper.SetInputConnection(cube.GetOutputPort())
-        cube_actor = vtk.vtkActor()
-        cube_actor.SetMapper(cube_mapper)
-
-        renderer.AddActor(cube_actor)
+        # Hintergrundfarbe setzen
         renderer.SetBackground(0.1, 0.2, 0.4)  # Hintergrundfarbe
 
         interactor.Initialize() 
