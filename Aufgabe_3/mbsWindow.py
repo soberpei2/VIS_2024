@@ -7,7 +7,8 @@ import vtk
 from PySide6.QtGui import QAction, QKeySequence
 from PySide6.QtWidgets import QMainWindow
 from vtkmodules.qt.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
-from mbsModel import mbsModel
+import mbsModel as mbsModel
+import mbsObject as mbsObject
 
 #===================================================================================
 #                               KLASSE - mbsWindow                                 #
@@ -20,6 +21,8 @@ class mbsWindow(QMainWindow):
         # Mutterklassenkonstruktor
         #-------------------------
         QMainWindow.__init__(self)
+
+        self.model = None
 
         # Fenstertitel / zentrales Widget definieren
         #-------------------------------------------
@@ -100,10 +103,9 @@ class mbsWindow(QMainWindow):
             self.loadVTKbackGround(widget)
 
         # fdd-File einlesen
-        mbsModel().importFddFile(Path(sys.argv[1]))
-
-        # Renderer aktualisieren
-        self.renderer.SetBackground(0.1, 0.1, 0.1)
-        self.vtkWidget.GetRenderWindow().Render()
+        myModel = mbsModel.mbsModel()
+        fdd_path = Path(sys.argv[1])
+        myModel.importFddFile(fdd_path)
+        myModel.showModel(self.renderer)
         
     
