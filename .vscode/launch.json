@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "args": ["-f","QT_Tutorial/all_day.csv"]
+            "args": ["Aufgabe_3/test.fdd"]
         }
     ]
 }
