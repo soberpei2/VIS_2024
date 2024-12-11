@@ -46,6 +46,7 @@ class mbsWindow(QMainWindow):
         # Speicher-Aktion defnieren
         #--------------------------
         save_action = QAction("Save", self)
+        save_action.triggered.connect(lambda: self.save())
 
         # Import-Aktion definieren (Achtung: lambda für callable Aktion, sonst wird
         # diese sofort ausgeführt)
@@ -147,4 +148,19 @@ class mbsWindow(QMainWindow):
         # json-File einlesen und anzeigen
         self.mbsModel.loadDatabase(json_path)
         self.mbsModel.showModel(self.renderer)
+    #=======================================================================================
+
+    # Fkt. - save
+    #============
+    def save(self):
+        '''
+        Fkt.-Beschreibung:
+        \t save speichert das aktuell, geöffnete Modell als json-File
+        '''
+        # Speicherpfad bestimmen (am selben Ort wie Pfadeingabe, nur mit .json)
+        fdd_path = Path(sys.argv[1])
+        path = fdd_path.with_suffix(".json")
+        
+        # Aufruf der Speicherfkt. von mbsModel
+        self.mbsModel.saveDatabase(path)
     
