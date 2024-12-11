@@ -11,11 +11,13 @@ import dataobject
 
 class mbsModel:
     def __init__(self):
-       self.__listOfMbsObject = []
-       self.listOfBody = []
-       self.listOfConstraint = []
-       self.listOfForce = []
-       self.listOfMeasure = []
+        self.__listOfMbsObject = []
+        self._filePath = []
+
+        self.listOfBody = []
+        self.listOfConstraint = []
+        self.listOfForce = []
+        self.listOfMeasure = []
 
     # def addMbsObject(self,mbsObject):
     #     if mbsObject.getType() == "Body":
@@ -42,8 +44,12 @@ class mbsModel:
     def hideModel(self,renderer):
         for obj in self.__listOfMbsObject:
             obj.hide(renderer)
+
+    def getListOfMbsModel(self):
+        return self.__listOfMbsObject
     
     def importFddFile(self,filePathFdd):
+        self._filePath = os.path.normpath(filePathFdd)
         [fileName, fileExtension] = os.path.splitext(filePathFdd)
 
         if(fileExtension == ".fdd"):
@@ -68,6 +74,7 @@ class mbsModel:
         fds.close()
 
     def importJsonFile (self, filePathJson):
+        self._filePath = os.path.normpath(filePathJson)
         [fileName, fileExtension] = os.path.splitext(filePathJson)
 
         file2read = open(filePathJson,"r")
