@@ -4,7 +4,7 @@ import mbsModel
 from pathlib import Path
 # Importiere wichtige Klassen aus PySide6 (GUI-Komponenten)
 from PySide6.QtGui import QAction, QKeySequence
-from PySide6.QtWidgets import QMainWindow, QFileDialog, QStatusBar, QMessageBox
+from PySide6.QtWidgets import QMainWindow, QFileDialog, QStatusBar, QMessageBox,QMenu
 from PySide6.QtCore import Qt
 # Importiere das MainWidget für das Rendering
 from main_widget import MainWidget
@@ -12,6 +12,7 @@ from main_widget import MainWidget
 from vtkmodules.vtkRenderingCore import vtkRenderer
 # Importiere QVTKRenderWindowInteractor für die Interaktion mit dem VTK-Renderfenster
 import QVTKRenderWindowInteractor as QVTK
+import vtk
 
 QVTKRenderWindowInteractor = QVTK.QVTKRenderWindowInteractor  # Alias für das QVTKRenderWindowInteractor-Modul
 
@@ -81,6 +82,29 @@ class MainWindow(QMainWindow):
         top_action = QAction('Top Ansicht', self)
         top_action.triggered.connect(self.set_top_view)  # Verknüpfe die Aktion mit einer Methode
         view_menu.addAction(top_action)
+                
+        # Ansicht von Rechts hinzufügen
+        top_action = QAction('Rechts Ansicht', self)
+        top_action.triggered.connect(self.set_rigth_view)  # Verknüpfe die Aktion mit einer Methode
+        view_menu.addAction(top_action)
+
+        # Menü unterpunkt Einstellungen hinzugefügt
+        settings_menu = menubar.addMenu('Einstellungen')
+
+        # Steuerung Untermenü hinzufügen
+        steuerung_menu = QMenu("Steuerung", self)
+
+        # 'Steuerung Abaqus' hinzufügen
+        abaqus_action = QAction('Steuerung Abaqus', self)
+        abaqus_action.triggered.connect(self.set_interaction_abaqus)
+        steuerung_menu.addAction(abaqus_action)
+
+        # 'Steuerung Creo' hinzufügen
+        creo_action = QAction('Steuerung Creo', self)
+        creo_action.triggered.connect(self.set_interaction_creo)
+        steuerung_menu.addAction(creo_action)
+
+        settings_menu.addMenu(steuerung_menu)
 
 
     def create_status_bar(self):
@@ -152,9 +176,10 @@ class MainWindow(QMainWindow):
     def set_front_view(self):
         """Setzt die Kamera in die Frontansicht."""
         camera = self.widget.renderer.GetActiveCamera()  # Aktive Kamera holen
-        camera.SetPosition(0, -100, 0)  # Setze die Kamera vor das Modell
+        camera.SetPosition(0, 1, 0)  # Setze die Kamera über das Modell
         camera.SetFocalPoint(0, 0, 0)  # Fokus auf den Ursprung
-        camera.SetViewUp(1, 0, 0)  # Oben ist die Z-Achse
+        camera.SetViewUp(0, 0, 1)  # Oben ist die Z-Achse
+        self.widget.renderer.ResetCamera()  # Stellt sicher, dass das gesamte Modell sichtbar ist
         self.widget.GetRenderWindow().Render()  # Szene neu rendern
 
     def set_top_view(self):
@@ -163,4 +188,52 @@ class MainWindow(QMainWindow):
         camera.SetPosition(0, 0, 1)  # Setze die Kamera über das Modell
         camera.SetFocalPoint(0, 0, 0)  # Fokus auf den Ursprung
         camera.SetViewUp(0, 1, 0)  # Oben ist die Y-Achse
+        self.widget.renderer.ResetCamera()  # Stellt sicher, dass das gesamte Modell sichtbar ist
         self.widget.GetRenderWindow().Render()  # Szene neu rendern
+
+    def set_rigth_view(self):
+        """Setzt die Kamera in die Draufsicht."""
+        camera = self.widget.renderer.GetActiveCamera()  # Aktive Kamera holen
+        camera.SetPosition(1, 0, 0)  # Setze die Kamera über das Modell
+        camera.SetFocalPoint(0, 0, 0)  # Fokus auf den Ursprung
+        camera.SetViewUp(0, 0, 1)  # Oben ist die Y-Achse
+        self.widget.renderer.ResetCamera()  # Stellt sicher, dass das gesamte Modell sichtbar ist
+        self.widget.GetRenderWindow().Render()  # Szene neu rendern
+
+    def open_control_settings(self):
+        """Öffnet die Steuerungseinstellungen und stellt die Interaktion wie in Creo ein."""
+        # Diese Methode aktiviert eine benutzerdefinierte Steuerung wie in Creo
+        self.set_creo_mouse_interaction()
+
+    def set_creo_mouse_interaction(self):
+        """Aktiviert die Creo-ähnliche Mausinteraktion."""
+        # In Creo wird normalerweise folgendermaßen interagiert:
+        # - Linksklick: Drehung der Ansicht
+        # - Rechtsklick: Zoom
+        # - Mittlere Maustaste oder Shift + Mausklick: Pan
+        
+        # Setze den Interactor auf eine benutzerdefinierte Steuerung (falls nötig)
+        self.widget.SetInteractorStyle(self.create_creo_interaction_style())
+
+    def create_creo_interaction_style(self):
+        """Erstellt eine benutzerdefinierte Interaktionsweise wie in Creo."""
+        # Hier könntest du mit VTKs "vtkInteractorStyle" arbeiten, um eine benutzerdefinierte Steuerung zu definieren
+        # VTK bietet mehrere Interaktionsstile, die du überschreiben kannst, wie z.B. vtkInteractorStyleTrackballCamera,
+        # das das Drehen und Zoomen eines Modells ermöglicht.
+        interactor_style = vtk.vtkInteractorStyleTrackballCamera()
+
+        # Stelle sicher, dass der Interactor die Maus so behandelt, wie in Creo:
+        interactor_style.SetMouseWheelMotionFactor(0.1)  # Geschwindigkeit des Zoomens
+        return interactor_style
+    
+    def set_interaction_abaqus(self):
+        """Setzt die Interaktion auf 'Steuerung Abaqus'."""
+        # Hier definierst du, wie die Mausinteraktion für Abaqus funktioniert
+        self.widget.set_interaction("abaqus")
+        self.statusBar().showMessage("Interaktion: Steuerung Abaqus")
+
+    def set_interaction_creo(self):
+        """Setzt die Interaktion auf 'Steuerung Creo'."""
+        # Hier definierst du, wie die Mausinteraktion für Creo funktioniert
+        self.widget.set_interaction("creo")
+        self.statusBar().showMessage("Interaktion: Steuerung Creo")
