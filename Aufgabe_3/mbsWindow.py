@@ -32,6 +32,9 @@ class mbsWindow(QMainWindow):
         exit_action.setShortcut(QKeySequence.Quit)
         exit_action.triggered.connect(self.close)
 
+        # Aktionen zu File-Menü hinzufügen
+        self.file_menu.addAction(exit_action)
+
         # Statusleiste
         #-------------
         self.status = self.statusBar()
