@@ -8,10 +8,7 @@ from mbsModelWidget import mbsModelWidget
 # Qt Application
 app = QApplication(sys.argv)
 
-widget = mbsModelWidget()
-window = MainWindow(widget)
+
+window = MainWindow()
 window.show()
-
-
-
 sys.exit(app.exec())

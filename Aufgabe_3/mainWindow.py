@@ -2,19 +2,20 @@ from mbsModel import mbsModel
 import os
 
 from PySide6.QtGui import QAction, QKeySequence
-from PySide6.QtWidgets import QMainWindow, QFileDialog, QApplication
+from PySide6.QtWidgets import QMainWindow, QFileDialog, QApplication, QMessageBox
 from mbsModelWidget import mbsModelWidget
 
 
 
 class MainWindow(QMainWindow):
-    def __init__(self, widget):
+    def __init__(self):
         QMainWindow.__init__(self)
-        self.showMaximized()
-        self.widget = widget
-
         self.setWindowTitle("pyFreeDyn")
-        self.setCentralWidget(self.widget)
+        self.showMaximized()
+
+        self.mbsModel = None
+        self.widget = mbsModelWidget()
+
         # Menu
         self.menu = self.menuBar()
         self.fileMenu = self.menu.addMenu("File")
@@ -25,6 +26,10 @@ class MainWindow(QMainWindow):
 
         # Status Bar
         self.status = self.statusBar()
+
+        newAction = QAction("New",self)
+        newAction.triggered.connect(self.newMbsModel)
+        self.fileMenu.addAction(newAction)
 
         loadAction = QAction("Load",self)
         loadAction.setShortcut(QKeySequence.Open)
@@ -58,33 +63,87 @@ class MainWindow(QMainWindow):
         self.status = self.statusBar()
         self.status.showMessage("Data loaded and plotted")
 
-        
+
+        self.setCentralWidget(self.widget)
+
+    def newMbsModel(self):
+        if self.mbsModel == None:
+            self.mbsModel = mbsModel()
+            self.widget.renderModelWithTree(self.mbsModel)      
+        else:
+            reply = QMessageBox.question(self, "Attention", "You have not saved the file yet do you want to continue? The changes to the current model will be deleted.",
+                                     QMessageBox.Yes | QMessageBox.No,
+                                     QMessageBox.No)
+
+            if reply == QMessageBox.Yes:
+                self.widget.hideModel(self.mbsModel)
+                self.mbsModel = mbsModel()
+                self.widget.showModel(self.mbsModel)
+
+            
 
     def loadFile(self):
-        self.mbsModel = mbsModel()
-        filePath, _ = QFileDialog.getOpenFileName(self, "load File", "", "pyFreeDyn-File (*.json)")
-        self.mbsModel.importJsonFile(filePath)
-        self.widget.modelRenderer()
-        self.widget.renderModel(self.mbsModel)
-        self.widget.modelTree(self.mbsModel)
+        if self.mbsModel == None:
+            self.mbsModel = mbsModel()
+            filePath, _ = QFileDialog.getOpenFileName(self, "load File", "", "pyFreeDyn-File (*.json)")
+            self.mbsModel.importJsonFile(filePath)
+            self.widget.renderModelWithTree(self.mbsModel)
+        else:
+            reply = QMessageBox.question(self, "Attention", "You have not saved the file yet do you want to continue? The changes to the current model will be deleted.",
+                                     QMessageBox.Yes | QMessageBox.No,
+                                     QMessageBox.No)
 
-    def saveFile(self, saveModel):
-        filePath, _ = QFileDialog.getSaveFileName(self, "save File", "", "pyFreeDyn-File (*.json)")
-        self.widget.saveJsonFile(filePath)
+            if reply == QMessageBox.Yes:
+                self.widget.hideModel(self.mbsModel)
+                self.mbsModel = mbsModel()
+                filePath, _ = QFileDialog.getOpenFileName(self, "load File", "", "pyFreeDyn-File (*.json)")
+                self.mbsModel.importJsonFile(filePath)
+                self.widget.showModel(self.mbsModel)
+        
+
+    def saveFile(self):
+        if self.mbsModel == None:
+            QMessageBox.information(self, "Attention", "You cannot save a file that does not exist.")
+        else:
+            [fileName, fileExtension] = os.path.splitext(self.mbsModel._filePath)
+            if fileExtension == ".json":
+                self.widget.saveJsonFile(self.mbsModel._filePath)
+            else:
+                filePath, _ = QFileDialog.getSaveFileName(self, "save File", "", "pyFreeDyn-File (*.json)")
+                self.widget.saveJsonFile(filePath)
 
     def saveAsFile(self):
-        filePath, _ = QFileDialog.getSaveFileName(self, "save File", "", "pyFreeDyn-File (*.json)")
-        self.widget.saveJsonFile(filePath)
+        if self.mbsModel == None:
+            QMessageBox.information(self, "Attention", "You cannot save a file that does not exist.")
+        else:
+            filePath, _ = QFileDialog.getSaveFileName(self, "save File", "", "pyFreeDyn-File (*.json)")
+            self.widget.saveJsonFile(filePath)
 
     def importFile(self):
-        filePath, _ = QFileDialog.getOpenFileName(self, "import file", "", "FreeDyn-File (*.fdd)")
-        importModel = mbsModel()
-        importModel.importFddFile(filePath)
-        return importModel
+        if self.mbsModel == None:
+            filePath, _ = QFileDialog.getOpenFileName(self, "import file", "", "FreeDyn-File (*.fdd)")
+            self.mbsModel = mbsModel()
+            self.mbsModel.importFddFile(filePath)
+        else:
+            reply = QMessageBox.question(self, "Attention", "You have not saved the file yet do you want to continue? The changes to the current model will be deleted.",
+                                     QMessageBox.Yes | QMessageBox.No,
+                                     QMessageBox.No)
+
+            if reply == QMessageBox.Yes:
+                self.widget.hideModel(self.mbsModel)
+                self.mbsModel = mbsModel()
+                filePath, _ = QFileDialog.getOpenFileName(self, "load File", "", "pyFreeDyn-File (*.json)")
+                self.mbsModel.importFddFile(filePath)
+                self.widget.showModel(self.mbsModel)
 
     def exportFile(self,exportModel):
-        filePath, _ = QFileDialog.getSaveFileName(self, "export file", "", "pyFreeDyn-File (*.fds)")
-        exportModel.exportFdsFile(filePath)
+        if self.mbsModel == None:
+            QMessageBox.information(self, "Attention", "You cannot export a file that does not exist.")
+        else:
+            filePath, _ = QFileDialog.getSaveFileName(self, "export file", "", "pyFreeDyn-File (*.fds)")
+            exportModel.exportFdsFile(filePath)
+
+    
 
 
 

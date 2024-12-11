@@ -11,9 +11,10 @@ class mbsModelWidget(QWidget):
     def __init__(self):
         QWidget.__init__(self)
         self.layout = QHBoxLayout(self)
+        self.QVTKWidget = None
+        self.treeWidget = None
         
     def modelRenderer(self):
-        
         self.QVTKWidget = QVTK.QVTKRenderWindowInteractor(self)
         self.renderer = vtk.vtkRenderer()
         renderWindow = self.QVTKWidget.GetRenderWindow()
@@ -40,10 +41,22 @@ class mbsModelWidget(QWidget):
         self.layout.addWidget(self.treeWidget)
         self.layout.addWidget(self.QVTKWidget)
         self.setLayout(self.layout)
-        self.treeWidget.Initialize()
 
-    def renderModel(self, mbsModel):
+
+    def showModel(self, mbsModel):
         mbsModel.showModel(self.renderer)
         self.renderer.ResetCamera()
+
+    def hideModel(self, mbsModel):
+        mbsModel.hideModel(self.renderer)
+
+    #def renderTree(self, mbsModel):
+
+    
+    def renderModelWithTree(self, mbsModel):
+        self.modelRenderer()
+        self.modelTree(mbsModel)
+        self.showModel(mbsModel)
+        
         
 
