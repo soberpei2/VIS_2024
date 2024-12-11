@@ -22,7 +22,8 @@ class mbsWindow(QMainWindow):
         #-------------------------
         QMainWindow.__init__(self)
 
-        self.model = None
+        # Initialisieren eines mbsModells
+        self.mbsModel = None
 
         # Fenstertitel / zentrales Widget definieren
         #-------------------------------------------
@@ -31,7 +32,7 @@ class mbsWindow(QMainWindow):
 
         # Initialisiere Instanzvariable für das VTK-Widget
         self.vtkWidget = None
-
+    
         # File-Menü anlegen
         #------------------
         self.menu = self.menuBar()
@@ -40,7 +41,6 @@ class mbsWindow(QMainWindow):
         # Load-Aktion definieren
         #-----------------------
         load_action = QAction("Load", self)
-
 
         # Speicher-Aktion defnieren
         #--------------------------
@@ -77,7 +77,7 @@ class mbsWindow(QMainWindow):
         # Abmessungen des Main-Windows festlegen
         #---------------------------------------
         geometry = self.screen().availableGeometry()
-        self.setFixedSize(geometry.width() * 0.8, geometry.height() * 0.7)
+        self.setFixedSize(geometry.width() * 0.6, geometry.height() * 0.7)
     #=======================================================================================
 
     # Fkt. - loadVTKbackGround
@@ -97,15 +97,28 @@ class mbsWindow(QMainWindow):
         self.interactor.Initialize()
     #=======================================================================================
 
+    # Fkt. - importFdd
+    #=================
     def importFdd(self, widget):
+        '''
+        Fkt.-Beschreibung:
+        \t importFdd liest ein fdd-File ein und visualisiert dieses
+        \n
+        Input-Variablen:
+        \t widget...Objekt vom Typ QWidget oder einer abgeleiteten Klasse
+        '''
         # Überprüfen, ob schon ein vtk-Widget existiert (wenn nicht -> Widget erstellen)
         if not self.vtkWidget:
             self.loadVTKbackGround(widget)
 
-        # fdd-File einlesen
-        myModel = mbsModel.mbsModel()
+        # Objekt vom Typ mbsModel anlegen
+        self.mbsModel = mbsModel.mbsModel()
+
+        # Abspeichern des .fdd-Pfades
         fdd_path = Path(sys.argv[1])
-        myModel.importFddFile(fdd_path)
-        myModel.showModel(self.renderer)
+
+        # .fdd-File einlesen und anzeigen
+        self.mbsModel.importFddFile(fdd_path)
+        self.mbsModel.showModel(self.renderer)
         
     
