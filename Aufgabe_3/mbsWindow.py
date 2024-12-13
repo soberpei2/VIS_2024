@@ -9,6 +9,7 @@ from PySide6.QtWidgets import QMainWindow
 from vtkmodules.qt.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
 import mbsModel as mbsModel
 import mbsObject as mbsObject
+import mbsDialog as mbsDialog
 
 #===================================================================================
 #                               KLASSE - mbsWindow                                 #
@@ -70,7 +71,7 @@ class mbsWindow(QMainWindow):
         # Statusleiste
         #-------------
         self.status = self.statusBar()
-        self.status.showMessage("GUI einsatzbereit")
+        self.status.showMessage("Freedyn startklar")
 
         # Interaktion mit VTK
         #--------------------
@@ -115,6 +116,9 @@ class mbsWindow(QMainWindow):
 
         # Objekt vom Typ mbsModel anlegen
         self.mbsModel = mbsModel.mbsModel()
+
+        # Aufrufen des Dialogs
+        self.showDialog()
 
         # Abspeichern des .fdd-Pfades
         fdd_path = Path(sys.argv[1])
@@ -182,4 +186,8 @@ class mbsWindow(QMainWindow):
             self.status.showMessage("Freedyn-Modell gespeichert")
     #=======================================================================================
 
-    
+    # Fkt. - showDialog
+    #==================
+    def showDialog(self):
+        dialog = mbsDialog.mbsDialog()
+        dialog.exec()
