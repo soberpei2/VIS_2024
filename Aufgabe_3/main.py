@@ -12,12 +12,6 @@ from pathlib import Path
 #================================================================================
 
 if __name__ == "__main__":
-    
-    # Abfrage, ob genug Argumente für Aufruf
-    #=======================================
-    if len(sys.argv) < 2:
-        sys.exit("No fdd file provided! Please run script with additional argument: fdd-filepath!")
-    #======================================================================================
 
     # Qt-Anwendung
     #=============
