@@ -3,6 +3,7 @@
 from PySide6.QtWidgets import (QApplication, QMainWindow, QMenuBar, QDialog, QHBoxLayout,
                                QVBoxLayout, QLabel, QPushButton, QLineEdit)
 from PySide6.QtGui import QAction, QKeySequence
+from PySide6.QtCore import Slot
 
 
 #===================================================================================
@@ -15,6 +16,9 @@ class mbsDialog(QDialog):
     def __init__(self):
         # Mutterklassenkonstruktor
         super().__init__()
+
+        # Initialisieren des Dateipfads
+        self.file_path = ""
 
         # Fenster anlegen
         self.setWindowTitle("ImportFdd-File")
@@ -37,6 +41,26 @@ class mbsDialog(QDialog):
         self.layout().addLayout(button_layout)
 
         # Buttonverbindungen
-        self.ok_button.clicked.connect(self.accept)
+        self.ok_button.clicked.connect(self.getInput)
         self.close_button.clicked.connect(self.reject)
-        
+    #=======================================================================================
+
+    # Fkt. - getInput
+    #================
+    def getInput(self):
+        '''
+        Fkt.-Beschreibung:
+        \t getInput gibt den Text aus dem Eingabefeld zurück
+        '''
+        self.file_path = self.input_field.text()
+        self.accept()
+    #=======================================================================================
+
+    # Fkt. - getFilepath
+    #===================
+    def getFilepath(self):
+        '''
+        Fkt.-Beschreibung:
+        \t getFilepath gibt den Dateipfad zum fdd-File zurück
+        '''
+        return self.file_path
