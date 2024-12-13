@@ -122,6 +122,9 @@ class mbsWindow(QMainWindow):
         # .fdd-File einlesen und anzeigen
         self.mbsModel.importFddFile(fdd_path)
         self.mbsModel.showModel(self.renderer)
+
+        # Nachricht in Statusleiste
+        self.status.showMessage("Fdd-File eingelesen")
     #=======================================================================================
 
     # Fkt. - load
@@ -163,4 +166,6 @@ class mbsWindow(QMainWindow):
         
         # Aufruf der Speicherfkt. von mbsModel
         self.mbsModel.saveDatabase(path)
+    #=======================================================================================
+
     
