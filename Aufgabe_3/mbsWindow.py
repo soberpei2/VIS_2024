@@ -27,6 +27,9 @@ class mbsWindow(QMainWindow):
         # Initialisieren eines mbsModells
         self.mbsModel = None
 
+        # Initialisieren eines Dateipfads
+        self.file_path = ""
+
         # Fenstertitel / zentrales Widget definieren
         #-------------------------------------------
         self.setWindowTitle("pyFreedyn")
@@ -157,9 +160,16 @@ class mbsWindow(QMainWindow):
         # Freedyn-Modell ist vorhanden
         #-----------------------------
         else:
-            # Speicherpfad bestimmen (am selben Ort wie Pfadeingabe, nur mit .json)
-            fdd_path = Path(sys.argv[1])
-            path = fdd_path.with_suffix(".json")
+            # Abspeichern der Dateiendung
+            file_name, file_extension = os.path.splitext(self.file_path)
+
+            # Wenn fdd-File eingelesen -> Endung auf .json ändern zum Speichern
+            if file_extension == ".fdd":
+                path = self.file_path.with_suffix(".json")
+
+            # Wenn Endung schon .json -> keine Änderung notwendig
+            elif file_extension == ".json":
+                path = self.file_path
             
             # Aufruf der Speicherfkt. von mbsModel
             self.mbsModel.saveDatabase(path)
@@ -184,20 +194,20 @@ class mbsWindow(QMainWindow):
         self.dialog.exec()
 
         # Abspeichern des .fdd-Pfades
-        file_path = self.dialog.getFilepath()
+        self.file_path = self.dialog.getFilepath()
 
         # Abspeichern der Dateiendung
-        file_name, file_extension = os.path.splitext(file_path)
+        file_name, file_extension = os.path.splitext(self.file_path)
 
         # Import eines fdd-Files bei Endung .fdd
         if file_extension == ".fdd":
             # .fdd-File einlesen und anzeigen
-            self.mbsModel.importFddFile(file_path)
+            self.mbsModel.importFddFile(self.file_path)
             self.mbsModel.showModel(self.renderer)
         
         # Import eines json-Files bei Endung .json
         elif file_extension == ".json":
-            self.mbsModel.loadDatabase(file_path)
+            self.mbsModel.loadDatabase(self.file_path)
             self.mbsModel.showModel(self.renderer)
 
         # Fehlermeldung bei anderer Endung
