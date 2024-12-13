@@ -1,7 +1,7 @@
 # Einlesen benötigte Bibliotheken
 #================================
 from PySide6.QtWidgets import (QApplication, QMainWindow, QMenuBar, QDialog,
-                               QVBoxLayout, QLabel, QPushButton)
+                               QVBoxLayout, QLabel, QPushButton, QLineEdit)
 from PySide6.QtGui import QAction, QKeySequence
 
 
@@ -17,12 +17,16 @@ class mbsDialog(QDialog):
         super().__init__()
 
         # Fenster anlegen
-        self.setWindowTitle("Pfad zum fdd-File")
+        self.setWindowTitle("ImportFdd-File")
         self.setLayout(QVBoxLayout())
         
-        # Dialoginhalt als Widget hinzufügen
-        label = QLabel("Bitte geben Sie den Pfad zu ihrem fdd-File ein:")
-        self.layout().addWidget(label)
+        # Aufforderung an User
+        self.label = QLabel("Bitte geben Sie den Pfad zu ihrem fdd-File ein:")
+        self.layout().addWidget(self.label)
+
+        # Eingabefeld
+        self.input_field = QLineEdit()
+        self.layout().addWidget(self.input_field)
 
         # Erzeugen einer Schließfläche
         close_button = QPushButton("Close")
