@@ -44,7 +44,7 @@ class mbsWindow(QMainWindow):
         load_action = QAction("Load", self)
         load_action.triggered.connect(lambda: self.load(widget))
 
-        # Speicher-Aktion defnieren
+        # Speicher-Aktion definieren
         #--------------------------
         save_action = QAction("Save", self)
         save_action.triggered.connect(lambda: self.save())
@@ -118,10 +118,13 @@ class mbsWindow(QMainWindow):
         self.mbsModel = mbsModel.mbsModel()
 
         # Aufrufen des Dialogs
-        self.showDialog()
+        self.dialog = mbsDialog.mbsDialog()
+        self.dialog.exec()
 
         # Abspeichern des .fdd-Pfades
-        fdd_path = Path(sys.argv[1])
+        fdd_path = self.dialog.getFilepath()
+        #fdd_path = Path(sys.argv[1])
+        print(fdd_path)
 
         # .fdd-File einlesen und anzeigen
         self.mbsModel.importFddFile(fdd_path)
@@ -185,9 +188,4 @@ class mbsWindow(QMainWindow):
             # Nachricht in Statusleiste
             self.status.showMessage("Freedyn-Modell gespeichert")
     #=======================================================================================
-
-    # Fkt. - showDialog
-    #==================
-    def showDialog(self):
-        dialog = mbsDialog.mbsDialog()
-        dialog.exec()
+        
