@@ -1,6 +1,7 @@
 # Einlesen benötigte Bibliotheken
 #================================
 import sys
+import os
 from pathlib import Path
 from PySide6.QtCore import Slot
 import vtk
@@ -114,6 +115,7 @@ class mbsWindow(QMainWindow):
         if not self.vtkWidget:
             self.loadVTKbackGround(widget)
 
+        # Funktion zum Dialog-Aufruf und Modell-Import aufrufen
         self.importModel()
 
         # Nachricht in Statusleiste
@@ -134,16 +136,7 @@ class mbsWindow(QMainWindow):
         if not self.vtkWidget:
             self.loadVTKbackGround(widget)
 
-        # Objekt vom Typ mbsModel anlegen
-        self.mbsModel = mbsModel.mbsModel()
-
-        # Abspeichern des .json-Pfades
-        fdd_path = Path(sys.argv[1])
-        json_path = fdd_path.with_suffix(".json")
-
-        # json-File einlesen und anzeigen
-        self.mbsModel.loadDatabase(json_path)
-        self.mbsModel.showModel(self.renderer)
+        self.importModel()
 
         # Nachricht in Statusleiste
         self.status.showMessage("Freedyn-Modell geladen")
@@ -191,9 +184,23 @@ class mbsWindow(QMainWindow):
         self.dialog.exec()
 
         # Abspeichern des .fdd-Pfades
-        fdd_path = self.dialog.getFilepath()
+        file_path = self.dialog.getFilepath()
 
-        # .fdd-File einlesen und anzeigen
-        self.mbsModel.importFddFile(fdd_path)
-        self.mbsModel.showModel(self.renderer)
+        # Abspeichern der Dateiendung
+        file_name, file_extension = os.path.splitext(file_path)
+
+        # Import eines fdd-Files bei Endung .fdd
+        if file_extension == ".fdd":
+            # .fdd-File einlesen und anzeigen
+            self.mbsModel.importFddFile(file_path)
+            self.mbsModel.showModel(self.renderer)
         
+        # Import eines json-Files bei Endung .json
+        elif file_extension == ".json":
+            self.mbsModel.loadDatabase(file_path)
+            self.mbsModel.showModel(self.renderer)
+
+        # Fehlermeldung bei anderer Endung
+        else:
+            print("Wrong file type: " + file_extension)
+            return False
