@@ -25,8 +25,10 @@ class MainWindow(QMainWindow):
         load_action.triggered.connect(self.load_model)
 
         save_action = QAction("save",self)
+        save_action.triggered.connect(self.save_model)
 
         openfdd_action = QAction("open fdd",self)
+        openfdd_action.triggered.connect(self.import_fdd)
 
         exit_action = QAction("Exit", self)
         exit_action.setShortcut(QKeySequence.Quit)
@@ -85,5 +87,29 @@ class MainWindow(QMainWindow):
     def load_json(self,filename):
             self.myModel = mbsModel.mbsModel()  # Erstelle ein neues Modell
             self.myModel.loadDatabase(Path(filename))  # Lade das Modell aus der JSON-Datei
-            self.statusBar().showMessage(f"Modell geladen: {filename}")
+            self.statusBar().showMessage(f"Modell aus JSON Datei geladen: {filename}")
             self.widget.update_renderer(self.myModel)  # Aktualisiere das Rendering mit dem neuen Modell
+        
+    def save_model(self):
+        """Speichert das Modell in einer JSON-Datei."""
+        options = QFileDialog.Options()
+        filename, _ = QFileDialog.getSaveFileName(self, "Save Model File", "", "JSON Files (*.json)", options=options)
+        if filename:
+            self.myModel.saveDatabase(Path(filename))  # Speichert das Modell
+            self.statusBar().showMessage(f"Modell gespeichert: {filename}")
+
+    def import_fdd(self):
+        """Importiert ein FDD-Modell aus einer Datei."""
+        options = QFileDialog.Options()
+        filename, _ = QFileDialog.getOpenFileName(self, "Import FDD File", "", "JSON and FDD Files (*.json *.fdd)", options=options) # Filter gleich nach fdd und json datein
+
+        if filename:
+            if filename.lower().endswith(".fdd"):  # Überprüfe, ob die Datei eine Fdd-Datei ist
+                self.myModel = mbsModel.mbsModel()
+                self.myModel.importFddFile(filename)
+                self.statusBar().showMessage(f"FDD-Datei importiert: {filename}")
+                self.widget.update_renderer(self.myModel)
+            else:
+                self.show_error_message("Ungültige Datei", "Bitte wählen Sie eine gültige Fdd-Datei aus.")
+        else:
+            self.statusBar().showMessage("Modell-Laden abgebrochen")
