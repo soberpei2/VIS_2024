@@ -163,15 +163,23 @@ class mbsWindow(QMainWindow):
         Fkt.-Beschreibung:
         \t save speichert das aktuell, geöffnete Modell als json-File
         '''
-        # Speicherpfad bestimmen (am selben Ort wie Pfadeingabe, nur mit .json)
-        fdd_path = Path(sys.argv[1])
-        path = fdd_path.with_suffix(".json")
-        
-        # Aufruf der Speicherfkt. von mbsModel
-        self.mbsModel.saveDatabase(path)
+        # Freedyn-Modell fehlt -> Fehlernachricht
+        #----------------------------------------
+        if self.mbsModel is None:
+            self.status.showMessage("Kein Modell zum Speichern geladen!")
 
-        # Nachricht in Statusleiste
-        self.status.showMessage("Freedyn-Modell gespeichert")
+        # Freedyn-Modell ist vorhanden
+        #-----------------------------
+        else:
+            # Speicherpfad bestimmen (am selben Ort wie Pfadeingabe, nur mit .json)
+            fdd_path = Path(sys.argv[1])
+            path = fdd_path.with_suffix(".json")
+            
+            # Aufruf der Speicherfkt. von mbsModel
+            self.mbsModel.saveDatabase(path)
+
+            # Nachricht in Statusleiste
+            self.status.showMessage("Freedyn-Modell gespeichert")
     #=======================================================================================
 
     
