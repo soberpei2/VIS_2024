@@ -21,11 +21,11 @@ class mbsDialog(QDialog):
         self.file_path = ""
 
         # Fenster anlegen
-        self.setWindowTitle("ImportFdd-File")
+        self.setWindowTitle("Import Freedyn-File")
         self.setLayout(QVBoxLayout())
         
         # Aufforderung an User
-        self.label = QLabel("Bitte geben Sie den Pfad zu ihrem fdd-File ein:")
+        self.label = QLabel("Bitte geben Sie den Pfad zu ihrem Freedyn-File ein:")
         self.layout().addWidget(self.label)
 
         # Eingabefeld
