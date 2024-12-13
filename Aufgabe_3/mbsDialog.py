@@ -30,6 +30,7 @@ class mbsDialog(QDialog):
 
         # Eingabefeld
         self.input_field = QLineEdit()
+        self.input_field.setPlaceholderText("Pfad/zu/meinem/File.xyz")
         self.layout().addWidget(self.input_field)
 
         # Erzeugen eines Ok- und Close-Buttons nebeneinander
