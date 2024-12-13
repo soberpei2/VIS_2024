@@ -70,7 +70,7 @@ class mbsWindow(QMainWindow):
         # Statusleiste
         #-------------
         self.status = self.statusBar()
-        self.status.showMessage("Hallo!")
+        self.status.showMessage("GUI einsatzbereit")
 
         # Interaktion mit VTK
         #--------------------
@@ -151,6 +151,9 @@ class mbsWindow(QMainWindow):
         # json-File einlesen und anzeigen
         self.mbsModel.loadDatabase(json_path)
         self.mbsModel.showModel(self.renderer)
+
+        # Nachricht in Statusleiste
+        self.status.showMessage("Freedyn-Modell geladen")
     #=======================================================================================
 
     # Fkt. - save
@@ -166,6 +169,9 @@ class mbsWindow(QMainWindow):
         
         # Aufruf der Speicherfkt. von mbsModel
         self.mbsModel.saveDatabase(path)
+
+        # Nachricht in Statusleiste
+        self.status.showMessage("Freedyn-Modell gespeichert")
     #=======================================================================================
 
     
