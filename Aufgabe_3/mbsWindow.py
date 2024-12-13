@@ -114,21 +114,7 @@ class mbsWindow(QMainWindow):
         if not self.vtkWidget:
             self.loadVTKbackGround(widget)
 
-        # Objekt vom Typ mbsModel anlegen
-        self.mbsModel = mbsModel.mbsModel()
-
-        # Aufrufen des Dialogs
-        self.dialog = mbsDialog.mbsDialog()
-        self.dialog.exec()
-
-        # Abspeichern des .fdd-Pfades
-        fdd_path = self.dialog.getFilepath()
-        #fdd_path = Path(sys.argv[1])
-        print(fdd_path)
-
-        # .fdd-File einlesen und anzeigen
-        self.mbsModel.importFddFile(fdd_path)
-        self.mbsModel.showModel(self.renderer)
+        self.importModel()
 
         # Nachricht in Statusleiste
         self.status.showMessage("Fdd-File eingelesen")
@@ -188,4 +174,26 @@ class mbsWindow(QMainWindow):
             # Nachricht in Statusleiste
             self.status.showMessage("Freedyn-Modell gespeichert")
     #=======================================================================================
+
+    # Fkt. - importModel
+    #===================
+    def importModel(self):
+        '''
+        Fkt.-Beschreibung:
+        \t importModel lädt die gewählte Datei und visualiesiert diese im vtk-Widget. Es wird
+           dabei zwischen fdd-Files und json-Files unterschieden
+        '''
+       # Objekt vom Typ mbsModel anlegen
+        self.mbsModel = mbsModel.mbsModel()
+
+        # Aufrufen des Dialogs
+        self.dialog = mbsDialog.mbsDialog()
+        self.dialog.exec()
+
+        # Abspeichern des .fdd-Pfades
+        fdd_path = self.dialog.getFilepath()
+
+        # .fdd-File einlesen und anzeigen
+        self.mbsModel.importFddFile(fdd_path)
+        self.mbsModel.showModel(self.renderer)
         
