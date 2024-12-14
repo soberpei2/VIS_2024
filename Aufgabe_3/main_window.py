@@ -21,16 +21,16 @@ class MainWindow(QMainWindow):
         self.edit_menu = self.menu.addMenu("Edit")
 
         # Q Actions erstellen
-        load_action = QAction('Load', self)
+        load_action = QAction('Load from JSON', self)
         load_action.triggered.connect(self.load_model)
 
-        save_action = QAction("save",self)
+        save_action = QAction("Save to JSON",self)
         save_action.triggered.connect(self.save_model)
 
-        openfdd_action = QAction("open fdd",self)
+        openfdd_action = QAction("Open FDD",self)
         openfdd_action.triggered.connect(self.import_fdd)
 
-        exit_action = QAction("Exit", self)
+        exit_action = QAction("EXIT", self)
         exit_action.setShortcut(QKeySequence.Quit)
         exit_action.triggered.connect(self.close)
 
@@ -42,21 +42,15 @@ class MainWindow(QMainWindow):
 
         # Status Bar 
         self.status = self.statusBar()
-        self.status.showMessage("Test 1234")
+        self.status.showMessage("Laden Sie ein JSON oder FDD File ein, um es anzuzeigen")
 
         # Fenstergröße variabel
         geometry = self.screen().availableGeometry()
         self.resize(geometry.width() * 0.8, geometry.height() * 0.7)
 
         # Hauptfenster konfigurieren
-        self.setWindowTitle("3D Modell in Qt mit VTK")  # Setze den Titel des Fensters
+        self.setWindowTitle("3D Modell in QT mit VTK")  # Setze den Titel des Fensters
         self.setGeometry(100, 100, 800, 600)  # Setze die Fenstergröße und Position
-        
-        # Menüleiste erstellen
-        #self.create_menu()
-
-        # Statusleiste erstellen
-        #self.create_status_bar()
 
         # VTK-Widget und -Renderer initialisieren
         self.widget = mwid.Widget()  # Erstelle ein VTK-Widget
@@ -80,7 +74,7 @@ class MainWindow(QMainWindow):
             if filename.lower().endswith(".json"):  # Überprüfe, ob die Datei eine JSON-Datei ist
                 self.load_json(filename)
             else:
-                self.show_error_message("Ungültige Datei", "Bitte wählen Sie eine gültige JSON-Datei aus.")
+                self.messagebox("Ungültiges Dateiformat","Bitte wählen Sie eine JSON-Datei aus.")
         else:
             self.statusBar().showMessage("Modell-Laden abgebrochen")
     
@@ -103,13 +97,18 @@ class MainWindow(QMainWindow):
         options = QFileDialog.Options()
         filename, _ = QFileDialog.getOpenFileName(self, "Import FDD File", "", "JSON and FDD Files (*.json *.fdd)", options=options) # Filter gleich nach fdd und json datein
 
-        if filename:
-            if filename.lower().endswith(".fdd"):  # Überprüfe, ob die Datei eine Fdd-Datei ist
-                self.myModel = mbsModel.mbsModel()
-                self.myModel.importFddFile(filename)
-                self.statusBar().showMessage(f"FDD-Datei importiert: {filename}")
-                self.widget.update_renderer(self.myModel)
-            else:
-                self.show_error_message("Ungültige Datei", "Bitte wählen Sie eine gültige Fdd-Datei aus.")
+        if filename.lower().endswith(".fdd"):  # Überprüfe, ob die Datei eine Fdd-Datei ist
+            self.myModel = mbsModel.mbsModel()
+            self.myModel.importFddFile(filename)
+            self.statusBar().showMessage(f"FDD-Datei importiert: {filename}")
+            self.widget.update_renderer(self.myModel)
         else:
-            self.statusBar().showMessage("Modell-Laden abgebrochen")
+            self.messagebox("Ungültiges Dateiformat","Bitte wählen Sie eine FDD-Datei aus.")
+
+    def messagebox(self,title,text):
+            msg_box = QMessageBox(self)
+            msg_box.setIcon(QMessageBox.Critical)
+            msg_box.setWindowTitle(title)
+            msg_box.setText(text)
+            msg_box.exec()
+
