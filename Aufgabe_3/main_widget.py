@@ -7,9 +7,11 @@ import mbsModel
 
 
 class Widget(QWidget):
-    def __init__(self):
+    def __init__(self, model):
         super().__init__()
 
+        self.model = model  # Referenz auf das Modell (mbsModel)
+        
         # VTK Renderer Setup
         self.vtk_widget = QVTKRenderWindowInteractor(self)
         self.renderer = vtkRenderer()
@@ -21,22 +23,14 @@ class Widget(QWidget):
         layout.addWidget(self.vtk_widget)
         self.setLayout(layout)
 
-        # Placeholder for 3D content
-        self._add_geometry_actor()
+        # Zeige das Modell im Renderer
+        self._show_model_in_renderer()
 
-    def _add_geometry_actor(self):
-        """Add a placeholder actor to the VTK Renderer."""
-        from vtkmodules.vtkRenderingCore import vtkActor, vtkPolyDataMapper
-        from vtkmodules.vtkFiltersSources import vtkConeSource
-
-        geometry = vtk
-        mapper = vtkPolyDataMapper()
-        mapper.SetInputConnection(cone.GetOutputPort())
-        actor = vtkActor()
-        actor.SetMapper(mapper)
-
-        self.renderer.AddActor(actor)
-        self.renderer.ResetCamera()
+    def _show_model_in_renderer(self):
+        """Zeigt das Modell im VTK-Renderer."""
+        self.model.showModel(self.renderer)  # Aufruf der showModel Methode
+        
+        self.renderer.ResetCamera()  # Kamera-Ansicht zurücksetzen
 
     def update_renderer(self, actors):
         """Update the renderer with new actors."""

@@ -23,13 +23,11 @@ if len(sys.argv) < 2:
 
 myModel = mbsModel.mbsModel()
 
-
-
 # Qt Application
 app = QApplication(sys.argv)
 
 # Create central widget (with VTK renderer)
-widget = Widget()
+widget = Widget(myModel)  # Übergibt das Modell an das Widget
 
 # Create main window with status bar and menus
 window = MainWindow(widget)
