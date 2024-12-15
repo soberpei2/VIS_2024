@@ -5,6 +5,7 @@ import constraint
 import force
 import measure
 import dataobject
+import settings
 
 
 
@@ -18,6 +19,7 @@ def parseText2blocksOfMbsObjects(fileContent,keySign,search4Typ):
     currentBlockType = ""
     currentTextBlock = []
     listOfMbsObjects = []
+    listOfSettings = []
 
     for line in fileContent:
         if(line.find(keySign) >= 0):
@@ -25,6 +27,8 @@ def parseText2blocksOfMbsObjects(fileContent,keySign,search4Typ):
                 for obj in search4Typ:             
                     if(currentBlockType == obj):
                         listOfMbsObjects.append(mbsObjectFactory(obj,currentTextBlock))
+                    if(currentBlockType == "SETTINGS" and currentBlockType == obj):
+                        listOfMbsObjects.append(settings.settings(text=currentTextBlock))
                 currentBlockType = ""
         
         for type_i in search4Typ:

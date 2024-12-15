@@ -19,12 +19,12 @@ fds_path = fdd_path.with_suffix(".fds")
 myModel.exportFdsFile(fds_path)
 #create path for model database file (json)
 json_path = fdd_path.with_suffix(".json")
-myModel.exportJsonFile(json_path)
+myModel.saveJsonFile(json_path)
 
 #create new model and load json generated above
 #(content should be the same)
 newModel = mbsModel.mbsModel()
-newModel.importJsonFile(json_path)
+newModel.loadJsonFile(json_path)
 
 #visualization part
 #-----------------------------------------------------------------------------
