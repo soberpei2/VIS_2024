@@ -182,9 +182,12 @@ class gravity(force):
         else:
             force.__init__(self,"Gravity",**kwargs)
 
-        
+        self.gravityArrow()
+
+    def gravityArrow(self):
+        self.actors = []
         direction = self.parameter["gravity_vector"]["value"]
-        size = self._symbolScale*1.5
+        size = 1
         arrow = vtk.vtkArrowSource()
         arrow.SetShaftResolution(100)
         arrow.SetTipResolution(100)
@@ -217,7 +220,7 @@ class gravity(force):
         textMapper.SetInputConnection(vectorText.GetOutputPort())
         
         transformText = vtk.vtkTransform()
-        transformText.Scale(0.1,0.1,0.1)
+        transformText.Scale(0.2,0.2,0.2)
 
         textActor = vtk.vtkFollower()
         textActor.SetMapper(textMapper)
@@ -236,5 +239,5 @@ class gravity(force):
 
         for actor in self.actors:
             actor.SetUserTransform(transform)
-        
+    
 

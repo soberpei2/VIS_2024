@@ -6,7 +6,7 @@ class settings(mbsObject):
     def __init__(self, **kwargs):
         if "text" in kwargs:
             parameter = {
-                "background color": {"type": "vectorInt", "value": [0,0,0]},
+                "background color": {"type": "vectorInt", "value": [0, 0, 0]},
                 "COG marker scale": {"type": "float", "value": 0.},
                 "constraint icon scale": {"type": "float", "value": 0,},
                 "force icon scale": {"type": "float", "value": 0.},

@@ -8,6 +8,7 @@ import constraint
 import force
 import measure
 import dataobject
+import settings
 
 class mbsModel:
     def __init__(self):
@@ -17,14 +18,39 @@ class mbsModel:
     
     def showModel(self,renderer):
         for obj in self.__listOfMbsObject:
-            obj.show(renderer)
+            if obj.getSubtype() != "Gravity" and obj.getType() != "Settings":
+                obj.show(renderer)
 
     def hideModel(self,renderer):
         for obj in self.__listOfMbsObject:
-            obj.hide(renderer)
+            if obj.getSubtype() != "Gravity" and obj.getType() != "Settings":
+                obj.hide(renderer)
 
     def getListOfMbsModel(self):
         return self.__listOfMbsObject
+    
+    def getBackgroundColor(self):
+        for obj in self.__listOfMbsObject:
+            if obj.getType() == "Settings":
+                backgroundColorRGB = obj.parameter["background color"]["value"]
+        return backgroundColorRGB
+    
+    def setBackgroundColor(self, backgroundColorRGB):
+        for obj in self.__listOfMbsObject:
+            if obj.getType() == "Settings":
+                obj.parameter["background color"]["value"] = backgroundColorRGB
+    
+    def getGravityVector(self):
+        for obj in self.__listOfMbsObject:
+            if obj.getSubtype() == "Gravity":
+                gravityVector = obj.parameter["gravity_vector"]["value"]
+        return gravityVector
+    
+    def setGravityVector(self, gravityVector):
+        for obj in self.__listOfMbsObject:
+            if obj.getSubtype() == "Gravity":
+                obj.parameter["gravity_vector"]["value"] = gravityVector
+
     
     def importFddFile(self,filePathFdd):
         self._filePath = os.path.normpath(filePathFdd)
@@ -76,6 +102,8 @@ class mbsModel:
                     self.__listOfMbsObject.append(measure.measure(parameter=modelObject["parameter"]))
                 elif(modelObject["type"] == "DataObject" and modelObject["subtype"] == "Parameter"):
                     self.__listOfMbsObject.append(dataobject.parameter(parameter=modelObject["parameter"]))
+                elif(modelObject["type"] == "Settings" and modelObject["subtype"] == ""):
+                    self.__listOfMbsObject.append(settings.settings(parameter=modelObject["parameter"]))
             return True
 
         else:

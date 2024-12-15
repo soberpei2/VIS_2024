@@ -4,7 +4,7 @@ import os
 import numpy as np
 
 
-from PySide6.QtWidgets import QWidget, QHBoxLayout, QTreeWidget, QTreeWidgetItem
+from PySide6.QtWidgets import QWidget, QTreeWidget, QTreeWidgetItem,QHBoxLayout
 from PySide6.QtCore import Qt
 
 
@@ -12,45 +12,27 @@ class mbsModelWidget(QWidget):
     def __init__(self, mbsModel):
         QWidget.__init__(self)
         self.mbsModel = mbsModel
-        self.layout = QHBoxLayout(self)
         self.QVTKWidget = None
         self.treeWidget = None
-        
-    def modelRenderer(self):
-        self.QVTKWidget = QVTK.QVTKRenderWindowInteractor(self)
-        self.layout.addWidget(self.QVTKWidget)
-        self.setLayout(self.layout)
+        self.layout = QHBoxLayout()
 
         
+
+    def createModelRenderer(self):
+        self.QVTKWidget = QVTK.QVTKRenderWindowInteractor(self)
+                
         self.renderWindow = self.QVTKWidget.GetRenderWindow()
         self.renderWindow.SetNumberOfLayers(2)
         
-        renderWindowInteractor = self.QVTKWidget.GetRenderWindow().GetInteractor()
+        self.renderWindowInteractor = self.QVTKWidget.GetRenderWindow().GetInteractor()
         style = vtk.vtkInteractorStyleTrackballCamera()
-        renderWindowInteractor.SetInteractorStyle(style)
-        renderWindowInteractor.SetRenderWindow(self.renderWindow)
-
-
-        cosy = vtk.vtkAxesActor()
-        cosy.SetTotalLength(1.0, 1.0, 1.0)
-
-        rendererCosy = vtk.vtkRenderer()
-        rendererCosy.SetLayer(1)
-        self.renderWindow.AddRenderer(rendererCosy)
-        rendererCosy.AddActor(cosy)
-        rendererCosy.SetViewport(0.85, 0, 1.0, 0.15)
-        
-        self.cameraCosy = vtk.vtkCamera()
-        rendererCosy.SetActiveCamera(self.cameraCosy)
-        self.cameraCosy.SetFocalPoint(0,0,0)
-        
-               
-
+        self.renderWindowInteractor.SetInteractorStyle(style)
+        self.renderWindowInteractor.SetRenderWindow(self.renderWindow)
 
         self.rendererMbsModel = vtk.vtkRenderer()
         self.rendererMbsModel.SetLayer(0)
         self.renderWindow.AddRenderer(self.rendererMbsModel)
-        self.rendererMbsModel.SetBackground(0.1, 0.1, 0.1)
+        self.rendererMbsModel.SetBackground([channel / 255 for channel in self.mbsModel.getBackgroundColor()])
     
         self.cameraMbsModel = vtk.vtkCamera()
         self.rendererMbsModel.SetActiveCamera(self.cameraMbsModel)
@@ -59,14 +41,16 @@ class mbsModelWidget(QWidget):
         self.cameraMbsModel.SetFocalPoint(0,0,0)
         self.rendererMbsModel.ResetCamera()
 
-        renderWindowInteractor.AddObserver('RenderEvent', self.syncCameras)
-
+        self.addCoordinateSystem()
+        self.addGravity()
+        
+        self.layout.addWidget(self.QVTKWidget)
+        self.setLayout(self.layout)
+    
         self.QVTKWidget.Initialize()
         self.renderWindow.Render()
-        renderWindowInteractor.Start()
+        self.renderWindowInteractor.Start()
 
-
-    
 
     def syncCameras(self, obj, event):
         self.cameraCosy.SetPosition(self.cameraMbsModel.GetPosition())
@@ -85,12 +69,50 @@ class mbsModelWidget(QWidget):
             self.cameraCosy.SetPosition(newCameraPosition)
         
         self.renderWindow.Render()
+    
+    def deleteModelRenderer(self):
+        self.layout.removeWidget(self.QVTKWidget)
+
+    def addCoordinateSystem(self):
+        self.cosy = vtk.vtkAxesActor()
+        self.cosy.SetTotalLength(1.0, 1.0, 1.0)
+
+        self.rendererCosy = vtk.vtkRenderer()
+        self.rendererCosy.SetLayer(1)
+        self.renderWindow.AddRenderer(self.rendererCosy)
+        self.rendererCosy.AddActor(self.cosy)
+        self.rendererCosy.SetViewport(0.85, 0, 1.0, 0.15)
+        
+        self.cameraCosy = vtk.vtkCamera()
+        self.rendererCosy.SetActiveCamera(self.cameraCosy)
+        self.cameraCosy.SetFocalPoint(0,0,0)
+
+        self.renderWindowInteractor.AddObserver('RenderEvent', self.syncCameras)
+
+    def hideCoordinateSystem(self):
+        self.rendererCosy.RemoveActor(self.cosy)
+
+    def addGravity(self):
+        for obj in self.mbsModel.getListOfMbsModel():
+            if obj.getSubtype() == "Gravity":
+                obj.hide(self.rendererCosy)
+                obj.gravityArrow()
+                obj.show(self.rendererCosy)
+
+    def renderModel(self):
+        self.mbsModel.showModel(self.rendererMbsModel)
+        self.rendererMbsModel.ResetCamera()
+    
+    def hideModel(self):
+        self.mbsModel.hideModel(self.renderer)
 
 
 
 
 
-    def modelTree(self):
+
+
+    def createModelTree(self):
         self.treeWidget = QTreeWidget()
         
         self.treeWidget.setHeaderLabels(["mbsModel"])
@@ -137,26 +159,19 @@ class mbsModelWidget(QWidget):
         treeWithPixels = int(self.logicalDpiX() * 50 / 25.4)  # Umrechnung in Pixel
         self.treeWidget.setFixedWidth(treeWithPixels)
         
-        
         self.layout.addWidget(self.treeWidget)
-        self.layout.addWidget(self.QVTKWidget)
         self.setLayout(self.layout)
 
-    def deleteModel(self):
-        self.layout.removeWidget(self.QVTKWidget)
 
-    def deleteTree(self):
+    def deleteModelTree(self):
         self.layout.removeWidget(self.treeWidget)
-
-    def renderModel(self):
-        self.mbsModel.showModel(self.rendererMbsModel)
-        self.rendererMbsModel.ResetCamera()
 
     def renderTree(self):
         if self.mbsModel._filePath != None:
             self.treeWidget.setHeaderLabels(["mbsModel " + os.path.basename(self.mbsModel._filePath)])
         else:
             self.treeWidget.setHeaderLabels(["mbsModel"])
+            
         for obj in self.mbsModel.getListOfMbsModel():
             if obj.getType() == "Body":
                 if obj.getSubtype() == "Rigid_EulerParameter_PAI":
@@ -178,8 +193,7 @@ class mbsModelWidget(QWidget):
                 if obj.getSubtype() == "Parameter":
                     self.childParameter.addChild(QTreeWidgetItem([obj.parameter["name"]["value"]]))
 
-    def hideModel(self):
-        self.mbsModel.hideModel(self.renderer)
+
 
 
         
