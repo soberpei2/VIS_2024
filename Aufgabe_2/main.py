@@ -1,53 +1,40 @@
 import mbsModel
 import sys
 from pathlib import Path
-
-from vtkmodules.vtkRenderingCore import (
-    vtkRenderWindow,
-    vtkRenderWindowInteractor,
-    vtkRenderer
-)
-from vtkmodules.all import vtkInteractorStyleTrackballCamera
+from vtkmodules.vtkRenderingCore import vtkRenderer
+from PyQt6.QtWidgets import QApplication
+from main_window import MainWindow
 
 if len(sys.argv) < 2:
     sys.exit("No fdd file provided! Please run script with additional argument: fdd-filepath!")
 
+# Load the model
 myModel = mbsModel.mbsModel()
 
-#read fdd file path from input arguments
+# Read FDD file path from input arguments
 fdd_path = Path(sys.argv[1])
 myModel.importFddFile(fdd_path)
-#create path for solver input file (fds)
+
+# Create path for solver input file (fds)
 fds_path = fdd_path.with_suffix(".fds")
 myModel.exportFdsFile(fds_path)
-#create path for model database file (json)
+
+# Create path for model database file (json)
 json_path = fdd_path.with_suffix(".json")
 myModel.saveDatabase(json_path)
 
-#create new model and load json generated above
-#(content should be the same)
+# Load database into a new model
 newModel = mbsModel.mbsModel()
 newModel.loadDatabase(json_path)
 
-#visualization part
-#-----------------------------------------------------------------------------
+# Create a VTK renderer
 renderer = vtkRenderer()
-renWin = vtkRenderWindow()
-renWin.AddRenderer(renderer)
-renWin.SetWindowName('pyFreeDyn')
-renWin.SetSize(1024,768)
-
-# Interactor einrichten
-interactor = vtkRenderWindowInteractor()
-interactor.SetRenderWindow(renWin)
-
-style = vtkInteractorStyleTrackballCamera()
-interactor.SetInteractorStyle(style)
-
-# Modell anzeigen
 newModel.showModel(renderer)
 
-# Render- und Interaktionsloop starten
-renWin.Render()
-interactor.Start()
-#-----------------------------------------------------------------------------
+# Start the Qt application
+app = QApplication(sys.argv)
+main_window = MainWindow(renderer)
+main_window.show()
+
+# Start the Qt event loop
+sys.exit(app.exec())
