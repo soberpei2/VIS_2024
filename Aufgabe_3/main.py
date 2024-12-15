@@ -19,31 +19,14 @@ from vtkmodules.vtkRenderingCore import (
 from vtkmodules.all import vtkInteractorStyleTrackballCamera
 
 
-if len(sys.argv) < 2:
-    sys.exit("No fdd file provided! Please run script with additional argument: fdd-filepath!")
-
-myModel = mbsModel.mbsModel()
-
-#read fdd file path from input arguments
-fdd_path = Path(sys.argv[1])
-myModel.importFddFile(fdd_path)
-#create path for solver input file (fds)
-fds_path = fdd_path.with_suffix(".fds")
-myModel.exportFdsFile(fds_path)
-#create path for model database file (json)
-json_path = fdd_path.with_suffix(".json")
-myModel.saveDatabase(json_path)
-
-#create new model and load json generated above
-#(content should be the same)
-newModel = mbsModel.mbsModel()
-newModel.loadDatabase(json_path)
-
 # Qt Application
 app = QApplication(sys.argv)
 
+# Erstelle das Modell
+newModel = mbsModel.mbsModel()
+
 # Erstelle das zentrale Widget (mit VTK-Renderer)
-widget = Widget(myModel)  # Übergibt das Modell an das Widget
+widget = Widget(newModel)  # Übergibt das Modell an das Widget
 
 # Erstelle das Hauptfenster mit Statusleiste und Menüs
 window = MainWindow(widget)

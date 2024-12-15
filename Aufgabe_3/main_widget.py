@@ -10,12 +10,11 @@ from vtkmodules.all import vtkRenderer, vtkInteractorStyleTrackballCamera
 class Widget(QWidget):
     def __init__(self, model):
         super().__init__()
-
-        self.model = model  # Referenz auf das Modell (mbsModel)
         
         # VTK Renderer Setup
         self.vtk_widget = QVTKRenderWindowInteractor(self)
         self.renderer = vtkRenderer()
+        self.renderer.SetBackground(1.,1.,1.)
         render_window = self.vtk_widget.GetRenderWindow()
         render_window.AddRenderer(self.renderer)
 
@@ -24,16 +23,10 @@ class Widget(QWidget):
         layout.addWidget(self.vtk_widget)
         self.setLayout(layout)
 
-        # VTK Render Window
-        self.vtk_render_window = self.vtk_widget.GetRenderWindow()
-
-        # Zeige das Modell im Renderer und aktualisiere die Darstellung
-        self._initialize_and_render_model()
-
-    def _initialize_and_render_model(self):
+    def update_renderer(self, model):
         """Initialisiert das Modell und rendert es im VTK-Renderer."""
         # Zeige das Modell im Renderer
-        self.model.showModel(self.renderer)
+        model.showModel(self.renderer)
         
         # Kamera zurücksetzen, um die Ansicht zu optimieren
         self.renderer.ResetCamera()

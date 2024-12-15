@@ -1,122 +1,101 @@
 from __future__ import annotations
+from pathlib import Path
 import json
 from PySide6.QtGui import QAction, QKeySequence
 from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox
 import mbsModel
 import os
+import main_widget
+
+
+newModel = mbsModel.mbsModel()
 
 class MainWindow(QMainWindow):
     def __init__(self, widget):
         super().__init__()
         self.setWindowTitle("Inputfilereader")
         self.setCentralWidget(widget)
+        self.setGeometry(100, 100, 1200, 900)
 
-        # Instanz der mbsModel-Klasse
-        self.model = mbsModel.mbsModel()  # Annahme: Deine Klasse heißt mbsModel
+        # Instanz des Modells
+        self.model = mbsModel.mbsModel()
 
-        # Menu
+        # Menü erstellen
         self.menu = self.menuBar()
         self.file_menu = self.menu.addMenu("File")
 
-        # File Menu Actions
+        # Menüaktionen definieren
         load_action = QAction("Load Database", self)
         import_fdd_action = QAction("Import Fdd", self)
         save_action = QAction("Save", self)
         export_fds_action = QAction("Export FDS File", self)
         exit_action = QAction("Exit", self)
 
-        # Connect actions to methods
+        # Aktionen verbinden
         load_action.triggered.connect(self.select_and_load_database)
         import_fdd_action.triggered.connect(self.select_and_import_fdd)
         save_action.triggered.connect(self.save_to_file)
         export_fds_action.triggered.connect(self.export_fds_file)
 
-        # Exit action
+        # Exit-Action
         exit_action.setShortcut(QKeySequence.Quit)
         exit_action.triggered.connect(self.close)
 
+        # Aktionen zum Menü hinzufügen
         self.file_menu.addAction(load_action)
         self.file_menu.addAction(import_fdd_action)
         self.file_menu.addAction(save_action)
         self.file_menu.addAction(export_fds_action)
         self.file_menu.addAction(exit_action)
 
-        # Status Bar
+        # Statusleiste
         self.status = self.statusBar()
         self.status.showMessage("Ready")
 
-        # Window dimensions
+        # Fenstergröße festlegen
         geometry = self.screen().availableGeometry()
         self.setFixedSize(geometry.width() * 0.8, geometry.height() * 0.7)
 
     def select_and_load_database(self):
-        """Open a file dialog to select a JSON database file and load it."""
-        file_path, _ = QFileDialog.getOpenFileName(
-            self,
-            "Load Database",           # Dialog Title
-            "",                         # Initial Directory
-            "JSON Files (*.json);;All Files (*)"  # File Filters
-        )
-
-        if file_path:  # If a file was selected
-            try:
-                success = self.model.loadDatabase(file_path)
-                if success:
-                    QMessageBox.information(self, "Success", f"Database loaded successfully: {file_path}")
-                else:
-                    QMessageBox.warning(self, "Failed", "Failed to load the database.")
-            except Exception as e:
+        """Lädt eine JSON-Datenbankdatei."""
+        jason_path, _ = QFileDialog.getOpenFileName(self, "Load Database", "", "JSON Files (*.json);;All Files (*)")
+        if jason_path:
+            if jason_path.lower().endswith(".json"):
+                self.model.loadDatabase(Path(jason_path))
+                newModel.loadDatabase(jason_path)
+                self.centralWidget().update_renderer(self.model)
+                QMessageBox.information(self, "Success", f"Database loaded successfully: {jason_path}")
+            else:
+                QMessageBox.warning(self, "Failed", "Failed to load the database.")
+        else:
                 QMessageBox.critical(self, "Error", f"Error loading database:\n{str(e)}")
 
     def select_and_import_fdd(self):
-        """Open a file dialog to select an Fdd file and import it."""
-        file_path, _ = QFileDialog.getOpenFileName(
-            self,
-            "Import Fdd File",          # Dialog Title
-            "",                         # Initial Directory
-            "Fdd Files (*.fdd);;All Files (*)"  # File Filters
-        )
+        """Öffnet den Dateidialog und speichert den Pfad zur ausgewählten FDD-Datei."""
+        fddfilename, _  = QFileDialog.getOpenFileName(self, "Import Fdd File", "", "Fdd Files (*.fdd);;All Files (*)")
+        if fddfilename.lower().endswith(".fdd"):
+                    self.model.importFddFile(Path(fddfilename))
+                    newModel.importFddFile(fddfilename)                    
+                    self.centralWidget().update_renderer(self.model)
+                    QMessageBox.information(self, "Success", f"Fdd file imported successfully: {fddfilename}")
 
-        if file_path:  # If a file was selected
-            try:
-                success = self.model.importFddFile(file_path)
-                if success:
-                    QMessageBox.information(self, "Success", f"Fdd file imported successfully: {file_path}")
-                else:
+        else:
                     QMessageBox.warning(self, "Failed", "Failed to import the Fdd file.")
-            except Exception as e:
-                QMessageBox.critical(self, "Error", f"Error importing Fdd file:\n{str(e)}")
 
     def save_to_file(self):
-        """Open a file dialog to select a location and save the current state as JSON."""
-        file_path, _ = QFileDialog.getSaveFileName(
-            self,
-            "Save Database",           # Dialog Title
-            "",                        # Initial Directory
-            "JSON Files (*.json);;All Files (*)"  # File Filters
-        )
-
-        if file_path:  # If a file was selected
-            try:
-                # Speichern der Datenbank mit der `saveDatabase` Methode
-                self.model.saveDatabase(file_path)
+        """Speichert die Datenbank als JSON-Datei."""
+        file_path, _ = QFileDialog.getSaveFileName(self, "Save Database", "", "JSON Files (*.json);;All Files (*)")
+        if file_path:
+                self.model.saveDatabase(Path(file_path))
                 QMessageBox.information(self, "Success", f"Database saved successfully: {file_path}")
-            except Exception as e:
-                QMessageBox.critical(self, "Error", f"Error saving database:\n{str(e)}")
+
 
     def export_fds_file(self):
-        """Open a file dialog to select a location and export the model to an FDS file."""
-        file_path, _ = QFileDialog.getSaveFileName(
-            self,
-            "Export FDS File",         # Dialog Title
-            "",                        # Initial Directory
-            "FDS Files (*.fds);;All Files (*)"  # File Filters
-        )
-
-        if file_path:  # If a file was selected
+        """Exportiert das Modell als FDS-Datei."""
+        file_path, _ = QFileDialog.getSaveFileName(self, "Export FDS File", "", "FDS Files (*.fds);;All Files (*)")
+        if file_path:
             try:
-                # Exportiere das Modell in die FDS-Datei mit der `exportFdsFile` Methode
-                self.model.exportFdsFile(file_path)
+                self.model.exportFdsFile(Path(file_path))
                 QMessageBox.information(self, "Success", f"FDS File exported successfully: {file_path}")
             except Exception as e:
                 QMessageBox.critical(self, "Error", f"Error exporting FDS file:\n{str(e)}")
