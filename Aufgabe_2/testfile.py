@@ -1,13 +1,21 @@
+import sys  
+from PySide6.QtCore import Slot
+from PySide6.QtGui import QAction, QKeySequence
+from PySide6.QtWidgets import QApplication, QMainWindow,QStatusBar,  QVBoxLayout, QWidget, QFileDialog, QMessageBox
+
+from vtkmodules.vtkRenderingCore import vtkRenderer, vtkRenderWindow
+
+from vtkmodules.vtkFiltersSources import vtkSphereSource
+from vtkmodules.vtkRenderingCore import vtkPolyDataMapper, vtkActor
+from vtkmodules.qt.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
+from vtkmodules.vtkRenderingCore import (
+    
+    vtkRenderWindowInteractor
+)
 import mbsModel
-import sys
-from pathlib import Path
-from vtkmodules.vtkRenderingCore import vtkRenderer
-from PyQt6.QtWidgets import QApplication
 from qt_anwendung import MainWindow
-
-#------------------------------------------------------------------------------------------------------------------------
-
-from inputfilereader import readInput  # Importiere die Funktion readInput
+from pathlib import Path
+from vtkmodules.all import vtkInteractorStyleTrackballCamera
 
 #------------------------------------------------------------------------------------------------------------------------
 
@@ -39,7 +47,7 @@ newModel.loadDatabase(json_path)
 renderer = vtkRenderer()
 #renWin = vtkRenderWindow()
 #renWin.AddRenderer(renderer)
-##renWin.SetWindowName('pyFreeDyn')
+#renWin.SetWindowName('pyFreeDyn')
 #renWin.SetSize(1024,768)
 
 # Interactor einrichten
@@ -60,14 +68,14 @@ newModel.showModel(renderer)
 # Aufgabe 3
 
 
-#def main():
-#    app = QApplication(sys.argv)  # Qt-Anwendung erstellen
-#    window = MainWindow()  # Hauptfenster instanziieren
-#    window.show()  # Fenster anzeigen
-#    sys.exit(app.exec_())  # Anwendung starten
+def main():
+    app = QApplication(sys.argv)  # Qt-Anwendung erstellen
+    window = MainWindow()  # Hauptfenster instanziieren
+    window.show()  # Fenster anzeigen
+    sys.exit(app.exec_())  # Anwendung starten
 
-#if __name__ == "__main__":
-#    main()  # Hauptfunktion aufrufen
+if __name__ == "__main__":
+    main()  # Hauptfunktion aufrufen
 
 # Start the Qt application
 app = QApplication(sys.argv)
@@ -76,6 +84,18 @@ main_window.show()
 
 # Start the Qt event loop
 sys.exit(app.exec())
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
