@@ -1,9 +1,10 @@
 # main_widget.py
 import sys
-from PySide6.QtWidgets import QWidget, QVBoxLayout
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QApplication, QMainWindow, QMenuBar, QMessageBox
 from vtkmodules.vtkRenderingCore import vtkRenderer, vtkRenderWindow
 from vtkmodules.qt.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
 import mbsModel
+from vtkmodules.all import vtkRenderer, vtkInteractorStyleTrackballCamera
 
 
 class Widget(QWidget):
@@ -18,24 +19,24 @@ class Widget(QWidget):
         render_window = self.vtk_widget.GetRenderWindow()
         render_window.AddRenderer(self.renderer)
 
-        # Layout
+        # Layout Setup
         layout = QVBoxLayout()
         layout.addWidget(self.vtk_widget)
         self.setLayout(layout)
 
+        # VTK Render Window
+        self.vtk_render_window = self.vtk_widget.GetRenderWindow()
+
+        # Zeige das Modell im Renderer und aktualisiere die Darstellung
+        self._initialize_and_render_model()
+
+    def _initialize_and_render_model(self):
+        """Initialisiert das Modell und rendert es im VTK-Renderer."""
         # Zeige das Modell im Renderer
-        self._show_model_in_renderer()
-
-    def _show_model_in_renderer(self):
-        """Zeigt das Modell im VTK-Renderer."""
-        self.model.showModel(self.renderer)  # Aufruf der showModel Methode
+        self.model.showModel(self.renderer)
         
-        self.renderer.ResetCamera()  # Kamera-Ansicht zurücksetzen
-
-    def update_renderer(self, actors):
-        """Update the renderer with new actors."""
-        self.renderer.RemoveAllViewProps()
-        for actor in actors:
-            self.renderer.AddActor(actor)
+        # Kamera zurücksetzen, um die Ansicht zu optimieren
         self.renderer.ResetCamera()
+
+        # Rendern des Fensters
         self.vtk_widget.GetRenderWindow().Render()

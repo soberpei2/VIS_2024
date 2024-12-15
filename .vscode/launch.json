@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "args": ["QT_Tutorial/main_window.py"]
+            "args": ["Aufgabe_2/main.py"]
         }
     ]
 }
