@@ -17,26 +17,6 @@ class mbsModelWidget(QWidget):
         self.treeWidget = None
         
     def modelRenderer(self):
-        # self.QVTKWidget = QVTK.QVTKRenderWindowInteractor(self)
-        # self.layout.addWidget(self.QVTKWidget)
-        # self.setLayout(self.layout)
-
-        # self.renderer = vtk.vtkRenderer()
-        # self.renderWindow = self.QVTKWidget.GetRenderWindow()
-        # self.renderWindow.AddRenderer(self.renderer)
-
-        # #vtkRenderWindow.vtkRenderWindow(self.QVTKWidget.GetRenderWindow())
-
-        # interactor = self.QVTKWidget.GetRenderWindow().GetInteractor()
-        # style = vtk.vtkInteractorStyleTrackballCamera()
-        # interactor.SetInteractorStyle(style)
-
-        # self.QVTKWidget.Initialize()
-        # self.renderWindow.Render()
-        # interactor.Start()
-
-
-
         self.QVTKWidget = QVTK.QVTKRenderWindowInteractor(self)
         self.layout.addWidget(self.QVTKWidget)
         self.setLayout(self.layout)
@@ -173,7 +153,10 @@ class mbsModelWidget(QWidget):
         self.rendererMbsModel.ResetCamera()
 
     def renderTree(self):
-        self.treeWidget.setHeaderLabels(["mbsModel " + os.path.basename(self.mbsModel._filePath)])
+        if self.mbsModel._filePath != None:
+            self.treeWidget.setHeaderLabels(["mbsModel " + os.path.basename(self.mbsModel._filePath)])
+        else:
+            self.treeWidget.setHeaderLabels(["mbsModel"])
         for obj in self.mbsModel.getListOfMbsModel():
             if obj.getType() == "Body":
                 if obj.getSubtype() == "Rigid_EulerParameter_PAI":

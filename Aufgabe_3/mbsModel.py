@@ -12,7 +12,7 @@ import dataobject
 class mbsModel:
     def __init__(self):
         self.__listOfMbsObject = []
-        self._filePath = []
+        self._filePath = None
 
         self.listOfBody = []
         self.listOfConstraint = []
@@ -73,7 +73,7 @@ class mbsModel:
             obj.writeSolverFile(fds)
         fds.close()
 
-    def importJsonFile (self, filePathJson):
+    def loadJsonFile (self, filePathJson):
         self._filePath = os.path.normpath(filePathJson)
         [fileName, fileExtension] = os.path.splitext(filePathJson)
 
@@ -104,7 +104,7 @@ class mbsModel:
             print("Wrong file type: " + fileExtension)
             return False
 
-    def exportJsonFile (self, filePath):
+    def saveJsonFile (self, filePath):
         modelObjects = []
         for obj in self.__listOfMbsObject:
             modelObject = {"type": obj.getType(),

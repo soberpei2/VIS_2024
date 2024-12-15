@@ -13,6 +13,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("pyFreeDyn")
         self.showMaximized()
 
+        self.status = self.statusBar()
         self.mbsModel = None
         self.widget = mbsModelWidget(self.mbsModel)
 
@@ -59,11 +60,6 @@ class MainWindow(QMainWindow):
         exitAction.triggered.connect(self.close)
         self.fileMenu.addAction(exitAction)
 
-        # Status Bar
-        self.status = self.statusBar()
-        self.status.showMessage("Data loaded and plotted")
-
-
         
 
     def newMbsModel(self):
@@ -79,6 +75,7 @@ class MainWindow(QMainWindow):
                 return
         self.mbsModel = mbsModel()
         self.mbsWidget()
+        self.status.showMessage("New mbs-model created.",2000)
 
             
 
@@ -95,8 +92,9 @@ class MainWindow(QMainWindow):
                 return
         self.mbsModel = mbsModel()
         filePath, _ = QFileDialog.getOpenFileName(self, "load File", "", "pyFreeDyn-File (*.json)")
-        self.mbsModel.importJsonFile(filePath)
+        self.mbsModel.loadJsonFile(filePath)
         self.mbsWidget()
+        self.status.showMessage("Mbs-model " + os.path.basename(self.mbsModel._filePath) + " loaded.",2000)
         
 
     def saveFile(self):
@@ -105,17 +103,20 @@ class MainWindow(QMainWindow):
         else:
             [fileName, fileExtension] = os.path.splitext(self.mbsModel._filePath)
             if fileExtension == ".json":
-                self.widget.saveJsonFile(self.mbsModel._filePath)
+                self.mbsModel.saveJsonFile(self.mbsModel._filePath)
             else:
                 filePath, _ = QFileDialog.getSaveFileName(self, "save File", "", "pyFreeDyn-File (*.json)")
-                self.widget.saveJsonFile(filePath)
+                self.mbsModel.saveJsonFile(filePath)
+            self.status.showMessage("Mbs-model " + os.path.basename(self.mbsModel._filePath) + " saved.",2000)
 
     def saveAsFile(self):
         if self.mbsModel == None:
             QMessageBox.information(self, "Attention", "You cannot save a file that does not exist.")
         else:
             filePath, _ = QFileDialog.getSaveFileName(self, "save File", "", "pyFreeDyn-File (*.json)")
-            self.widget.saveJsonFile(filePath)
+            self.mbsModel.saveJsonFile(filePath)
+            self.status.showMessage("Mbs-model saved as" + os.path.basename(self.mbsModel._filePath) + " .",2000)
+        
 
     def importFile(self):
         if self.mbsModel != None:
@@ -132,13 +133,15 @@ class MainWindow(QMainWindow):
         self.mbsModel = mbsModel()
         self.mbsModel.importFddFile(filePath)
         self.mbsWidget()
+        self.status.showMessage("Mbs-model from" + os.path.basename(self.mbsModel._filePath) + " imported.",2000)
 
-    def exportFile(self,exportModel):
+    def exportFile(self):
         if self.mbsModel == None:
             QMessageBox.information(self, "Attention", "You cannot export a file that does not exist.")
         else:
             filePath, _ = QFileDialog.getSaveFileName(self, "export file", "", "pyFreeDyn-File (*.fds)")
-            exportModel.exportFdsFile(filePath)
+            self.mbsModel.exportFdsFile(filePath)
+            self.status.showMessage("Mbs-model exported as" + os.path.basename(self.mbsModel._filePath) + " .",2000)
 
     
     def mbsWidget(self):
