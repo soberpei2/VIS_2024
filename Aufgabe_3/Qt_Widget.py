@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import (
 from vtkmodules.qt.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
 import vtk
 from mbsModel import mbsModel
+from inputfilereader import readInput
 
 
 class MainWindow(QMainWindow):
@@ -57,12 +58,24 @@ class MainWindow(QMainWindow):
             self.vtk_widget.load_model(file_name)
 
     def import_fdd(self):
-        #öffnet DateiFialog um FDD-Datei zu laden
-        file_name, _ = QFileDialog.getOpenFileName(self, "Import Fdd", "", "Fdd Files (*.fdd);;All Files (*)")
+        file_name, _ = QFileDialog.getOpenFileName(self, "Load Fdd File", "", "Fdd Files (*.fdd);;All Files (*)")
         if file_name:
-            self.update_status(f"Imported Fdd: {file_name}")
-            self.model.importFddFile(file_name)
-            self.vtk_widget.render_model(self.model)
+            try:
+                # Lese die Fdd-Datei mit inputfilereader
+                mbs_objects = readInput(file_name)
+                self.model = mbsModel()
+                self.model.load_objects(mbs_objects)  # Neue Methode im mbsModel
+
+                # Visualisiere das Modell im Renderer
+                self.vtk_widget.render_model(self.model)
+                # Kamera auf das Modell ausrichten
+                self.vtk_widget.renderer.ResetCamera() # kamera reseten um nicht zu weit im modell zu sein, funktioniert jedoch nicht
+                self.vtk_widget.GetRenderWindow().Render()
+
+                self.update_status(f"Loaded Fdd file: {file_name}")
+            except Exception as e:
+                self.update_status(f"Error loading Fdd file: {e}")
+                print(e)
 
     def update_status(self, message):
         self.status_bar.showMessage(message)
@@ -115,6 +128,8 @@ class VTKRenderWidget(QWidget):
     def render_model(self, model):
         # Fügt alle Akteure des Modells zum Renderer hinzu
         self.renderer.RemoveAllViewProps()
+
+        model.showModel(self.renderer)## visualisiere neues Modell
         for actor in model.get_actors(): #iterieren über alle Akteure
             self.renderer.AddActor(actor)
         self.vtk_widget.GetRenderWindow().Render()

@@ -31,6 +31,9 @@ class mbsModel:
         for object in self.__mbsObjectList:
             object.writeSolverInput(f)
         f.close()
+
+    def load_objects(self, objects): #wichtig zum laden der Objekte
+        self.__mbsObjectList = objects
         
     def loadDatabase(self,database2Load):
         f = open(database2Load)
