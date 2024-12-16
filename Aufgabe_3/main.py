@@ -7,3 +7,7 @@ if __name__ == "__main__":
     window = MainWindow()
     window.show()
     sys.exit(app.exec_())
+
+
+
+# C:\Users\hanne\AppData\Local\Programs\Python\Python312\Scripts

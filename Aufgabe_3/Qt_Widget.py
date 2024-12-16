@@ -5,7 +5,8 @@ from PyQt5.QtWidgets import (
 from vtkmodules.qt.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
 import vtk
 from mbsModel import mbsModel
-from inputfilereader import readInput
+from inputfilereader import readInput  # pfadindifferenzen mit weiter äußerem inputfilereader! -> umbenennung zu inputfilereader__
+
 
 
 class MainWindow(QMainWindow):
@@ -80,7 +81,7 @@ class MainWindow(QMainWindow):
                 self.vtk_widget.render_model(self.model)
                 # Kamera auf das Modell ausrichten
                 self.vtk_widget.renderer.ResetCamera() # kamera reseten um nicht zu weit im modell zu sein, funktioniert jedoch nicht
-                self.vtk_widget.GetRenderWindow().Render()
+                self.vtk_widget.vtk_widget.GetRenderWindow().Render() #2mal vtk_widget da außerhalb
 
                 self.update_status(f"Loaded Fdd file: {file_name}")
             except Exception as e:
@@ -98,7 +99,7 @@ class MainWindow(QMainWindow):
                 # Modell visualisieren
                 self.vtk_widget.render_model(self.model)
                 self.vtk_widget.renderer.ResetCamera()
-                self.vtk_widget.GetRenderWindow().Render()
+                self.vtk_widget.vtk_widget.GetRenderWindow().Render()
 
                 self.update_status(f"Model loaded from: {file_name}")
             except Exception as e:
@@ -145,7 +146,7 @@ class VTKRenderWidget(QWidget):
         reader.SetFileName(file_name) #Dateiname setzen
         reader.Update() # laden der Datei
 
-        # Prüfen, ob Punkte im Modell vorhanden sind
+        # Prüfen, ob Punkte im Modell vorhanden sind funktioniert no nd
         output = reader.GetOutput()
         if output.GetNumberOfPoints() == 0:
             print("Fehler: .obj Datei enthält keine Punkte. Datei prüfen!")
@@ -165,11 +166,12 @@ class VTKRenderWidget(QWidget):
         # Rendern
         self.vtk_widget.GetRenderWindow().Render()
 
-    def render_model(self, model):
+    def render_model(self, model: mbsModel):
         # Fügt alle Akteure des Modells zum Renderer hinzu
         self.renderer.RemoveAllViewProps()
 
         model.showModel(self.renderer)## visualisiere neues Modell
-        for actor in model.get_actors(): #iterieren über alle Akteure
-            self.renderer.AddActor(actor)
+         # Kamera neu ausrichten um zoom problem zu beheben
+        self.renderer.ResetCamera()
+
         self.vtk_widget.GetRenderWindow().Render()
