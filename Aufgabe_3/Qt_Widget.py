@@ -45,6 +45,11 @@ class MainWindow(QMainWindow):
         import_action.triggered.connect(self.import_fdd)
         file_menu.addAction(import_action)
 
+        # JSON Datei laden
+        load_json_action = QAction("Load from JSON", self)
+        load_json_action.triggered.connect(self.load_JSON)
+        file_menu.addAction(load_json_action)
+
         # Save
         import_action = QAction("Save", self)
         import_action.triggered.connect(self.saveGeometry)
@@ -80,6 +85,24 @@ class MainWindow(QMainWindow):
                 self.update_status(f"Loaded Fdd file: {file_name}")
             except Exception as e:
                 self.update_status(f"Error loading Fdd file: {e}")
+                print(e)
+
+    def load_JSON(self):
+        file_name, _ = QFileDialog.getOpenFileName(self, "Load Model from JSON", "", "JSON Files (*.json);;All Files (*)")
+        if file_name:
+            try:
+                # JSON-Daten ins Modell laden
+                self.model = mbsModel()
+                self.model.loadDatabase(file_name)
+
+                # Modell visualisieren
+                self.vtk_widget.render_model(self.model)
+                self.vtk_widget.renderer.ResetCamera()
+                self.vtk_widget.GetRenderWindow().Render()
+
+                self.update_status(f"Model loaded from: {file_name}")
+            except Exception as e:
+                self.update_status(f"Error loading model: {e}")
                 print(e)
 
     def saveGeometry(self):
