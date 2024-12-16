@@ -45,6 +45,11 @@ class MainWindow(QMainWindow):
         import_action.triggered.connect(self.import_fdd)
         file_menu.addAction(import_action)
 
+        # Save
+        import_action = QAction("Save", self)
+        import_action.triggered.connect(self.saveGeometry)
+        file_menu.addAction(import_action)
+
         # Aktion "Exit" zum Beenden der Anwendung
         exit_action = QAction("Exit", self)
         exit_action.triggered.connect(self.close)
@@ -75,6 +80,18 @@ class MainWindow(QMainWindow):
                 self.update_status(f"Loaded Fdd file: {file_name}")
             except Exception as e:
                 self.update_status(f"Error loading Fdd file: {e}")
+                print(e)
+
+    def saveGeometry(self):
+        # Öffnen Dialog zum Speichern der Datei
+        file_name, _ = QFileDialog.getSaveFileName(self, "Save Model", "", "JSON Files (*.json);;All Files (*)")
+        if file_name:
+            try:
+                # Modell speichern
+                self.model.saveDatabase(file_name)
+                self.update_status(f"Model saved to: {file_name}")
+            except Exception as e:
+                self.update_status(f"Error saving model: {e}")
                 print(e)
 
     def update_status(self, message):
