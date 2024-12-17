@@ -14,7 +14,7 @@ from PySide6.QtWidgets import QApplication
 from main_window import MainWindow
 
 
-
+'''
 if len(sys.argv) < 2:
     sys.exit("No fdd file provided! Please run script with additional argument: fdd-filepath!")
 
@@ -56,6 +56,9 @@ newModel.showModel(renderer)
 # Render- und Interaktionsloop starten
 renWin.Render()
 interactor.Start()
+
+'''
+
 #-----------------------------------------------------------------------------
 # Qt Application
 app = QApplication(sys.argv)
