@@ -2,11 +2,7 @@ import mbsModel
 import sys
 from pathlib import Path
 
-from vtkmodules.vtkRenderingCore import (
-    vtkRenderWindow,
-    vtkRenderWindowInteractor,
-    vtkRenderer
-)
+from vtkmodules.vtkRenderingCore import (vtkRenderWindow, vtkRenderWindowInteractor, vtkRenderer)
 from vtkmodules.all import vtkInteractorStyleTrackballCamera
 
 from PySide6.QtCore import Slot
@@ -15,49 +11,6 @@ from PySide6.QtWidgets import QMainWindow
 from PySide6.QtWidgets import QApplication
 
 from main_window import MainWindow
-
-#if len(sys.argv) < 2:
-    #sys.exit("No fdd file provided! Please run script with additional argument: fdd-filepath!")
-
-myModel = mbsModel.mbsModel()
-
-#read fdd file path from input arguments
-fdd_path = Path("C:\VIS_2024\Aufgabe_3//test.fdd")
-myModel.importFddFile(fdd_path)
-#create path for solver input file (fds)
-fds_path = fdd_path.with_suffix(".fds")
-myModel.exportFdsFile(fds_path)
-#create path for model database file (json)
-json_path = fdd_path.with_suffix(".json")
-myModel.saveDatabase(json_path)
-
-#create new model and load json generated above
-#(content should be the same)
-newModel = mbsModel.mbsModel()
-newModel.loadDatabase(json_path)
-
-#visualization part
-#-----------------------------------------------------------------------------
-renderer = vtkRenderer()
-renWin = vtkRenderWindow()
-renWin.AddRenderer(renderer)
-renWin.SetWindowName('pyFreeDyn')
-renWin.SetSize(1024,768)
-
-# Interactor einrichten
-interactor = vtkRenderWindowInteractor()
-interactor.SetRenderWindow(renWin)
-
-style = vtkInteractorStyleTrackballCamera()
-interactor.SetInteractorStyle(style)
-
-# Modell anzeigen
-newModel.showModel(renderer)
-
-# Render- und Interaktionsloop starten
-renWin.Render()
-interactor.Start()
-#-----------------------------------------------------------------------------
 
 # Qt Application
 app = QApplication(sys.argv)
