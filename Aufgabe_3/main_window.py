@@ -58,23 +58,23 @@ class MainWindow(QMainWindow):
 
         self.file_menu.addAction(save_action)
 
-        # ImportFdd QAction
+        
         import_fdd_action = QAction("ImportFdd", self)
         import_fdd_action.setShortcut("Ctrl+I")
         import_fdd_action.triggered.connect(self.import_fdd_file)
 
         self.file_menu.addAction(import_fdd_action)
 
-        # Status Bar
+        
         self.status = self.statusBar()
         self.setStatusBar(self.status)
         self.status.showMessage("No model loaded")
 
-        # Window dimensions
+       
         geometry = self.screen().availableGeometry()
         self.setFixedSize(geometry.width() * 0.8, geometry.height() * 0.7)
 
-        # Model data placeholder
+        
         self.mbs_model = None
 
     def load_file(self):
@@ -108,25 +108,25 @@ class MainWindow(QMainWindow):
 
         if fddfilename.lower().endswith(".fdd"):
             try:
-                # Importiere die FDD-Datei
+                
                 self.model.importFddFile(Path(fddfilename))
 
-                # Konvertiere die FDD-Daten in JSON-kompatibles Format (Python-Dictionary)
+                
                 json_data = self.model.switch_to_json()
 
-                # JSON-Daten ausgeben (optional für Debugging)
-                print(json.dumps(json_data, indent=4))  # Dies zeigt die JSON-Daten im Terminal an
+               
+                print(json.dumps(json_data, indent=4))  
 
-                # Renderer aktualisieren
+                
                 self.centralWidget().update_renderer(self.model)
 
-                # Erfolgsmeldung
+                
                 QMessageBox.information(self, "Success", f"Fdd file imported and converted to JSON successfully: {fddfilename}")
             except Exception as e:
-                # Fehlerbehandlung, wenn etwas schiefgeht
+                
                 QMessageBox.critical(self, "Error", f"An error occurred while importing and converting the Fdd file:\n{str(e)}")
         else:
-            # Fehler, wenn die Datei keine FDD-Datei ist
+            
             QMessageBox.warning(self, "Failed", "Failed to import the Fdd file.")
     
 

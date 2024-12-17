@@ -24,10 +24,10 @@ class Widget(QWidget):
     def update_renderer(self, model):
 
         """Initialisiert das Modell und rendert es im VTK-Renderer."""
-        # Modell im Renderer
+        # Renderer
         model.showModel(self.renderer)
         
-        # Kamera zurücksetzen, um die Ansicht zu optimieren
+        
         self.renderer.ResetCamera()
 
         # Rendering Fenster
