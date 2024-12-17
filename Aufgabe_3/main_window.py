@@ -104,28 +104,28 @@ class MainWindow(QMainWindow):
 
     def import_fdd_file(self):
         """Methode zum Importieren einer .fdd-Datei."""
-    fddfilename, _ = QFileDialog.getOpenFileName(self, "Import Fdd File", "", "Fdd Files (*.fdd);;All Files (*)")
+        fddfilename, _ = QFileDialog.getOpenFileName(self, "Import Fdd File", "", "Fdd Files (*.fdd);;All Files (*)")
 
-    if fddfilename.lower().endswith(".fdd"):
-        try:
-            # Importiere die FDD-Datei
-            self.model.importFddFile(Path(fddfilename))
+        if fddfilename.lower().endswith(".fdd"):
+            try:
+                # Importiere die FDD-Datei
+                self.model.importFddFile(Path(fddfilename))
 
-            # Konvertiere die FDD-Daten in JSON-kompatibles Format (Python-Dictionary)
-            json_data = self.model.switch_to_json()
+                # Konvertiere die FDD-Daten in JSON-kompatibles Format (Python-Dictionary)
+                json_data = self.model.switch_to_json()
 
-            # JSON-Daten ausgeben (optional für Debugging)
-            print(json.dumps(json_data, indent=4))  # Dies zeigt die JSON-Daten im Terminal an
+                # JSON-Daten ausgeben (optional für Debugging)
+                print(json.dumps(json_data, indent=4))  # Dies zeigt die JSON-Daten im Terminal an
 
-            # Renderer aktualisieren
-            self.centralWidget().update_renderer(self.model)
+                # Renderer aktualisieren
+                self.centralWidget().update_renderer(self.model)
 
-            # Erfolgsmeldung
-            QMessageBox.information(self, "Success", f"Fdd file imported and converted to JSON successfully: {fddfilename}")
-        except Exception as e:
-            # Fehlerbehandlung, wenn etwas schiefgeht
-            QMessageBox.critical(self, "Error", f"An error occurred while importing and converting the Fdd file:\n{str(e)}")
-    else:
+                # Erfolgsmeldung
+                QMessageBox.information(self, "Success", f"Fdd file imported and converted to JSON successfully: {fddfilename}")
+            except Exception as e:
+                # Fehlerbehandlung, wenn etwas schiefgeht
+                QMessageBox.critical(self, "Error", f"An error occurred while importing and converting the Fdd file:\n{str(e)}")
+        else:
             # Fehler, wenn die Datei keine FDD-Datei ist
             QMessageBox.warning(self, "Failed", "Failed to import the Fdd file.")
     

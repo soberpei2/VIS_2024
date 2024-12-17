@@ -1,14 +1,14 @@
+import sys
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QApplication, QMainWindow, QMenuBar, QMessageBox
 from vtkmodules.vtkRenderingCore import vtkRenderer, vtkRenderWindow
 from vtkmodules.qt.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
 import mbsModel
 from vtkmodules.all import vtkRenderer, vtkInteractorStyleTrackballCamera
-import sys
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QApplication, QMainWindow, QMenuBar, QMessageBox
-
 
 class Widget(QWidget):
     def __init__(self):
-
+        super().__init__()
+        
         # Setup VTK Renderer 
         self.vtk_widget = QVTKRenderWindowInteractor(self)
         self.renderer = vtkRenderer()
