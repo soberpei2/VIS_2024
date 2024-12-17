@@ -45,4 +45,4 @@ Arbeiten mit VTK, CAD file reader und eingebauten Geometriequellen, Transformati
 
 ## Beispiel für den Aufruf von `main.py`
 ```bash
-python main.py /path/to/your/inputfile
+python Aufgabe_2/main.py  Aufgabe_2/test.fdd
