@@ -18,8 +18,20 @@ class SolverExplicit(Solver):
         """Perform one step of numerical integration (e.g., explicit Euler)."""
         current_state = self.__model__.get_state()
         
+<<<<<<< HEAD
         # Call the model's dydt method to get the derivatives of the state
         derivatives = self.__model__.dydt(t)
+=======
+        """Perform one step of numerical integration."""
+        #----------------------------------------------------------------------------
+        #  | implementation here  |
+        # \ /                    \ /
+        #  v                      v
+        dydt = self.__model__.dydt(t)
+        new_state = self.__model__.get_state() + dydt * dt
+        self.__model__.set_state(new_state)
+        #----------------------------------------------------------------------------
+>>>>>>> 556f251205053badc0fd836e57cb1a2d74bb833a
         
         # Update the state using the Euler method
         new_state = current_state + derivatives * dt

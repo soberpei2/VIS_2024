@@ -9,6 +9,7 @@ plt.rcParams['text.usetex'] = True
 
 import model
 import solver
+import matplotlib.pyplot as plt
 
 def run_simulation():
     # Parameters
@@ -41,7 +42,17 @@ def run_simulation():
         positions[step] = myModel.get_state()[0]
         
         # Take a time step
+<<<<<<< HEAD
         mySolver.step(t, dt)
+=======
+        mySolver.step(t, model, dt)
+        plt.plot(times, positions)
+    plt.xlabel('Time (s)')
+    plt.ylabel('Position (m)')
+    plt.title('Single Mass Oscillator')
+    plt.grid()
+    plt.show()
+>>>>>>> 556f251205053badc0fd836e57cb1a2d74bb833a
 
     # Plotting the result
     plt.plot(times, positions)
