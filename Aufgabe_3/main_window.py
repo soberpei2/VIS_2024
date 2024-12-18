@@ -71,16 +71,32 @@ class MainWindow(QMainWindow):
                 QMessageBox.critical(self, "Error", f"Error loading database:\n{str(e)}")
 
     def select_and_import_fdd(self):
-        """Öffnet den Dateidialog und speichert den Pfad zur ausgewählten FDD-Datei."""
-        fddfilename, _  = QFileDialog.getOpenFileName(self, "Import Fdd File", "", "Fdd Files (*.fdd);;All Files (*)")
-        if fddfilename.lower().endswith(".fdd"):
-                    self.model.importFddFile(Path(fddfilename))
-                    newModel.importFddFile(fddfilename)                    
-                    self.centralWidget().update_renderer(self.model)
-                    QMessageBox.information(self, "Success", f"Fdd file imported successfully: {fddfilename}")
+        """Öffnet den Dateidialog und importiert die ausgewählte FDD-Datei, konvertiert sie in JSON."""
+        fddfilename, _ = QFileDialog.getOpenFileName(self, "Import Fdd File", "", "Fdd Files (*.fdd);;All Files (*)")
 
+        if fddfilename.lower().endswith(".fdd"):
+            try:
+                # Importiere die FDD-Datei
+                self.model.importFddFile(Path(fddfilename))
+
+                # Konvertiere die FDD-Daten in JSON-kompatibles Format (Python-Dictionary)
+                json_data = self.model.switch_to_json()
+
+                # JSON-Daten ausgeben (optional für Debugging)
+                print(json.dumps(json_data, indent=4))  # Dies zeigt die JSON-Daten im Terminal an
+
+                # Renderer aktualisieren
+                self.centralWidget().update_renderer(self.model)
+
+                # Erfolgsmeldung
+                QMessageBox.information(self, "Success", f"Fdd file imported and converted to JSON successfully: {fddfilename}")
+            except Exception as e:
+                # Fehlerbehandlung, wenn etwas schiefgeht
+                QMessageBox.critical(self, "Error", f"An error occurred while importing and converting the Fdd file:\n{str(e)}")
         else:
-                    QMessageBox.warning(self, "Failed", "Failed to import the Fdd file.")
+            # Fehler, wenn die Datei keine FDD-Datei ist
+            QMessageBox.warning(self, "Failed", "Failed to import the Fdd file.")
+
 
     def save_to_file(self):
         """Speichert die Datenbank als JSON-Datei."""

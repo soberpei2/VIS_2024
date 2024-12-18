@@ -66,7 +66,25 @@ class mbsModel:
 
         with open(dataBasePath, "w") as outfile:
             outfile.write(jDataBase)
-    
+
+    def switch_to_json(self):
+
+        # JSON-kompatible Datenstruktur vorbereiten
+        modelObjects = []
+        for object in self.__mbsObjectList:
+            modelObject = {"type": object.getType(),
+                           "subtype": object.getSubType(),
+                           "parameter": object.parameter}
+            modelObjects.append(modelObject)
+        
+        jDataBase = json.dumps({"modelObjects": modelObjects})
+        
+
+        # Daten als Python-Dictionary zurückgeben
+        return jDataBase
+
+
+        
     def showModel(self, renderer):
         for object in self.__mbsObjectList:
             object.show(renderer)
