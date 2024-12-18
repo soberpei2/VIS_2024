@@ -2,7 +2,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-import xlsxwriter
+import xlsxwrite
 
 # Enable LaTeX in matplotlib
 plt.rcParams['text.usetex'] = True
@@ -13,7 +13,7 @@ import solver
 def run_simulation():
     # Parameters
     m = 1.0      # mass (kg)
-    k = 100000.0     # stiffness (N/m)
+    k = 100.0     # stiffness (N/m)
     d = 0.01      # damping coefficient
 
     # initial conditions
