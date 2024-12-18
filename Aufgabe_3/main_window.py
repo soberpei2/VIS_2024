@@ -47,7 +47,6 @@ class MainWindow(QMainWindow):
         file_menu = menubar.addMenu('File')
         view_menu = menubar.addMenu('View')
 
-
         # 'Load' Aktion hinzufügen
         load_action = QAction('Load', self)
         load_action.triggered.connect(self.load_model)
@@ -99,7 +98,7 @@ class MainWindow(QMainWindow):
  
     def save_model(self):
         """Speichert das Modell in einer JSON-Datei."""
-        options = QFileDialog.Options()     # dialog ist öffnen vom explorer
+        options = QFileDialog.Options()     # dialog öffnen vom explorer
         filename, _ = QFileDialog.getSaveFileName(self, "Save Model File", "", "JSON Files (*.json)", options=options)
         if filename:
             self.myModel.saveDatabase(Path(filename))  # Speichert das Modell bzw den Pfad + Pfadnahme
