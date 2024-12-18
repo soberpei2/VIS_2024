@@ -2,10 +2,16 @@ import mbsModel
 import sys
 from pathlib import Path
 
+from PySide6.QtCore import QDateTime, QTimeZone
+from PySide6.QtWidgets import QApplication
+from qtmain_window import MainWindow
+from qt_widget import MainWidget
+
 from vtkmodules.vtkRenderingCore import (
     vtkRenderWindow,
     vtkRenderWindowInteractor,
-    vtkRenderer
+    vtkRenderer,
+    vtkTextActor
 )
 from vtkmodules.all import vtkInteractorStyleTrackballCamera
 
@@ -32,10 +38,27 @@ newModel.loadDatabase(json_path)
 #visualization part
 #-----------------------------------------------------------------------------
 renderer = vtkRenderer()
+renderer.SetBackground(1,1,1)
 renWin = vtkRenderWindow()
 renWin.AddRenderer(renderer)
-renWin.SetWindowName('pyFreeDyn')
-renWin.SetSize(1024,768)
+
+def windowtype(type):
+        hint = vtkTextActor()
+        hint.SetInput("MKS Reader by fpointin: Press 'q' to exit.")
+        hint.GetTextProperty().SetFontSize(24)
+        hint.GetTextProperty().SetColor(0, 0, 0)  
+        hint.SetPosition(10, 10)
+        renderer.AddActor2D(hint)
+        
+        #kleines Fenster
+        if type == 1:
+            renWin.SetSize(1024,768)
+            renWin.SetWindowName("MKS Reader by fpointin")
+        #Fullscreen
+        if type == 2:
+            renWin.SetFullScreen(True)
+
+windowtype(2)
 
 # Interactor einrichten
 interactor = vtkRenderWindowInteractor()
