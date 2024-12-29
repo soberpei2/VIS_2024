@@ -4,7 +4,7 @@ import mbsModel
 from pathlib import Path
 # Importiere wichtige Klassen aus PySide6 (GUI-Komponenten)
 from PySide6.QtGui import QAction, QKeySequence, QStandardItemModel, QStandardItem
-from PySide6.QtWidgets import QMainWindow, QFileDialog, QStatusBar, QMessageBox, QMenu, QTreeView, QWidget,QHBoxLayout, QSplitter
+from PySide6.QtWidgets import QMainWindow, QFileDialog, QStatusBar, QMessageBox, QMenu, QTreeView, QWidget, QHBoxLayout, QSplitter
 from PySide6.QtCore import Qt, QRect
 # Importiere das MainWidget für das Rendering
 from main_widget import MainWidget
@@ -14,7 +14,8 @@ from vtkmodules.vtkRenderingCore import vtkRenderer
 import QVTKRenderWindowInteractor as QVTK
 import vtk
 
-QVTKRenderWindowInteractor = QVTK.QVTKRenderWindowInteractor  # Alias für das QVTKRenderWindowInteractor-Modul
+# Alias für das QVTKRenderWindowInteractor-Modul
+QVTKRenderWindowInteractor = QVTK.QVTKRenderWindowInteractor
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -57,7 +58,6 @@ class MainWindow(QMainWindow):
         
         self.treeView.setMinimumWidth(80)  # Mindestbreite setzen
         self.treeView.setMaximumWidth(600)  # Maximale Breite für den Baum (optional, anpassbar)
-
 
         # Füge das TreeView und das VTK-Widget zum Splitter hinzu
         self.splitter.addWidget(self.treeView)
@@ -305,10 +305,8 @@ class MainWindow(QMainWindow):
                 measure_item = QStandardItem(f"Measure {measures_item.rowCount() + 1}")
                 measures_item.appendRow(measure_item)
 
-
         # Füge alle Kategorien zum Baum hinzu.
         self.treeModel.appendRow(bodies_item)
         self.treeModel.appendRow(constraints_item)
         self.treeModel.appendRow(forces_item)
         self.treeModel.appendRow(measures_item)
-
