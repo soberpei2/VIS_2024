@@ -4,7 +4,6 @@ from PySide6.QtWidgets import QApplication
 # Importiere das Hauptfenster
 from main_window import MainWindow
 
-
 def main():
     """Initialisiert die Qt-Anwendung und startet das Hauptfenster."""
     app = QApplication(sys.argv)  # Erstelle eine Qt-Anwendung
