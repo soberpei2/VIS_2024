@@ -94,6 +94,7 @@ class genericTorque(force):
     def __init__(self,**kwargs):
         if "text" in kwargs:
             parameter = {
+                "name": {"type": "string", "value": "no"},
                 "body1": {"type": "string", "value": "no"},
                 "body2": {"type": "string", "value": "no"},
                 "mode": {"type": "string", "value": ""},

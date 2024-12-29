@@ -4,7 +4,7 @@ import mbsModel
 from pathlib import Path
 # Importiere wichtige Klassen aus PySide6 (GUI-Komponenten)
 from PySide6.QtGui import QAction, QKeySequence, QStandardItemModel, QStandardItem
-from PySide6.QtWidgets import QMainWindow, QFileDialog, QStatusBar, QMessageBox, QMenu, QTreeView, QWidget, QHBoxLayout, QSplitter
+from PySide6.QtWidgets import QMainWindow, QFileDialog, QStatusBar, QMessageBox, QMenu, QTreeView, QWidget, QHBoxLayout, QSplitter, QInputDialog
 from PySide6.QtCore import Qt, QRect
 # Importiere das MainWidget für das Rendering
 from main_widget import MainWidget
@@ -52,6 +52,13 @@ class MainWindow(QMainWindow):
         self.treeModel = QStandardItemModel()
         self.treeModel.setHorizontalHeaderLabels(['Strukturbaum'])  # Setze die Header
         self.treeView.setModel(self.treeModel)  # Setze das Modell für den Baum
+
+        # Füge das Kontextmenü für den Strukturbaum hinzu
+        self.treeView.setContextMenuPolicy(Qt.CustomContextMenu)  # Aktiviere Kontextmenü
+        self.treeView.customContextMenuRequested.connect(self.show_context_menu)  # Verknüpfe mit der Methode
+
+        # Füge die Strukturbaumdaten hinzu (dies muss nach dem Laden des Modells geschehen)
+        self.add_structure_tree()
 
         # **Setze eine Startbreite von 200 Pixel für den Baum**
         self.initial_tree_width = 100  # Startbreite für den Baum
@@ -282,29 +289,34 @@ class MainWindow(QMainWindow):
 
     def add_structure_tree(self):
         """Fügt die Strukturbaumknoten und Unterpunkte basierend auf den geladenen Modellobjekten hinzu."""
+        if not self.myModel:
+            return
+
         mbs_objects = self.myModel.get_mbs_object_list()  # Zugriff auf die Objektliste
 
-        # Zunächst erstellen wir Hauptpunkte für die verschiedenen Objektkategorien.
+        # Kategorien für die verschiedenen Objektarten
         bodies_item = QStandardItem('Bodys')
         constraints_item = QStandardItem('Constraints')
         forces_item = QStandardItem('Forces')
         measures_item = QStandardItem('Measures')
-        dataobjects_item = QStandardItem('DataObjects')  # Für DataObjects, falls vorhanden
 
         # Füge die Knoten aus dem Modell in die entsprechenden Kategorien ein.
         for obj in mbs_objects:
+            # Name des Objekts extrahieren
+            object_name = obj.parameter.get('name', {}).get('value', 'Unbenannt')  # Standardname: Unbenannt
+
             # Überprüfe den Typ jedes Objekts und füge es der entsprechenden Kategorie hinzu
             if obj.getType() == "Body":
-                body_item = QStandardItem(f"Body {bodies_item.rowCount() + 1}")
+                body_item = QStandardItem(f"{object_name}")  # Benutze den Namen
                 bodies_item.appendRow(body_item)
             elif obj.getType() == "Constraint":
-                constraint_item = QStandardItem(f"Constraint {constraints_item.rowCount() + 1}")
+                constraint_item = QStandardItem(f"{object_name}")
                 constraints_item.appendRow(constraint_item)
             elif obj.getType() == "Force":
-                force_item = QStandardItem(f"Force {forces_item.rowCount() + 1}")
+                force_item = QStandardItem(f"{object_name}")
                 forces_item.appendRow(force_item)
             elif obj.getType() == "Measure":
-                measure_item = QStandardItem(f"Measure {measures_item.rowCount() + 1}")
+                measure_item = QStandardItem(f"{object_name}")
                 measures_item.appendRow(measure_item)
 
         # Füge alle Kategorien zum Baum hinzu.
@@ -312,3 +324,58 @@ class MainWindow(QMainWindow):
         self.treeModel.appendRow(constraints_item)
         self.treeModel.appendRow(forces_item)
         self.treeModel.appendRow(measures_item)
+
+    def show_context_menu(self, pos):
+        """Zeigt das Kontextmenü für den Strukturbaum an."""
+        index = self.treeView.indexAt(pos)  # Hole den Baumknoten unter der Maus
+        if not index.isValid():  # Wenn der Knoten ungültig ist, tue nichts
+            return
+
+        menu = QMenu(self.treeView)  # Erstelle das Kontextmenü
+        rename_action = QAction("Umbennen", self)  # Aktion zum Umbennen
+        properties_action = QAction("Eigenschaften", self)  # Aktion zum Anzeigen der Eigenschaften
+
+        # Verknüpfe die Aktionen mit den Methoden
+        rename_action.triggered.connect(lambda: self.rename_object(index))
+        properties_action.triggered.connect(lambda: self.show_properties(index))
+
+        # Füge die Aktionen zum Menü hinzu
+        menu.addAction(rename_action)
+        menu.addAction(properties_action)
+        
+        # Zeige das Menü an der Position des Rechtsklicks
+        menu.exec_(self.treeView.mapToGlobal(pos))
+
+    def rename_object(self, index):
+        """Ermöglicht das Umbennen des Objekts."""
+        current_name = index.data()  # Der aktuelle Name des Objekts
+        new_name, ok = QInputDialog.getText(self, "Umbennen", "Neuer Name:", text=current_name)
+
+        if ok and new_name:
+            # Hole das Objekt aus dem Modell und setze den neuen Namen
+            obj = self.get_object_from_index(index)
+            obj.parameter['name']['value'] = new_name  # Aktualisiere den Namen des Objekts im Modell
+
+            # Aktualisiere den Baum mit dem neuen Namen
+            index.model().dataChanged.emit(index, index)  # Signal, dass sich der Name geändert hat
+
+    def show_properties(self, index):
+        """Zeigt die Eigenschaften des Objekts an."""
+        obj = self.get_object_from_index(index)
+        
+        # Eigenschaften des Objekts abrufen (z.B. Position und Masse)
+        position = obj.parameter.get('position', {}).get('value', 'Nicht gesetzt')
+        mass = obj.parameter.get('mass', {}).get('value', 'Nicht gesetzt')
+
+        # Erstelle die Nachricht, die die Eigenschaften anzeigt
+        properties_message = f"Position: {position}\nMasse: {mass}"
+
+        # Zeige die Eigenschaften in einer MessageBox
+        QMessageBox.information(self, "Eigenschaften", properties_message)
+
+    def get_object_from_index(self, index):
+        """Holt das Modellobjekt basierend auf dem Index."""
+        # Wir gehen davon aus, dass jedes Baumobjekt eine Referenz auf das Modellobjekt enthält.
+        # Hier musst du den Index auf das tatsächliche Modellobjekt übersetzen.
+        # In diesem Fall gehe ich davon aus, dass du eine Methode wie 'get_mbs_object_list' hast.
+        return self.myModel.get_mbs_object_list()[index.row()]
