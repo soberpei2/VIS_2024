@@ -3,9 +3,9 @@ import mbsModel
 # Importiere Path, um mit Dateipfaden zu arbeiten
 from pathlib import Path
 # Importiere wichtige Klassen aus PySide6 (GUI-Komponenten)
-from PySide6.QtGui import QAction, QKeySequence
-from PySide6.QtWidgets import QMainWindow, QFileDialog, QStatusBar, QMessageBox,QMenu
-from PySide6.QtCore import Qt
+from PySide6.QtGui import QAction, QKeySequence, QStandardItemModel, QStandardItem
+from PySide6.QtWidgets import QMainWindow, QFileDialog, QStatusBar, QMessageBox, QMenu, QTreeView, QWidget,QHBoxLayout, QSplitter
+from PySide6.QtCore import Qt, QRect
 # Importiere das MainWidget für das Rendering
 from main_widget import MainWidget
 # Importiere den Renderer aus VTK
@@ -20,6 +20,9 @@ class MainWindow(QMainWindow):
     def __init__(self):
         """Initialisiert das Hauptfenster der Anwendung."""
         super().__init__()
+
+        # Initialisiere das Modell
+        self.myModel = None  # Anfangs kein Modell geladen
 
         # Hauptfenster konfigurieren
         self.setWindowTitle("3D Modell in Qt mit VTK")  # Setze den Titel des Fensters
@@ -37,11 +40,46 @@ class MainWindow(QMainWindow):
         # Setze den Hintergrund des Renderers auf Schwarz
         self.widget.renderer.SetBackground(0.0, 0.0, 0.0)  # Hintergrund für den Renderer auf Schwarz
 
-        # Setze das Widget als zentrales Widget des Fensters
-        self.setCentralWidget(self.widget)
+        # Layout für das Hauptfenster erstellen
+        main_layout = QHBoxLayout()
 
-        # Initialisiere das RenderWindow, um den Hintergrund anzuzeigen
-        self.widget.GetRenderWindow().Render()  # Rendere das Fenster, um den schwarzen Hintergrund zu sehen
+        # QSplitter erstellen, um den Stammbaum und das VTK-Widget zu trennen
+        self.splitter = QSplitter(Qt.Horizontal)
+
+        # Erstelle und füge den Stammbaum hinzu
+        self.treeView = QTreeView(self)  # Erstelle das QTreeView-Widget
+        self.treeModel = QStandardItemModel()
+        self.treeModel.setHorizontalHeaderLabels(['Strukturbaum'])  # Setze die Header
+        self.treeView.setModel(self.treeModel)  # Setze das Modell für den Baum
+
+        # **Setze eine Startbreite von 200 Pixel für den Baum**
+        self.initial_tree_width = 100  # Startbreite für den Baum
+        
+        self.treeView.setMinimumWidth(80)  # Mindestbreite setzen
+        self.treeView.setMaximumWidth(600)  # Maximale Breite für den Baum (optional, anpassbar)
+
+
+        # Füge das TreeView und das VTK-Widget zum Splitter hinzu
+        self.splitter.addWidget(self.treeView)
+        self.splitter.addWidget(self.widget)
+
+        # Setze den Splitter so, dass der Baum eine Startbreite von 200 Pixel hat
+        self.splitter.setSizes([self.initial_tree_width, self.width() - self.initial_tree_width])
+
+        # Füge den Splitter zum Layout hinzu
+        main_layout.addWidget(self.splitter)
+
+        # Container erstellen und das Layout setzen
+        container = QWidget(self)
+        container.setLayout(main_layout)
+        self.setCentralWidget(container)
+
+        # Fenster anzeigen
+        self.setGeometry(100, 100, 1000, 600)
+        self.show()
+
+        # Initialisiere das RenderWindow
+        self.widget.GetRenderWindow().Render()
 
     def create_menu(self):
         """Erstellt die Menüleiste und ihre Aktionen."""
@@ -131,6 +169,7 @@ class MainWindow(QMainWindow):
             self.myModel.loadDatabase(Path(filename))  # Lade das Modell aus der JSON-Datei
             self.statusBar().showMessage(f"Modell geladen: {filename}")
             self.widget.update_renderer(self.myModel)  # Aktualisiere das Rendering mit dem neuen Modell
+            self.add_structure_tree()  # Hier den Strukturbaum hinzufügen, nach dem Modell laden
         except Exception as e:
             self.statusBar().showMessage(f"Fehler beim Laden des Modells: {e}")
 
@@ -162,6 +201,7 @@ class MainWindow(QMainWindow):
             self.myModel.importFddFile(filename)
             self.statusBar().showMessage(f"FDD-Datei importiert: {filename}")
             self.widget.update_renderer(self.myModel)
+            self.add_structure_tree()  # Hier den Strukturbaum hinzufügen, nach dem Modell laden
         except Exception as e:
             self.statusBar().showMessage(f"Fehler beim Importieren der FDD-Datei: {e}")
 
@@ -237,3 +277,38 @@ class MainWindow(QMainWindow):
         # Hier definierst du, wie die Mausinteraktion für Creo funktioniert
         self.widget.set_interaction("creo")
         self.statusBar().showMessage("Interaktion: Steuerung Creo")
+
+    def add_structure_tree(self):
+        """Fügt die Strukturbaumknoten und Unterpunkte basierend auf den geladenen Modellobjekten hinzu."""
+        mbs_objects = self.myModel.get_mbs_object_list()  # Zugriff auf die Objektliste
+
+        # Zunächst erstellen wir Hauptpunkte für die verschiedenen Objektkategorien.
+        bodies_item = QStandardItem('Bodys')
+        constraints_item = QStandardItem('Constraints')
+        forces_item = QStandardItem('Forces')
+        measures_item = QStandardItem('Measures')
+        dataobjects_item = QStandardItem('DataObjects')  # Für DataObjects, falls vorhanden
+
+        # Füge die Knoten aus dem Modell in die entsprechenden Kategorien ein.
+        for obj in mbs_objects:
+            # Überprüfe den Typ jedes Objekts und füge es der entsprechenden Kategorie hinzu
+            if obj.getType() == "Body":
+                body_item = QStandardItem(f"Body {bodies_item.rowCount() + 1}")
+                bodies_item.appendRow(body_item)
+            elif obj.getType() == "Constraint":
+                constraint_item = QStandardItem(f"Constraint {constraints_item.rowCount() + 1}")
+                constraints_item.appendRow(constraint_item)
+            elif obj.getType() == "Force":
+                force_item = QStandardItem(f"Force {forces_item.rowCount() + 1}")
+                forces_item.appendRow(force_item)
+            elif obj.getType() == "Measure":
+                measure_item = QStandardItem(f"Measure {measures_item.rowCount() + 1}")
+                measures_item.appendRow(measure_item)
+
+
+        # Füge alle Kategorien zum Baum hinzu.
+        self.treeModel.appendRow(bodies_item)
+        self.treeModel.appendRow(constraints_item)
+        self.treeModel.appendRow(forces_item)
+        self.treeModel.appendRow(measures_item)
+

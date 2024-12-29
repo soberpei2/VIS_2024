@@ -70,3 +70,6 @@ class mbsModel:
     def showModel(self, renderer):
         for object in self.__mbsObjectList:
             object.show(renderer)
+            
+    def get_mbs_object_list(self):
+        return self.__mbsObjectList
