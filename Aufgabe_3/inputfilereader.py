@@ -4,6 +4,7 @@ import constraint
 import force
 import measure
 import dataobject
+import json
 
 def readInput(path2File):
     f = open(path2File,"r")
@@ -40,4 +41,14 @@ def readInput(path2File):
         
         currentTextBlock.append(line)
     
+    exportToJson(listOfMbsObjects, "test1.json")
     return listOfMbsObjects
+
+def exportToJson(listOfMbsObjects, outputPath):
+    modelObjects = []
+    for object in listOfMbsObjects:
+        modelObjects.append(object.parameter)  # Hier muss 'parameter' durch das tatsächliche Attribut ersetzt werden.
+    with open(outputPath, "w") as outfile:
+        json.dump({"modelObjects": modelObjects}, outfile, indent=4)
+
+readInput("E:\9.Semester\Digitalisierung-Visualisierung-Uebung\VIS_2024\Aufgabe_3\\test.fdd")
