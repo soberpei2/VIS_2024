@@ -5,8 +5,6 @@ import force
 import measure
 import dataobject
 
-import json
-
 def readInput(path2File):
     f = open(path2File,"r")
 

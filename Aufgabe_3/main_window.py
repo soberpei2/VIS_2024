@@ -166,12 +166,14 @@ class MainWindow(QMainWindow):
         """Lädt das Modell aus einer JSON-Datei und zeigt es im VTK-Renderer."""
         try:
             self.myModel = mbsModel.mbsModel()  # Erstelle ein neues Modell
+            print(f"Lade Modell aus Datei: {filename}")
             self.myModel.loadDatabase(Path(filename))  # Lade das Modell aus der JSON-Datei
             self.statusBar().showMessage(f"Modell geladen: {filename}")
             self.widget.update_renderer(self.myModel)  # Aktualisiere das Rendering mit dem neuen Modell
             self.add_structure_tree()  # Hier den Strukturbaum hinzufügen, nach dem Modell laden
         except Exception as e:
             self.statusBar().showMessage(f"Fehler beim Laden des Modells: {e}")
+            print(f"Fehler beim Laden des Modells: {e}")
 
     def save_model(self):
         """Speichert das Modell in einer JSON-Datei."""
