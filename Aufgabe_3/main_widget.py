@@ -17,3 +17,5 @@ class Widget(QVTK.QVTKRenderWindowInteractor):
         self.renderer.ResetCamera()  # Kamera zurücksetzen
         self.GetRenderWindow().Render()  # Rendern des aktualisierten Fensters
 
+    def GetRenderer(self):
+        return self.renderer

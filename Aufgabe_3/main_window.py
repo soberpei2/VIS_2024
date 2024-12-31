@@ -31,18 +31,27 @@ class MainWindow(QMainWindow):
         # Datei-Menü
         file_menu = menu_bar.addMenu("File")
         file_menu.addAction(self._create_action("Load from JSON", self.load_model))
-        file_menu.addAction(self._create_action("Save to JSON", self.save_model))
         file_menu.addAction(self._create_action("Open FDD", self.import_fdd))
+        file_menu.addSeparator()
+        file_menu.addAction(self._create_action("Save to JSON", self.save_model))
+        file_menu.addSeparator()
         file_menu.addAction(self._create_action("EXIT", self.close, QKeySequence.Quit))
 
         # View-Menü
         view_menu = menu_bar.addMenu("View")
         view_menu.addAction(self._create_action("Fullscreen", self.toggle_fullscreen, QKeySequence("F11")))
+        view_menu.addAction(self._create_action("Reset View", self.reset_view))
+        view_menu.addSeparator()
+        view_menu.addAction(self._create_action("Front View", self.set_front_view))
+        view_menu.addAction(self._create_action("Back View", self.set_back_view))
+        view_menu.addAction(self._create_action("Left View", self.set_left_view))
+        view_menu.addAction(self._create_action("Right View", self.set_right_view))
+        view_menu.addAction(self._create_action("Top View", self.set_top_view))
+        view_menu.addAction(self._create_action("Bottom View", self.set_bottom_view))
 
-        # Controls Menü
-        controls_menu = menu_bar.addMenu("Controls")
-        controls_menu.addAction(self._create_action("Switch Interactor Style", self.toggle_interactor_style))
-
+        # Steuerung-Menü
+        control_menu = menu_bar.addMenu("Control")
+        control_menu.addAction(self._create_action("Switch Interactor Style", self.toggle_interactor_style))
 
     def _create_action(self, name, method, shortcut=None):
         """Hilfsmethode zum Erstellen von Aktionen."""
@@ -106,6 +115,64 @@ class MainWindow(QMainWindow):
             self.current_interactor_style = "default"
             self.statusBar().showMessage("Standard Interactor aktiviert")
 
+    def reset_view(self):
+        """Zentriert die Ansicht auf das Modell und setzt die Kamera zurück."""
+        renderer = self.centralWidget().GetRenderer()
+        camera = renderer.GetActiveCamera()
+        
+        # Berechne Bounding-Box des aktuellen Modells
+        renderer.ResetCamera()  # Standard-Reset
+        bounds = renderer.ComputeVisiblePropBounds()
+        
+        if bounds:
+            center_x = (bounds[0] + bounds[1]) / 2.0
+            center_y = (bounds[2] + bounds[3]) / 2.0
+            center_z = (bounds[4] + bounds[5]) / 2.0
+            camera.SetFocalPoint(center_x, center_y, center_z)
+            
+            # Setze Kamera-Position zurück (z. B. auf eine Distanz basierend auf Bounding-Box)
+            diagonal = ((bounds[1] - bounds[0]) ** 2 + (bounds[3] - bounds[2]) ** 2 + (bounds[5] - bounds[4]) ** 2) ** 0.5
+            camera.SetPosition(center_x, center_y, center_z + 2.0 * diagonal)  # Kamera etwas entfernt setzen
+            camera.SetViewUp(0, 1, 0)  # Standard-Ausrichtung der Kamera
+
+        renderer.ResetCameraClippingRange()  # Sicherstellen, dass die Clipping-Range korrekt ist
+        self.centralWidget().GetRenderWindow().Render()
+        self.statusBar().showMessage("Ansicht zurückgesetzt")
+
+
+    def set_front_view(self):
+        self._set_camera_orientation(0, -1, 0, 0, 0, 1)
+        self.statusBar().showMessage("Front-Ansicht")
+
+    def set_back_view(self):
+        self._set_camera_orientation(0, 1, 0, 0, 0, 1)
+        self.statusBar().showMessage("Back-Ansicht")
+
+    def set_left_view(self):
+        self._set_camera_orientation(-1, 0, 0, 0, 0, 1)
+        self.statusBar().showMessage("Left-Ansicht")
+
+    def set_right_view(self):
+        self._set_camera_orientation(1, 0, 0, 0, 0, 1)
+        self.statusBar().showMessage("Right-Ansicht")
+
+    def set_top_view(self):
+        self._set_camera_orientation(0, 0, 1, 0, -1, 0)
+        self.statusBar().showMessage("Top-Ansicht")
+
+    def set_bottom_view(self):
+        self._set_camera_orientation(0, 0, -1, 0, 1, 0)
+        self.statusBar().showMessage("Bottom-Ansicht")
+
+    def _set_camera_orientation(self, pos_x, pos_y, pos_z, up_x, up_y, up_z):
+        """Hilfsmethode zum Einstellen der Kameraausrichtung."""
+        renderer = self.centralWidget().GetRenderer()
+        camera = renderer.GetActiveCamera()
+        camera.SetPosition(pos_x, pos_y, pos_z)
+        camera.SetFocalPoint(0, 0, 0)
+        camera.SetViewUp(up_x, up_y, up_z)
+        renderer.ResetCamera()
+        self.centralWidget().GetRenderWindow().Render()
 
     def _show_message(self, title, text):
         """Zeigt eine Fehlermeldung an."""
