@@ -31,6 +31,12 @@ class MainWindow(QMainWindow):
         file_menu.addAction(self._create_action("Open FDD", self.import_fdd))
         file_menu.addAction(self._create_action("EXIT", self.close, QKeySequence.Quit))
 
+
+        # View-Menü
+        view_menu = menu_bar.addMenu("View")
+        view_menu.addAction(self._create_action("Fullscreen", self.toggle_fullscreen, QKeySequence("F11")))
+
+
     def _create_action(self, name, method, shortcut=None):
         """Hilfsmethode zum Erstellen von Aktionen."""
         action = QAction(name, self)
@@ -68,6 +74,14 @@ class MainWindow(QMainWindow):
             self.centralWidget().update_renderer(self.myModel)
         else:
             self._show_message("Ungültiges Dateiformat", "Bitte wählen Sie eine FDD-Datei aus.")
+
+    def toggle_fullscreen(self):
+        """Schaltet zwischen Vollbild und Standardgröße um."""
+        if self.isFullScreen():
+            self.showNormal()
+            self.setGeometry(100, 100, 800, 600)  # Setze die Standardfenstergröße
+        else:
+            self.showFullScreen()
 
     def _show_message(self, title, text):
         """Zeigt eine Fehlermeldung an."""
