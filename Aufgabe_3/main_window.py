@@ -3,6 +3,7 @@ from PySide6.QtGui import QAction, QKeySequence
 from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox
 import mbsModel
 import main_widget as mwid
+import vtk
 
 class MainWindow(QMainWindow):
     def __init__(self, widget):
@@ -13,6 +14,9 @@ class MainWindow(QMainWindow):
 
         # Initialisiere MBS Modell
         self.myModel = mbsModel.mbsModel()
+
+        # Standard Interactor Style
+        self.current_interactor_style = "default"
 
         # Menü und Aktionen erstellen
         self._create_menus()
@@ -31,10 +35,13 @@ class MainWindow(QMainWindow):
         file_menu.addAction(self._create_action("Open FDD", self.import_fdd))
         file_menu.addAction(self._create_action("EXIT", self.close, QKeySequence.Quit))
 
-
         # View-Menü
         view_menu = menu_bar.addMenu("View")
         view_menu.addAction(self._create_action("Fullscreen", self.toggle_fullscreen, QKeySequence("F11")))
+
+        # Controls Menü
+        controls_menu = menu_bar.addMenu("Controls")
+        controls_menu.addAction(self._create_action("Switch Interactor Style", self.toggle_interactor_style))
 
 
     def _create_action(self, name, method, shortcut=None):
@@ -82,6 +89,23 @@ class MainWindow(QMainWindow):
             self.setGeometry(100, 100, 800, 600)  # Setze die Standardfenstergröße
         else:
             self.showFullScreen()
+
+    def toggle_interactor_style(self):
+        """Wechselt zwischen dem Standard-Interactor und Trackball-Interactor."""
+        render_window = self.centralWidget().GetRenderWindow()
+        interactor = render_window.GetInteractor()
+
+        if self.current_interactor_style == "default":
+            trackball_style = vtk.vtkInteractorStyleTrackballCamera()
+            interactor.SetInteractorStyle(trackball_style)
+            self.current_interactor_style = "trackball"
+            self.statusBar().showMessage("Trackball Interactor aktiviert")
+        else:
+            default_style = vtk.vtkInteractorStyleSwitch()
+            interactor.SetInteractorStyle(default_style)
+            self.current_interactor_style = "default"
+            self.statusBar().showMessage("Standard Interactor aktiviert")
+
 
     def _show_message(self, title, text):
         """Zeigt eine Fehlermeldung an."""
