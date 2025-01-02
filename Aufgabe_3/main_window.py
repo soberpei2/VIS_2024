@@ -81,30 +81,28 @@ class MainWindow(QMainWindow):
         constraints_item = QStandardItem("Constraints")
         forces_item = QStandardItem("Forces")
         measures_item = QStandardItem("Measures")
-        data_objects_item = QStandardItem("Data Objects")
 
         # Objekte nach Typen gruppieren
         for obj in self.myModel.get_mbsObjectList():
-            name = obj.parameter["name"]["value"]
+            obj_type, name = self.myModel.get_object_type_and_name(obj)
             item = QStandardItem(name)
-
-            if obj.getType() == "RIGID_BODY":
+            
+            print(obj_type,name)
+            
+            if obj_type == "Body":
                 rigid_bodies_item.appendRow(item)
-            elif obj.getType() == "CONSTRAINT":
+            elif obj_type == "Constraint":
                 constraints_item.appendRow(item)
-            elif obj.getType() == "FORCE":
+            elif obj_type == "Force":
                 forces_item.appendRow(item)
-            elif obj.getType() == "MEASURE":
+            elif obj_type == "Measure":
                 measures_item.appendRow(item)
-            elif obj.getType() == "DATAOBJECT_PARAMETER":
-                data_objects_item.appendRow(item)
 
         # Alle Items zum Root hinzufügen
         root_item.appendRow(rigid_bodies_item)
         root_item.appendRow(constraints_item)
         root_item.appendRow(forces_item)
         root_item.appendRow(measures_item)
-        root_item.appendRow(data_objects_item)
 
         self.tree_model.appendRow(root_item)
         self.tree_view.expandAll()
@@ -154,6 +152,7 @@ class MainWindow(QMainWindow):
                 self.myModel.loadDatabase(Path(filename))
                 self.statusBar().showMessage(f"Modell aus JSON geladen: {filename}")
                 self.centralWidget().update_renderer(self.myModel)
+                self.update_structure_tree()
             else:
                 self._show_message("Ungültiges Dateiformat", "Bitte wählen Sie eine JSON-Datei aus.")
         else:
@@ -173,6 +172,7 @@ class MainWindow(QMainWindow):
             self.myModel.importFddFile(filename)
             self.statusBar().showMessage(f"FDD-Datei importiert: {filename}")
             self.centralWidget().update_renderer(self.myModel)
+            self.update_structure_tree()
         else:
             self._show_message("Ungültiges Dateiformat", "Bitte wählen Sie eine FDD-Datei aus.")
 
