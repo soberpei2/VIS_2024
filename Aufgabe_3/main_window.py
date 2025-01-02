@@ -78,17 +78,22 @@ class MainWindow(QMainWindow):
 
         # Objekte aus dem Modell abfragen und dem Baum hinzufügen
         rigid_bodies_item = QStandardItem("Rigid Bodies")
+        rigid_bodies_item.setEditable(False)  # Überschrift nicht editierbar
+
         constraints_item = QStandardItem("Constraints")
+        constraints_item.setEditable(False)  # Überschrift nicht editierbar
+
         forces_item = QStandardItem("Forces")
+        forces_item.setEditable(False)  # Überschrift nicht editierbar
+
         measures_item = QStandardItem("Measures")
+        measures_item.setEditable(False)  # Überschrift nicht editierbar
 
         # Objekte nach Typen gruppieren
         for obj in self.myModel.get_mbsObjectList():
             obj_type, name = self.myModel.get_object_type_and_name(obj)
             item = QStandardItem(name)
-            
-            print(obj_type,name)
-            
+
             if obj_type == "Body":
                 rigid_bodies_item.appendRow(item)
             elif obj_type == "Constraint":
