@@ -71,15 +71,17 @@ class MainWindow(QMainWindow):
 
         return dock_widget
     
-    def update_structure_tree(self, file_name="File-Name"):
+    def update_structure_tree(self, file_name="File Name"):
         """Aktualisiert den Strukturbaum mit den geladenen MBS-Objekten."""
+        # Clear the model completely
         self.tree_model.clear()
 
-        # Platzhalter oder tatsächlicher Dateiname als Root-Item setzen
+        # Explicitly set the root item
         root_item = QStandardItem(file_name)
-        root_item.setEditable(False)  # Root-Item nicht editierbar
+        root_item.setEditable(False)  # Prevent editing of the root item
+        self.tree_model.appendRow(root_item)
 
-        # Objekte aus dem Modell abfragen und dem Baum hinzufügen
+        # Add child categories to the root item
         rigid_bodies_item = QStandardItem("Rigid Bodies")
         rigid_bodies_item.setEditable(False)
 
@@ -92,29 +94,33 @@ class MainWindow(QMainWindow):
         measures_item = QStandardItem("Measures")
         measures_item.setEditable(False)
 
-        # Objekte nach Typen gruppieren
+        # Populate the categories with model objects
         for obj in self.myModel.get_mbsObjectList():
             obj_type, name = self.myModel.get_object_type_and_name(obj)
             item = QStandardItem(name)
 
             if obj_type == "Body":
                 rigid_bodies_item.appendRow(item)
+                rigid_bodies_item.setEditable(False)
             elif obj_type == "Constraint":
                 constraints_item.appendRow(item)
+                constraints_item.setEditable(False)
             elif obj_type == "Force":
                 forces_item.appendRow(item)
+                forces_item.setEditable(False)
             elif obj_type == "Measure":
                 measures_item.appendRow(item)
+                measures_item.setEditable(False)
 
-        # Unterkategorien dem Root hinzufügen
+        # Append categories to the root item
         root_item.appendRow(rigid_bodies_item)
         root_item.appendRow(constraints_item)
         root_item.appendRow(forces_item)
         root_item.appendRow(measures_item)
 
-        # Root-Item dem Modell hinzufügen
-        self.tree_model.appendRow(root_item)
+        # Set the model's root item (no "1" anymore)
         self.tree_view.expandAll()
+
 
 
     def _create_menus(self):
