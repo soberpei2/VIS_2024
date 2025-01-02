@@ -6,11 +6,27 @@ import main_widget as mwid
 import vtk
 
 class MainWindow(QMainWindow):
+    DEFAULT_TEXT = (
+        "DEFAULT Steuerung:\n"
+        "- Linke Maustaste: Rotieren\n"
+        "- Rechte Maustaste: Zoom\n"
+        "- Shift + Linke Maustaste: Verschieben"
+    )
+
+    TRACKBALL_TEXT = (
+        "TRACKBALL Steuerung:\n"
+        "- Linke Maustaste: Rotieren\n"
+        "- Rechte Maustaste: Zoom\n"
+        "- Shift + Linke Maustaste: Verschieben"
+    )
+
+    WINDOW_GEOMETRY = (100, 100, 800, 600)  # x, y, Breite, Höhe
+
     def __init__(self, widget):
         super().__init__()
         self.setWindowTitle("3D Modell in QT mit VTK")
         self.setCentralWidget(widget)
-        self.setGeometry(100, 100, 800, 600)  # Setze die Fenstergröße und Position
+        self.setGeometry(*self.WINDOW_GEOMETRY)
 
         # Initialisiere MBS Modell
         self.myModel = mbsModel.mbsModel()
@@ -23,6 +39,9 @@ class MainWindow(QMainWindow):
 
         # Statusleiste initialisieren
         self.statusBar().showMessage("Laden Sie ein JSON oder FDD File ein, um es anzuzeigen")
+
+        # Text-Actor initialisieren
+        self.centralWidget().update_text_actor(self.DEFAULT_TEXT)
 
     def _create_menus(self):
         """Erstellt die Menüs und fügt Aktionen hinzu."""
@@ -95,7 +114,7 @@ class MainWindow(QMainWindow):
         """Schaltet zwischen Vollbild und Standardgröße um."""
         if self.isFullScreen():
             self.showNormal()
-            self.setGeometry(100, 100, 800, 600)  # Setze die Standardfenstergröße
+            self.setGeometry(*self.WINDOW_GEOMETRY)
         else:
             self.showFullScreen()
 
@@ -108,12 +127,15 @@ class MainWindow(QMainWindow):
             trackball_style = vtk.vtkInteractorStyleTrackballCamera()
             interactor.SetInteractorStyle(trackball_style)
             self.current_interactor_style = "trackball"
+            self.centralWidget().update_text_actor(self.TRACKBALL_TEXT)
             self.statusBar().showMessage("Trackball Interactor aktiviert")
         else:
             default_style = vtk.vtkInteractorStyleSwitch()
             interactor.SetInteractorStyle(default_style)
             self.current_interactor_style = "default"
+            self.centralWidget().update_text_actor(self.DEFAULT_TEXT)
             self.statusBar().showMessage("Standard Interactor aktiviert")
+
 
     def reset_view(self):
         """Zentriert die Ansicht auf das Modell und setzt die Kamera zurück."""
