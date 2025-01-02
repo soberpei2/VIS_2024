@@ -1,6 +1,7 @@
 from pathlib import Path
-from PySide6.QtGui import QAction, QKeySequence
-from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox
+from PySide6.QtGui import QAction, QKeySequence, QStandardItemModel, QStandardItem
+from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QDockWidget, QListView, QVBoxLayout, QWidget, QTreeView
+from PySide6.QtCore import Qt
 import mbsModel
 import main_widget as mwid
 import vtk
@@ -24,15 +25,12 @@ class MainWindow(QMainWindow):
 
     def __init__(self, widget):
         super().__init__()
+
         self.setWindowTitle("3D Modell in QT mit VTK")
         self.setCentralWidget(widget)
-        self.setGeometry(*self.WINDOW_GEOMETRY)
 
         # Initialisiere MBS Modell
         self.myModel = mbsModel.mbsModel()
-
-        # Standard Interactor Style
-        self.current_interactor_style = "default"
 
         # Menü und Aktionen erstellen
         self._create_menus()
@@ -42,6 +40,74 @@ class MainWindow(QMainWindow):
 
         # Text-Actor initialisieren
         self.centralWidget().update_text_actor(self.DEFAULT_TEXT)
+
+        # Initialisierung vom Interactor
+        self.current_interactor_style = "default"
+
+        # Strukturbaum-Dock-Widget hinzufügen
+        self.structure_tree_dock = self._create_structure_tree_dock()
+        self.addDockWidget(Qt.LeftDockWidgetArea, self.structure_tree_dock)
+
+    def _create_structure_tree_dock(self):
+        """Erstellt das Dock-Widget für den Strukturbaum."""
+        dock_widget = QDockWidget("Strukturbaum", self)
+        dock_widget.setFeatures(QDockWidget.DockWidgetMovable | QDockWidget.DockWidgetFloatable)
+        
+        # Erstelle ein Widget für den Strukturbaum
+        tree_widget = QWidget()
+        layout = QVBoxLayout(tree_widget)
+
+        # Erstelle den Baum-Modell
+        self.tree_model = QStandardItemModel()
+        self.tree_view = QTreeView()
+        self.tree_view.setModel(self.tree_model)
+        layout.addWidget(self.tree_view)
+
+        # Baum mit Objekten aus dem Modell füllen
+        self.update_structure_tree()
+
+        # Setze das Widget im Dock-Widget
+        dock_widget.setWidget(tree_widget)
+
+        return dock_widget
+    
+    def update_structure_tree(self):
+        """Aktualisiert den Strukturbaum mit den geladenen MBS-Objekten."""
+        self.tree_model.clear()
+        root_item = QStandardItem("Model Objects")
+
+        # Objekte aus dem Modell abfragen und dem Baum hinzufügen
+        rigid_bodies_item = QStandardItem("Rigid Bodies")
+        constraints_item = QStandardItem("Constraints")
+        forces_item = QStandardItem("Forces")
+        measures_item = QStandardItem("Measures")
+        data_objects_item = QStandardItem("Data Objects")
+
+        # Objekte nach Typen gruppieren
+        for obj in self.myModel.get_mbsObjectList():
+            name = obj.parameter["name"]["value"]
+            item = QStandardItem(name)
+
+            if obj.getType() == "RIGID_BODY":
+                rigid_bodies_item.appendRow(item)
+            elif obj.getType() == "CONSTRAINT":
+                constraints_item.appendRow(item)
+            elif obj.getType() == "FORCE":
+                forces_item.appendRow(item)
+            elif obj.getType() == "MEASURE":
+                measures_item.appendRow(item)
+            elif obj.getType() == "DATAOBJECT_PARAMETER":
+                data_objects_item.appendRow(item)
+
+        # Alle Items zum Root hinzufügen
+        root_item.appendRow(rigid_bodies_item)
+        root_item.appendRow(constraints_item)
+        root_item.appendRow(forces_item)
+        root_item.appendRow(measures_item)
+        root_item.appendRow(data_objects_item)
+
+        self.tree_model.appendRow(root_item)
+        self.tree_view.expandAll()
 
     def _create_menus(self):
         """Erstellt die Menüs und fügt Aktionen hinzu."""
@@ -135,6 +201,7 @@ class MainWindow(QMainWindow):
             self.current_interactor_style = "default"
             self.centralWidget().update_text_actor(self.DEFAULT_TEXT)
             self.statusBar().showMessage("Standard Interactor aktiviert")
+
 
 
     def reset_view(self):

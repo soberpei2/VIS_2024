@@ -11,6 +11,9 @@ import os
 class mbsModel:
     def __init__(self):
         self.__mbsObjectList = []
+
+    def get_mbsObjectList(self):
+        return self.__mbsObjectList
     
     def importFddFile(self,filepath):
         file_name, file_extension = os.path.splitext(filepath)
