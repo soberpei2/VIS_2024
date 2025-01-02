@@ -71,23 +71,26 @@ class MainWindow(QMainWindow):
 
         return dock_widget
     
-    def update_structure_tree(self):
+    def update_structure_tree(self, file_name="File-Name"):
         """Aktualisiert den Strukturbaum mit den geladenen MBS-Objekten."""
         self.tree_model.clear()
-        root_item = QStandardItem("Model Objects")
+
+        # Platzhalter oder tatsächlicher Dateiname als Root-Item setzen
+        root_item = QStandardItem(file_name)
+        root_item.setEditable(False)  # Root-Item nicht editierbar
 
         # Objekte aus dem Modell abfragen und dem Baum hinzufügen
         rigid_bodies_item = QStandardItem("Rigid Bodies")
-        rigid_bodies_item.setEditable(False)  # Überschrift nicht editierbar
+        rigid_bodies_item.setEditable(False)
 
         constraints_item = QStandardItem("Constraints")
-        constraints_item.setEditable(False)  # Überschrift nicht editierbar
+        constraints_item.setEditable(False)
 
         forces_item = QStandardItem("Forces")
-        forces_item.setEditable(False)  # Überschrift nicht editierbar
+        forces_item.setEditable(False)
 
         measures_item = QStandardItem("Measures")
-        measures_item.setEditable(False)  # Überschrift nicht editierbar
+        measures_item.setEditable(False)
 
         # Objekte nach Typen gruppieren
         for obj in self.myModel.get_mbsObjectList():
@@ -103,14 +106,16 @@ class MainWindow(QMainWindow):
             elif obj_type == "Measure":
                 measures_item.appendRow(item)
 
-        # Alle Items zum Root hinzufügen
+        # Unterkategorien dem Root hinzufügen
         root_item.appendRow(rigid_bodies_item)
         root_item.appendRow(constraints_item)
         root_item.appendRow(forces_item)
         root_item.appendRow(measures_item)
 
+        # Root-Item dem Modell hinzufügen
         self.tree_model.appendRow(root_item)
         self.tree_view.expandAll()
+
 
     def _create_menus(self):
         """Erstellt die Menüs und fügt Aktionen hinzu."""
@@ -157,7 +162,8 @@ class MainWindow(QMainWindow):
                 self.myModel.loadDatabase(Path(filename))
                 self.statusBar().showMessage(f"Modell aus JSON geladen: {filename}")
                 self.centralWidget().update_renderer(self.myModel)
-                self.update_structure_tree()
+                # Aktualisiere den Strukturbaum mit dem tatsächlichen Dateinamen
+                self.update_structure_tree(file_name=Path(filename).name)
             else:
                 self._show_message("Ungültiges Dateiformat", "Bitte wählen Sie eine JSON-Datei aus.")
         else:
@@ -177,7 +183,8 @@ class MainWindow(QMainWindow):
             self.myModel.importFddFile(filename)
             self.statusBar().showMessage(f"FDD-Datei importiert: {filename}")
             self.centralWidget().update_renderer(self.myModel)
-            self.update_structure_tree()
+            # Aktualisiere den Strukturbaum mit dem tatsächlichen Dateinamen
+            self.update_structure_tree(file_name=Path(filename).name)
         else:
             self._show_message("Ungültiges Dateiformat", "Bitte wählen Sie eine FDD-Datei aus.")
 
