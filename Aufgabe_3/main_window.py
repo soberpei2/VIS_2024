@@ -40,9 +40,13 @@ class MainWindow(QMainWindow):
 
         # Text-Actor initialisieren
         self.centralWidget().update_text_actor(self.DEFAULT_TEXT)
+        self.is_text_visible = False  # Flag, um den Text ein- und auszublenden
 
         # Initialisierung vom Interactor
         self.current_interactor_style = "default"
+        # Text-Actor initialisieren (kein Text standardmäßig)
+        self.is_text_visible = False
+        self.centralWidget().update_text_actor("")  # Kein Text beim Start
 
         # Strukturbaum-Dock-Widget hinzufügen
         self.structure_tree_dock = self._create_structure_tree_dock()
@@ -151,6 +155,7 @@ class MainWindow(QMainWindow):
         # Steuerung-Menü
         control_menu = menu_bar.addMenu("Control")
         control_menu.addAction(self._create_action("Switch Interactor Style", self.toggle_interactor_style))
+        control_menu.addAction(self._create_action("Interaction Information Text", self.toggle_control_text))
 
     def _create_action(self, name, method, shortcut=None):
         """Hilfsmethode zum Erstellen von Aktionen."""
@@ -159,6 +164,21 @@ class MainWindow(QMainWindow):
             action.setShortcut(shortcut)
         action.triggered.connect(method)
         return action
+
+    def toggle_control_text(self):
+        """Wechselt die Sichtbarkeit des Steuerungstextes."""
+        if self.is_text_visible:
+            self.centralWidget().update_text_actor("")  # Text ausblenden
+            self.is_text_visible = False
+            self.statusBar().showMessage("Steuerungstext ausgeblendet")
+        else:
+            # Text basierend auf dem aktuellen Interactor Style anzeigen
+            if self.current_interactor_style == "default":
+                self.centralWidget().update_text_actor(self.DEFAULT_TEXT)
+            elif self.current_interactor_style == "trackball":
+                self.centralWidget().update_text_actor(self.TRACKBALL_TEXT)
+            self.is_text_visible = True
+            self.statusBar().showMessage("Steuerungstext angezeigt")
 
     def load_model(self):
         """Lädt ein Modell aus einer JSON-Datei."""
