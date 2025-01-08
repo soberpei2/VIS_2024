@@ -19,7 +19,6 @@ class MainWidget(QVTK.QVTKRenderWindowInteractor):
         self.renderer.ResetCamera() # Kamera zurücksetzen, um das gesamte Modell einzufangen
         self.GetRenderWindow().Render()  # Rendert das Fenster, um das Modell anzuzeigen
 
-
     def set_interaction(self, mode):
         """Wechselt die Mausinteraktion."""
         if mode == "abaqus":

@@ -17,6 +17,8 @@ import vtk
 # Alias für das QVTKRenderWindowInteractor-Modul
 QVTKRenderWindowInteractor = QVTK.QVTKRenderWindowInteractor
 
+# ===================================================================================================
+
 class MainWindow(QMainWindow):
     def __init__(self):
         """Initialisiert das Hauptfenster der Anwendung."""
@@ -88,6 +90,9 @@ class MainWindow(QMainWindow):
         # Initialisiere das RenderWindow
         self.widget.GetRenderWindow().Render()
 
+# ===================================================================================================    
+ #Erstellen der Menübar und Befüllen 
+
     def create_menu(self):
         """Erstellt die Menüleiste und ihre Aktionen."""
         menubar = self.menuBar()
@@ -151,10 +156,13 @@ class MainWindow(QMainWindow):
 
         settings_menu.addMenu(steuerung_menu)
 
+# ===================================================================================================  
 
     def create_status_bar(self):
         """Erstellt die Statusleiste und zeigt eine Nachricht an."""
         self.statusBar().showMessage("Kein Modell geladen")
+
+# ===================================================================================================  
 
     def load_model(self):
         """Lädt ein Modell aus einer JSON-Datei."""
@@ -169,6 +177,8 @@ class MainWindow(QMainWindow):
         else:
             self.statusBar().showMessage("Modell-Laden abgebrochen")
 
+# ===================================================================================================  
+
     def load_json_model(self, filename):
         """Lädt das Modell aus einer JSON-Datei und zeigt es im VTK-Renderer."""
         try:
@@ -181,6 +191,8 @@ class MainWindow(QMainWindow):
         except Exception as e:
             self.statusBar().showMessage(f"Fehler beim Laden des Modells: {e}")
             print(f"Fehler beim Laden des Modells: {e}")
+            
+# ===================================================================================================  
 
     def save_model(self):
         """Speichert das Modell in einer JSON-Datei."""
@@ -189,6 +201,8 @@ class MainWindow(QMainWindow):
         if filename:
             self.myModel.saveDatabase(Path(filename))  # Speichert das Modell
             self.statusBar().showMessage(f"Modell gespeichert: {filename}")
+            
+# ===================================================================================================  
 
     def import_fdd(self):
         """Importiert ein FDD-Modell aus einer Datei."""
@@ -202,6 +216,8 @@ class MainWindow(QMainWindow):
                 self.show_error_message("Ungültige Datei", "Bitte wählen Sie eine gültige Fdd-Datei aus.")
         else:
             self.statusBar().showMessage("Modell-Laden abgebrochen")
+            
+# ===================================================================================================  
 
     def import_fdd_file(self, filename):
         """Lädt das Modell aus einer FDD-Datei."""
@@ -213,6 +229,8 @@ class MainWindow(QMainWindow):
             self.add_structure_tree()  # Hier den Strukturbaum hinzufügen, nach dem Modell laden
         except Exception as e:
             self.statusBar().showMessage(f"Fehler beim Importieren der FDD-Datei: {e}")
+            
+# ===================================================================================================  
 
     def show_error_message(self, title, message):
         """Zeigt eine Fehlermeldung an."""
@@ -221,6 +239,8 @@ class MainWindow(QMainWindow):
         msg_box.setWindowTitle(title)
         msg_box.setText(message)
         msg_box.exec()
+        
+# ===================================================================================================  
 
     def set_front_view(self):
         """Setzt die Kamera in die Frontansicht."""
@@ -230,6 +250,8 @@ class MainWindow(QMainWindow):
         camera.SetViewUp(0, 0, 1)  # Oben ist die Z-Achse
         self.widget.renderer.ResetCamera()  # Stellt sicher, dass das gesamte Modell sichtbar ist
         self.widget.GetRenderWindow().Render()  # Szene neu rendern
+        
+# ===================================================================================================  
 
     def set_top_view(self):
         """Setzt die Kamera in die Draufsicht."""
@@ -239,6 +261,8 @@ class MainWindow(QMainWindow):
         camera.SetViewUp(0, 1, 0)  # Oben ist die Y-Achse
         self.widget.renderer.ResetCamera()  # Stellt sicher, dass das gesamte Modell sichtbar ist
         self.widget.GetRenderWindow().Render()  # Szene neu rendern
+        
+# ===================================================================================================  
 
     def set_rigth_view(self):
         """Setzt die Kamera in die Draufsicht."""
@@ -249,10 +273,14 @@ class MainWindow(QMainWindow):
         self.widget.renderer.ResetCamera()  # Stellt sicher, dass das gesamte Modell sichtbar ist
         self.widget.GetRenderWindow().Render()  # Szene neu rendern
 
+# ===================================================================================================  
+
     def open_control_settings(self):
         """Öffnet die Steuerungseinstellungen und stellt die Interaktion wie in Creo ein."""
         # Diese Methode aktiviert eine benutzerdefinierte Steuerung wie in Creo
         self.set_creo_mouse_interaction()
+
+# ===================================================================================================  
 
     def set_creo_mouse_interaction(self):
         """Aktiviert die Creo-ähnliche Mausinteraktion."""
@@ -264,6 +292,8 @@ class MainWindow(QMainWindow):
         # Setze den Interactor auf eine benutzerdefinierte Steuerung (falls nötig)
         self.widget.SetInteractorStyle(self.create_creo_interaction_style())
 
+# ===================================================================================================  
+
     def create_creo_interaction_style(self):
         """Erstellt eine benutzerdefinierte Interaktionsweise wie in Creo."""
         # Hier könntest du mit VTKs "vtkInteractorStyle" arbeiten, um eine benutzerdefinierte Steuerung zu definieren
@@ -274,18 +304,24 @@ class MainWindow(QMainWindow):
         # Stelle sicher, dass der Interactor die Maus so behandelt, wie in Creo:
         interactor_style.SetMouseWheelMotionFactor(0.1)  # Geschwindigkeit des Zoomens
         return interactor_style
-    
+
+# ===================================================================================================  
+
     def set_interaction_abaqus(self):
         """Setzt die Interaktion auf 'Steuerung Abaqus'."""
         # Hier definierst du, wie die Mausinteraktion für Abaqus funktioniert
         self.widget.set_interaction("abaqus")
         self.statusBar().showMessage("Interaktion: Steuerung Abaqus")
 
+# ===================================================================================================  
+
     def set_interaction_creo(self):
         """Setzt die Interaktion auf 'Steuerung Creo'."""
         # Hier definierst du, wie die Mausinteraktion für Creo funktioniert
         self.widget.set_interaction("creo")
         self.statusBar().showMessage("Interaktion: Steuerung Creo")
+
+# ===================================================================================================  
 
     def add_structure_tree(self):
         """Fügt die Strukturbaumknoten und Unterpunkte basierend auf den geladenen Modellobjekten hinzu."""
@@ -325,6 +361,8 @@ class MainWindow(QMainWindow):
         self.treeModel.appendRow(forces_item)
         self.treeModel.appendRow(measures_item)
 
+# ===================================================================================================  
+
     def show_context_menu(self, pos):
         """Zeigt das Kontextmenü für den Strukturbaum an."""
         index = self.treeView.indexAt(pos)  # Hole den Baumknoten unter der Maus
@@ -346,6 +384,8 @@ class MainWindow(QMainWindow):
         # Zeige das Menü an der Position des Rechtsklicks
         menu.exec_(self.treeView.mapToGlobal(pos))
 
+# ===================================================================================================  
+
     def rename_object(self, index):
         """Ermöglicht das Umbennen des Objekts."""
         current_name = index.data()  # Der aktuelle Name des Objekts
@@ -358,6 +398,8 @@ class MainWindow(QMainWindow):
 
             # Aktualisiere den Baum mit dem neuen Namen
             index.model().dataChanged.emit(index, index)  # Signal, dass sich der Name geändert hat
+
+# ===================================================================================================  
 
     def show_properties(self, index):
         """Zeigt die Eigenschaften des Objekts an."""
@@ -372,6 +414,8 @@ class MainWindow(QMainWindow):
 
         # Zeige die Eigenschaften in einer MessageBox
         QMessageBox.information(self, "Eigenschaften", properties_message)
+
+# ===================================================================================================  
 
     def get_object_from_index(self, index):
         """Holt das Modellobjekt basierend auf dem Index."""
