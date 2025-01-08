@@ -14,19 +14,17 @@ class MainWidget(QVTK.QVTKRenderWindowInteractor):
     
     def update_renderer(self, model):
         """Aktualisiert den Renderer mit den neuen Modellobjekten."""
-        self.renderer.RemoveAllViewProps()  # Löscht alle bisherigen ViewProps (darunter Modelle)
         model.showModel(self.renderer)  # Zeigt das neue Modell im Renderer an
         self.renderer.ResetCamera() # Kamera zurücksetzen, um das gesamte Modell einzufangen
         self.GetRenderWindow().Render()  # Rendert das Fenster, um das Modell anzuzeigen
 
     def set_interaction(self, mode):
-        """Wechselt die Mausinteraktion."""
         if mode == "abaqus":
             self.current_interaction = "abaqus"
-            self.set_creo_interaction()  # "Abaqus" nutzt jetzt die "Creo"-Interaktion
+            self.set_abaqus_interaction()  # Richtige Methode
         elif mode == "creo":
             self.current_interaction = "creo"
-            self.set_abaqus_interaction()  # "Creo" nutzt jetzt die "Abaqus"-Interaktion
+            self.set_creo_interaction()  # Richtige Methode
 
     def set_abaqus_interaction(self):
         """Setzt die Mausinteraktion auf 'Abaqus'."""

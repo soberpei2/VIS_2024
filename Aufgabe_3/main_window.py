@@ -343,7 +343,7 @@ class MainWindow(QMainWindow):
 
             # Überprüfe den Typ jedes Objekts und füge es der entsprechenden Kategorie hinzu
             if obj.getType() == "Body":
-                body_item = QStandardItem(f"{object_name}")  # Benutze den Namen
+                body_item = QStandardItem(f"{object_name}")
                 bodies_item.appendRow(body_item)
             elif obj.getType() == "Constraint":
                 constraint_item = QStandardItem(f"{object_name}")
@@ -403,6 +403,9 @@ class MainWindow(QMainWindow):
 
     def show_properties(self, index):
         """Zeigt die Eigenschaften des Objekts an."""
+
+        mbs_objects = self.myModel.get_mbs_object_list()  # Zugriff auf die Objektliste
+
         obj = self.get_object_from_index(index)
         
         # Eigenschaften des Objekts abrufen (z.B. Position und Masse)
